@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+    <hibernate-mapping>
+        <class name="pojo.Cartedecredit" table="CARTEDECREDIT">
+            <id name="idUtilisateur" type="int" column="ID_UTILISATEUR"></id>
+            <property name="noCarte" column="NO_CARTE" type="string"/>  
+            <property name="typeCarte" column="TYPE_CARTE" type="string"/>
+            <property name="expMois" column="EXP_MOIS" type="int"/>
+            <property name="expAnnee" column="EXP_ANNEE" type="int"/>
+            <property name="cvv" column="CVV" type="int"/>
+        </class>
+    </hibernate-mapping>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="pojo.Utilisateur" table="UTILISATEUR">
+        <id name="idUtilisateur" type="int" column="ID_UTILISATEUR"></id>
+        <property name="nom" column="NOM" type="string"/>
+        <property name="courriel" column="COURRIEL" type="string"/>
+        <property name="numTel" column="NUM_TEL" type="string"/>
+        <property name="dateDeNaissance" column="DATE_DE_NAISSANCE" type="date"/>
+        <property name="motDePasse" column="MOT_DE_PASSE" type="string"/>
+
+        <many-to-one unique="true" insert="false" update="false" lazy="false" fetch="select" name="Adresse" column="ID_UTILISATEUR"/>
+    </class>
+</hibernate-mapping>

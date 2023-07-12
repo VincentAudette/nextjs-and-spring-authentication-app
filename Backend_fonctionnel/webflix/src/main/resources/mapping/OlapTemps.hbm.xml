@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="pojo.OlapTemps" table="OLAP_TEMPS">
+        <id name="idTemps" type="int" column="ID_TEMPS"></id>
+        <property name="dateComplete" column="DATE_COMPLETE" type="date"/>
+        <property name="heure" column="HEURE" type="int"/>
+        <property name="jour" column="JOUR" type="int"/>
+        <property name="mois" column="MOIS" type="int"/>
+        <property name="annee" column="ANNEE" type="int"/>
+        <property name="jourDeSemaine" column="JOUR_DE_SEMAINE" type="int"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    @apply bg-stone-900 text-stone-100
+}
+
+.input{
+    @apply appearance-none block w-full px-3 bg-stone-800 focus:bg-stone-700 py-2 border border-stone-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm
+} 
+.titre-section{
+    @apply text-3xl font-semibold;
+}
+
+.input-container{
+    @apply mt-2 flex items-center space-x-5;
+}
+
+.input-field{
+    @apply rounded-md border-stone-300;
+}

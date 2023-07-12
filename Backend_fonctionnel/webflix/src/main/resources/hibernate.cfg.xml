@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+    <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@log660ora12c.logti.etsmtl.ca:1521:LOG660</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+    <property name="hibernate.search.autoregister_listeners">false</property>
+    <property name="hibernate.connection.username">EQUIPE202</property>
+    <property name="hibernate.connection.password">wyuHHyx4</property>
+    <mapping class="pojo.Adresse"/>
+    <mapping class="pojo.Bandeannonce"/>
+    <mapping class="pojo.Cartedecredit"/>
+    <mapping class="pojo.Film"/>
+    <mapping class="pojo.Genre"/>
+    <mapping class="pojo.Location"/>
+    <mapping class="pojo.Pays"/> 
+    <mapping class="pojo.Personne"/>
+    <mapping class="pojo.Scenariste"/>
+    <mapping class="pojo.Utilisateur"/>
+    <mapping class="pojo.OlapLocation"/>
+    <mapping class="pojo.OlapClient"/>
+    <mapping class="pojo.OlapFilm"/>
+    <mapping class="pojo.OlapTemps"/>
+    <mapping class="pojo.CoteMoyenneFilm"/>
+    <mapping class="pojo.CorrelationFilm"/>
+    <mapping resource="mapping/Adresse.hbm.xml"/>
+    <mapping resource="mapping/Bandeannonce.hbm.xml"/>
+    <mapping resource="mapping/Cartedecredit.hbm.xml"/>
+    <mapping resource="mapping/Film.hbm.xml"/>
+    <mapping resource="mapping/Genre.hbm.xml"/> 
+    <mapping resource="mapping/Location.hbm.xml"/> 
+    <mapping resource="mapping/Pays.hbm.xml"/>
+    <mapping resource="mapping/Personne.hbm.xml"/>
+    <mapping resource="mapping/Scenariste.hbm.xml"/>
+    <mapping resource="mapping/Utilisateur.hbm.xml"/>
+    <mapping resource="mapping/OlapLocation.hbm.xml"/>
+    <mapping resource="mapping/OlapClient.hbm.xml"/>
+    <mapping resource="mapping/OlapFilm.hbm.xml"/>
+    <mapping resource="mapping/OlapTemps.hbm.xml"/>
+    <mapping resource="mapping/CoteMoyenneFilm.hbm.xml"/>
+    <mapping resource="mapping/CorrelationFilm.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,8 @@
+CREATE MATERIALIZED VIEW cote_moyenne_film
+REFRESH FORCE START WITH SYSDATE
+NEXT TRUNC(SYSDATE) + 60/48
+AS 
+SELECT idFilm, AVG(Cote) as cote_avg
+    FROM cote_loc
+    GROUP BY idFilm;
+    

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="pojo.Location" table="LOCATION">
+        <id name="idLocation" type="int" column="ID_LOCATION"></id>
+        <property name="dateDeRetour" column="DATE_DE_RETOUR" type="date"/>
+        <property name="dateARetourner" column="DATE_A_RETOURNER" type="date"/>
+        <property name="dateEmprunt" column="DATE_EMPRUNT" type="date"/>
+
+        <many-to-one insert="false" update="false" lazy="false" fetch="select" name="film" column="ID_FILM" />
+        <many-to-one insert="false" update="false" lazy="false" fetch="select" name="utilisateur" column="ID_UTILISATEUR"/>
+    </class>
+</hibernate-mapping>

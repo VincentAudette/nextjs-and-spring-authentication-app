@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="pojo.Adresse" table="ADRESSE">
+       <id name="idUtilisateur" column="ID_UTILISATEUR" type="int"></id>
+        <property name="numeroCivique" column="NUMERO_CIVIQUE" type="int"/>
+        <property name="rue" column="RUE" type="string"/>
+        <property name="ville" column="VILLE" type="string"/>
+        <property name="province" column="PROVINCE" type="string"/>
+        <property name="codePostal" column="CODE_POSTAL" type="string"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="pojo.Scenariste" table="SCENARISTE">
+        <id name="idScenariste" type="int" column="ID_SCENARISTE"></id>
+        <property name="nom" column="NOM" type="string"/>
+    </class>
+</hibernate-mapping>
+
+<!-- Il est possible que nous devions mettre le set inverse avec Film -->

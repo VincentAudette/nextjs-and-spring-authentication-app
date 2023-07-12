@@ -1,0 +1,40 @@
+<clients>
+<client id="997690">
+	<nom-famille>Flores</nom-famille>
+	<prenom>Robert</prenom>
+	<courriel>RobertCFlores21@gmail.com</courriel>
+	<tel>604-897-3621</tel>
+	<anniversaire>1953-07-22</anniversaire>
+	<adresse>3380 Glover Road</adresse>
+	<ville>Langley</ville>
+	<province>BC</province>
+	<code-postal>V3A 4P6</code-postal>
+	<info-credit>
+		<carte>MasterCard</carte>
+		<no>5567 9361 3607 8358</no>
+		<exp-mois>5</exp-mois>
+		<exp-annee>2026</exp-annee>
+	</info-credit>
+	<mot-de-passe>eishie3meiH</mot-de-passe>
+	<forfait>A</forfait>
+</client>
+<client id="2634523">
+	<nom-famille>Douglas</nom-famille>
+	<prenom>Travis</prenom>
+	<courriel>TravisMDouglas83@gmail.com</courriel>
+	<tel>416-944-1086</tel>
+	<anniversaire>1956-05-09</anniversaire>
+	<adresse>1510 Yonge Street</adresse>
+	<ville>Toronto</ville>
+	<province>ON</province>
+	<code-postal>M4W 1J7</code-postal>
+	<info-credit>
+		<carte>MasterCard</carte>
+		<no>5369 9124 9122 1479</no>
+		<exp-mois>4</exp-mois>
+		<exp-annee>2024</exp-annee>
+	</info-credit>
+	<mot-de-passe>bohgh8Cae</mot-de-passe>
+	<forfait>D</forfait>
+</client>
+</clients>

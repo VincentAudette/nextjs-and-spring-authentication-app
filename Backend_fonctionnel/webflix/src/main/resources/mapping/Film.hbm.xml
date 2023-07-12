@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="pojo.Film" table="FILM">
+        <id name="idFilm" type="int" column="ID_FILM"/>
+        <property name="titre" column="TITRE" type="string"/>
+        <property name="annee" column="ANNEE" type="int"/>
+        <property name="langue" column="LANGUE" type="string"/>
+        <property name="duree" column="DUREE" type="int"/>
+        <property name="resume" column="RESUME" type="string"/>
+        <property name="affiche" column="AFFICHE" type="string"/>
+
+        <many-to-one not-found="ignore" insert="false" update="false" lazy="false" fetch="select" name="realisateur" column="ID_REALISATEUR" />
+
+        <set name="acteurs" table="ROLEACTEUR" inverse="false" lazy="false" fetch="select" cascade="all">
+          <key column="ID_FILM" not-null="true"/>
+          <many-to-many entity-name="pojo.Personne">
+            <column name="ID_PERSONNE" not-null="true" />
+          </many-to-many>
+        </set>
+
+        <set name="scenaristes" table="FILMSCENARISTE" inverse="false" lazy="false" fetch="select" cascade="all">
+          <key column="ID_FILM" not-null="true"/>
+          <many-to-many entity-name="pojo.Scenariste">
+            <column name="ID_SCENARISTE" not-null="true" />
+          </many-to-many>
+        </set>
+
+        <set name="pays" table="FILMPAYS" inverse="false" lazy="false" fetch="select" cascade="all">
+          <key column="ID_FILM" not-null="true"/>
+          <many-to-many entity-name="pojo.Pays">
+            <column name="ID_PAYS" not-null="true" />
+          </many-to-many>
+        </set>
+
+        <set name="genres" table="FILMGENRE" inverse="false" lazy="false" fetch="select" cascade="all">
+          <key column="ID_FILM" not-null="true"/>
+          <many-to-many entity-name="pojo.Genre">
+            <column name="ID_GENRE" not-null="true" />
+          </many-to-many>
+        </set>
+        
+    </class>
+</hibernate-mapping>
