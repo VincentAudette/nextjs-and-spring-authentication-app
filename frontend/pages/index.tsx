@@ -1,6 +1,6 @@
 import LoginView from '../components/login-view'
 
 
-export default function WebflixDashboardEntry() {
+export default function GTI619DashboardEntry() {
   return (<LoginView />)
 }
