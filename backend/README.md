@@ -10,3 +10,8 @@
 #### Important
 - to create new db and update attributes -> spring.jpa.hibernate.ddl-auto=update
 - to use the db and change it with the app -> spring.jpa.hibernate.ddl-auto=none
+
+#### Ways to use h2
+1. bd in memory (often used for test) -> spring.datasource.url=jdbc:h2:mem:testdb
+2. local bd -> spring.datasource.url=jdbc:h2:./userinfo
+3. local bd with tcp connexion, server mode (port 8082) with local file -> jdbc:h2:tcp://localhost/~/src/java/MyDatabase;IFEXISTS=TRUE
