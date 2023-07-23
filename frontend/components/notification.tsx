@@ -37,7 +37,7 @@ export default function Notification({IconColor="red", heading, description,show
                   </div>
                   <div className="ml-4 flex-shrink-0 flex">
                     <button
-                      className=" rounded-md inline-flex text-gray-700 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
+                      className=" rounded-md inline-flex text-neutral-700 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
                       onClick={() => {
                         setShowNotification(false)
                       }}

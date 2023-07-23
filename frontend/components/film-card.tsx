@@ -75,7 +75,7 @@ export default function FilmCard({film, moreInfo, setLocationModalOpen}:FilmCard
                     <div className="text-left">Année: {film.annee}</div>
                     <div className="flex gap-2 flex-wrap">
                     {film.genres.map(genre=>(
-                        <p key={`${film.idFilm}-genre-${genre.idGenre}`} className="bg-stone-700 px-2 rounded-md">{genre.genre}</p>
+                        <p key={`${film.idFilm}-genre-${genre.idGenre}`} className="bg-neutral-700 px-2 rounded-md">{genre.genre}</p>
                     ))}
                     </div>
                 </div>
@@ -92,7 +92,7 @@ export default function FilmCard({film, moreInfo, setLocationModalOpen}:FilmCard
                        {bandeannnonce && bandeannnonce!=="Erreur" && <Link href={bandeannnonce}  passHref>
                         <a 
                         target="_blank"
-                        className="flex bg-gradient-to-br space-x-3 border text-white hover:border-stone-200 hover:text-stone-200 px-4 py-2 my-3 mt-5 rounded-md">
+                        className="flex bg-gradient-to-br space-x-3 border text-white hover:border-neutral-200 hover:text-neutral-200 px-4 py-2 my-3 mt-5 rounded-md">
                             {/* <PlayIcon className="h-6 w-6" /> */}
                             <p>Bande annonce</p>
                         </a>
@@ -130,7 +130,7 @@ export default function FilmCard({film, moreInfo, setLocationModalOpen}:FilmCard
                         </div>
                         <div className="my-3 space-y-2">
                             <p className="text-lg -mb-2 font-medium ">Pays</p>
-                            <div className="text-sm my-3 flex space-x-3">{film.pays.map(p=>(<p className="border border-stone-500 rounded-md px-1" key={`pays-${p.idPays}`}>{p.nom}</p>))}</div>
+                            <div className="text-sm my-3 flex space-x-3">{film.pays.map(p=>(<p className="border border-neutral-500 rounded-md px-1" key={`pays-${p.idPays}`}>{p.nom}</p>))}</div>
 
                         </div>
                     </div>
@@ -146,7 +146,7 @@ export default function FilmCard({film, moreInfo, setLocationModalOpen}:FilmCard
 
                     {activeList === 1 && film.scenaristes.map(scenariste=>(
                         <div key={`${film.idFilm}-scenariste-${scenariste.idScenariste}`} className="pt-2">
-                                <p className="font-medium text-stone-300">{scenariste.nom}</p>
+                                <p className="font-medium text-neutral-300">{scenariste.nom}</p>
                     </div>))
                     }
                     </div>

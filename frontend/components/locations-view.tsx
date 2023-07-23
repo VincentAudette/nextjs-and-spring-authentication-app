@@ -36,23 +36,23 @@ export default function LocationsView({idUtilisateur}){
         <ul className="space-y-3 mt-3">
         {locations && locations.map((location:Location)=>{
            return <li key={`location-${location.idLocation}`}>
-               <div className="flex space-x-8 border-t border-stone-600 pt-2" key={`location-${location.idLocation}`}>
+               <div className="flex space-x-8 border-t border-neutral-600 pt-2" key={`location-${location.idLocation}`}>
                 <span>
                 <p className="font-semibold">Date emprunte</p>
-                <p className="text-sm text-stone-400">{location.dateEmprunt}</p>
+                <p className="text-sm text-neutral-400">{location.dateEmprunt}</p>
                 </span>
                 <span>
                 <p className="font-semibold">Date à retourner</p>
-                {!isSuperUser && <p className="text-sm text-stone-400">{location.dateARetourner}</p>}
-                {isSuperUser  && <p className="text-sm text-stone-400">Aucune</p>}
+                {!isSuperUser && <p className="text-sm text-neutral-400">{location.dateARetourner}</p>}
+                {isSuperUser  && <p className="text-sm text-neutral-400">Aucune</p>}
                 </span>
                 {location.dateDeRetour && <span>
                 <p className="font-semibold">Date de retour</p>
-                <p className="text-sm text-stone-400">{location.dateDeRetour}</p>
+                <p className="text-sm text-neutral-400">{location.dateDeRetour}</p>
                 </span>}
                 
             </div>
-            <div className=" scale-75 border border-stone-600 rounded-md p-3">
+            <div className=" scale-75 border border-neutral-600 rounded-md p-3">
 
                 <FilmCard film={location.film} />
             </div>

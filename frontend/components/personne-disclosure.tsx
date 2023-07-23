@@ -31,8 +31,8 @@ export default function PersonneDisclosure({personne, key}: PersonneDisclosurePr
     {({ open }) => (
     <>
         <dt className="">
-        <Disclosure.Button className="text-left w-full flex justify-between items-start text-stone-400">
-            <span className="font-medium text-stone-300">{personne.nomPersonne}</span>
+        <Disclosure.Button className="text-left w-full flex justify-between items-start text-neutral-400">
+            <span className="font-medium text-neutral-300">{personne.nomPersonne}</span>
             <span className="ml-6 h-6 flex items-center">
             <ChevronDownIcon
                 className={classNames(open ? '-rotate-180' : 'rotate-0', 'h-5 w-5 transform')}
@@ -44,21 +44,21 @@ export default function PersonneDisclosure({personne, key}: PersonneDisclosurePr
         <Disclosure.Panel as="dd" className="mt-2 pr-12">
          <div className="text-base">
             {personne.lieuNaissance && <><p>Lieu de naissance</p>
-            <p className="text-sm text-stone-400 mb-2">{personne.lieuNaissance}
+            <p className="text-sm text-neutral-400 mb-2">{personne.lieuNaissance}
             </p></>}
             {personne.dateNaissance && <div className="flex mb-2">
                 <span>
                 <p>Age</p>
-                <p className="text-sm text-stone-400">{age} ans</p>
+                <p className="text-sm text-neutral-400">{age} ans</p>
                 </span>
                 <div className="grow" />
                 <span>
                 <p>Date de naisssance</p>
-                <p className="text-sm text-stone-400">{personne.dateNaissance}</p>
+                <p className="text-sm text-neutral-400">{personne.dateNaissance}</p>
                 </span>
             </div>}
             {personne.bio &&<><p>Biographie</p>
-            <p className="text-sm text-stone-400 overflow-y-scroll h-72">{personne.bio}</p>
+            <p className="text-sm text-neutral-400 overflow-y-scroll h-72">{personne.bio}</p>
             </>
             }
             </div>

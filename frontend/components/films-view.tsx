@@ -17,13 +17,13 @@ export default function FilmsView({listeFilms, setFocusedElement, pageValue, set
                     if(newPageValue>0){
                         setPageValue(newPageValue)
                     }
-                }} className="bg-stone-800 h-9 w-9 rounded-md flex items-center justify-center">
+                }} className="bg-neutral-800 h-9 w-9 rounded-md flex items-center justify-center">
                     {"<"}
                     </button>
                 <button onClick={()=>{
                     const newPageValue = pageValue+1;
                     setPageValue(newPageValue);
-                }} className="bg-stone-800 h-9 w-9 rounded-md flex items-center justify-center">
+                }} className="bg-neutral-800 h-9 w-9 rounded-md flex items-center justify-center">
                     {">"}
                     </button>
             </div>
@@ -33,7 +33,7 @@ export default function FilmsView({listeFilms, setFocusedElement, pageValue, set
            
             return (<button onClick={()=>setFocusedElement(<div>
                  <FilmCard film={film} moreInfo={true} setLocationModalOpen={setLocationModalOpen} />
-            </div>)} className=" w-full bg-stone-800 p-2 hover:bg-stone-600 rounded-md space-y-4" key={film.idFilm}>
+            </div>)} className=" w-full bg-neutral-800 p-2 hover:bg-neutral-600 rounded-md space-y-4" key={film.idFilm}>
                 <FilmCard film={film} />
 
                

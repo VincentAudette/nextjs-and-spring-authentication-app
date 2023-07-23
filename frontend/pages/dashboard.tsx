@@ -53,7 +53,7 @@ export default function Dashboard() {
 
     
   return (
-    <div className="min-h-screen bg-stone-800">
+    <div className="min-h-screen bg-neutral-800">
       <CommandPaletteV2 open={commandPalette} setOpen={setCommandPalette} />
       {profile && focusedElement!==null && <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} focusedFilm={focusedElement} profile={profile}/>}
       <Popover
@@ -61,7 +61,7 @@ export default function Dashboard() {
         className={({ open }) =>
           classNames(
             open ? 'fixed inset-0 z-40 overflow-y-auto' : '',
-            'bg-stone-900 shadow-sm lg:static lg:overflow-y-visible'
+            'bg-neutral-900 shadow-sm lg:static lg:overflow-y-visible'
           )
         }
       >
@@ -85,7 +85,7 @@ export default function Dashboard() {
                         </div>
                         <button
                           onClick={()=>setCommandPalette(true)}
-                          className="block w-full bg-stone-800 border border-stone-700 rounded-md py-2 pl-10 pr-3 text-sm placeholder-stone-500 focus:outline-none focus:text-stone-50 focus:placeholder-stone-400 focus:ring-1 focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
+                          className="block w-full bg-neutral-800 border border-neutral-700 rounded-md py-2 pl-10 pr-3 text-sm placeholder-neutral-500 focus:outline-none focus:text-neutral-50 focus:placeholder-neutral-400 focus:ring-1 focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
                         >Recherche</button>
                       </div>
                     </div>
@@ -93,7 +93,7 @@ export default function Dashboard() {
                 </div>
                 <div className="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden">
                   {/* Mobile menu button */}
-                  <Popover.Button className="-mx-2 rounded-md p-2 inline-flex items-center justify-center text-stone-400 hover:bg-stone-100 hover:text-stone-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
+                  <Popover.Button className="-mx-2 rounded-md p-2 inline-flex items-center justify-center text-neutral-400 hover:bg-neutral-100 hover:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
                     <span className="sr-only">Open menu</span>
                     {open ? (
                       <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -136,8 +136,8 @@ export default function Dashboard() {
                               >
                                <button 
                                className={classNames(
-                                  active ? 'bg-stone-100' : '',
-                                  'block py-2 px-4 text-sm text-stone-700'
+                                  active ? 'bg-neutral-100' : '',
+                                  'block py-2 px-4 text-sm text-neutral-700'
                                 )}> {item.name}</button>
                               </Link>
                             )}
@@ -165,22 +165,22 @@ export default function Dashboard() {
                     onClick={()=>{setActivePage(item.view)}}
                     key={item.name}
                     className={classNames(
-                      item.current ? 'bg-stone-800 text-stone-100' : 'hover:bg-stone-50 hover:text-stone-800 text-stone-100',
+                      item.current ? 'bg-neutral-800 text-neutral-100' : 'hover:bg-neutral-50 hover:text-neutral-800 text-neutral-100',
                       'block rounded-md py-2 px-3 text-base font-medium'
                     )}>
                       {item.name}
                     </button>
                 ))}
               </div>
-              <div className="border-t border-stone-800 pt-4 pb-3">
+              <div className="border-t border-neutral-800 pt-4 pb-3">
                 <div className="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
                    <div className="bg-slate-500 rounded-full items-center align-middle flex ">
                         <p className="rounded-full capitalize font-semibold p-2">{profile && profile.nom.split(" ")[0][0]+profile.nom.split(" ")[1][0]}</p>
                   </div>
-                  {profile && <div className='bg-stone-900 p-5 rounded-md'>
+                  {profile && <div className='bg-neutral-900 p-5 rounded-md'>
                 <p className='text-lg font-bold'>{profile.nom}</p>
                 <p className='text-md font-bold'>ID - {profile.idUtilisateur}</p>
-                <div className='text-stone-300 text-sm space-y-2 mt-3'>
+                <div className='text-neutral-300 text-sm space-y-2 mt-3'>
                 <span className='flex items-center space-x-2'><PhoneIcon className='h-5 w-5' /><p>{profile.numTel}</p></span>
                 <span className='flex items-center space-x-2'><AtSymbolIcon className='h-5 w-5' /><p>{profile.courriel}</p></span>
                 <span className='flex items-center space-x-2'><CalendarIcon className='h-5 w-5' /><p>{profile.dateDeNaissance}</p></span>
@@ -195,7 +195,7 @@ export default function Dashboard() {
                     <a
                       key={item.name}
                       href={item.href}
-                      className="block rounded-md py-2 px-3 text-base font-medium text-stone-500 hover:bg-stone-50 hover:text-stone-900"
+                      className="block rounded-md py-2 px-3 text-base font-medium text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900"
                     >
                       {item.name}
                     </a>
@@ -215,7 +215,7 @@ export default function Dashboard() {
                     <button
                       key={item.name}
                       onClick={()=>{setActivePage(item.view)}}
-                      className={`hidden lg:block py-2 px-3 text-base font-medium rounded-md  ${item.current ? "bg-stone-900 text-stone-50" :"  text-stone-400 hover:bg-stone-50 hover:text-stone-900"}`}
+                      className={`hidden lg:block py-2 px-3 text-base font-medium rounded-md  ${item.current ? "bg-neutral-900 text-neutral-50" :"  text-neutral-400 hover:bg-neutral-50 hover:text-neutral-900"}`}
                     >
                       {item.name}
                     </button>
@@ -223,7 +223,7 @@ export default function Dashboard() {
             </nav>
           </div>
           <main className="lg:col-span-9 xl:col-span-6">
-              <div className="bg-stone-900 rounded-md py-5 px-4">
+              <div className="bg-neutral-900 rounded-md py-5 px-4">
               {
                 DASHBOARD_STR === activePage && <DashboardView setActivePage={setActivePage} navigation={navigation} />
               }
@@ -243,12 +243,12 @@ export default function Dashboard() {
           <aside className="hidden xl:block xl:col-span-4">
             <div className="sticky top-6 space-y-4">
               {
-                focusedElement !== null &&  <div className='bg-stone-900 p-5 rounded-md'>{focusedElement}</div>
+                focusedElement !== null &&  <div className='bg-neutral-900 p-5 rounded-md'>{focusedElement}</div>
               }
-              {profile && <div className='bg-stone-900 p-5 rounded-md'>
+              {profile && <div className='bg-neutral-900 p-5 rounded-md'>
                 <p className='text-lg font-bold'>{profile.nom}</p>
                 <p className='text-md font-bold'>ID - {profile.idUtilisateur}</p>
-                <div className='text-stone-300 text-sm space-y-2 mt-3'>
+                <div className='text-neutral-300 text-sm space-y-2 mt-3'>
                 <span className='flex items-center space-x-2'><PhoneIcon className='h-5 w-5' /><p>{profile.numTel}</p></span>
                 <span className='flex items-center space-x-2'><AtSymbolIcon className='h-5 w-5' /><p>{profile.courriel}</p></span>
                 <span className='flex items-center space-x-2'><CalendarIcon className='h-5 w-5' /><p>{profile.dateDeNaissance}</p></span>

@@ -23,8 +23,8 @@ export default function ComboboxOptions({liste, titre, Icon, field, value, descr
 
     return (
         <li>
-          <h2 className="text-xs font-semibold text-stone-900">{titre}</h2>
-          <ul className="-mx-4 mt-2 text-sm text-stone-700">
+          <h2 className="text-xs font-semibold text-neutral-900">{titre}</h2>
+          <ul className="-mx-4 mt-2 text-sm text-neutral-700">
             {liste && liste.map((item) => (
               <Combobox.Option
                 key={item[field]}
@@ -40,7 +40,7 @@ export default function ComboboxOptions({liste, titre, Icon, field, value, descr
                   <>
                   {/* @ts-ignore */}
                     <Icon
-                      className={classNames('h-6 w-6 flex-none', active ? 'text-white' : 'text-stone-400')}
+                      className={classNames('h-6 w-6 flex-none', active ? 'text-white' : 'text-neutral-400')}
                       aria-hidden="true"
                     />
                     <span className="ml-3 flex-auto truncate">{item[field]}</span>

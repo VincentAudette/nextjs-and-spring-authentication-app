@@ -35,7 +35,7 @@ export default function StatsView(){
         <title>Webflix | Statistiques</title>
         <h1 className="titre-section">Statistiques</h1>
         <CommandPaletteStats open={paletteOpen} setOpen={setPaletteOpen} />
-        <button onClick={()=> setPaletteOpen(true)} className=" rounded-md bg-white hover:bg-stone-300 text-lg py-3 px-4 text-stone-900">Recherche statistiques</button>
+        <button onClick={()=> setPaletteOpen(true)} className=" rounded-md bg-white hover:bg-neutral-300 text-lg py-3 px-4 text-neutral-900">Recherche statistiques</button>
         <ul className="space-y-3 mt-3">
         {listeStats} locations
         </ul>

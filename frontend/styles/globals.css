@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 body{
-    @apply bg-stone-900 text-stone-100
+    @apply bg-neutral-900 text-neutral-100
 }
 
 .input{
-    @apply appearance-none block w-full px-3 bg-stone-800 focus:bg-stone-700 py-2 border border-stone-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm
+    @apply appearance-none block w-full px-3 bg-neutral-800 focus:bg-neutral-700 py-2 border border-neutral-700 rounded-md shadow-sm placeholder-neutral-400 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm
 } 
 .titre-section{
     @apply text-3xl font-semibold;
@@ -18,5 +18,5 @@ body{
 }
 
 .input-field{
-    @apply rounded-md border-stone-300;
+    @apply rounded-md border-neutral-300;
 }

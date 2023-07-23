@@ -90,7 +90,7 @@ export default function CommandPaletteStats({ open, setOpen}) {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Dialog.Overlay className="fixed inset-0 bg-stone-900 bg-opacity-70 transition-opacity" />
+							<Dialog.Overlay className="fixed inset-0 bg-neutral-900 bg-opacity-70 transition-opacity" />
 						</Transition.Child>
 
 						{/* This element is to trick the browser into centering the modal contents. */}
@@ -107,7 +107,7 @@ export default function CommandPaletteStats({ open, setOpen}) {
 							<div className="inline-block w-full max-w-xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
 								<Dialog.Title
 									as="h3"
-									className="text-lg font-medium leading-6 text-gray-900"
+									className="text-lg font-medium leading-6 text-neutral-900"
 								>
 									Recherche
 								</Dialog.Title>
