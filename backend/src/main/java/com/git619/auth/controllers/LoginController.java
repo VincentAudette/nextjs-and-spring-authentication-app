@@ -2,7 +2,6 @@ package com.git619.auth.controllers;
 
 import com.git619.auth.domain.User;
 import com.git619.auth.security.AuthToken;
-import com.git619.auth.services.SessionService;
 import com.git619.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -50,7 +46,6 @@ public class LoginController {
 
 
             AuthToken authToken = new AuthToken(token);
-            System.out.println("authToken="+authToken);
             // Return the token
             return ResponseEntity.ok(authToken);
 

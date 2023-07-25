@@ -11,6 +11,7 @@ import { useWebflix } from '../context/webflix-context'
 import LocationModal from '@components/location-modal'
 import CommandPaletteV2 from '@components/command-paletteV2'
 import StatsView from '@components/stats-view'
+import ETSLogo from '@components/SVG/ETSLogo'
 
 const DASHBOARD_STR = "dashboard";
 const FILMS_STR = "films";
@@ -56,7 +57,7 @@ export default function Dashboard() {
 
     
   return (
-    <div className="min-h-screen bg-neutral-800">
+    <div className="min-h-screen bg-neutral-700">
       <CommandPaletteV2 open={commandPalette} setOpen={setCommandPalette} />
       {profile && focusedElement!==null && <LocationModal open={locationModalOpen} setOpen={setLocationModalOpen} focusedFilm={focusedElement} profile={profile}/>}
       <Popover
@@ -64,36 +65,20 @@ export default function Dashboard() {
         className={({ open }) =>
           classNames(
             open ? 'fixed inset-0 z-40 overflow-y-auto' : '',
-            'bg-neutral-900 shadow-sm lg:static lg:overflow-y-visible'
+            'bg-neutral-800 shadow-sm lg:static lg:overflow-y-visible'
           )
         }
       >
         {({ open }) => (
           <>
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8">
+              <div className="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8 max-w-7xl mx-auto">
                 <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
                   <div className="flex-shrink-0 flex items-center">
-                   <WebflixLogo className="h-12 w-auto" />
+                    <ETSLogo className='h-auto w-20 pt-5 px-1 bg-red-500 my-auto mx-auto' />
                   </div>
                 </div>
-                <div className="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-6">
-                  <div className="flex items-center px-6 py-4 md:max-w-3xl md:mx-auto lg:max-w-none lg:mx-0 xl:px-0">
-                    <div className="w-full">
-                      <label htmlFor="search" className="sr-only">
-                        Search
-                      </label>
-                      <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
-                        </div>
-                        <button
-                          onClick={()=>setCommandPalette(true)}
-                          className="block w-full bg-neutral-800 border border-neutral-700 rounded-md py-2 pl-10 pr-3 text-sm placeholder-neutral-500 focus:outline-none focus:text-neutral-50 focus:placeholder-neutral-400 focus:ring-1 focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
-                        >Recherche</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <div className='grow' />
                 <div className="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden">
                   {/* Mobile menu button */}
                   <Popover.Button className="-mx-2 rounded-md p-2 inline-flex items-center justify-center text-neutral-400 hover:bg-neutral-100 hover:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
@@ -116,7 +101,7 @@ export default function Dashboard() {
                     <div>
                       <Menu.Button className="bg-slate-500 rounded-full items-center align-middle flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
                         <span className="sr-only">Ouvrir le menu</span>
-                        <p className="rounded-full capitalize font-semibold p-2">{profile && profile.nom.split(" ")[0][0]+profile.nom.split(" ")[1][0]}</p>
+                        <p className="rounded-full capitalize font-semibold p-2">{profile?.nom && profile.nom.split(" ")[0][0]+profile.nom.split(" ")[1][0]}</p>
                         {/* <img className="h-10 w-10 rounded-full object-cover" src={user.imageUrl} alt="" /> */}
                       </Menu.Button>
                     </div>
@@ -178,9 +163,9 @@ export default function Dashboard() {
               <div className="border-t border-neutral-800 pt-4 pb-3">
                 <div className="max-w-3xl mx-auto px-4 flex items-center sm:px-6">
                    <div className="bg-slate-500 rounded-full items-center align-middle flex ">
-                        <p className="rounded-full capitalize font-semibold p-2">{profile && profile.nom.split(" ")[0][0]+profile.nom.split(" ")[1][0]}</p>
+                        <p className="rounded-full capitalize font-semibold p-2">{profile?.nom && profile.nom.split(" ")[0][0]+profile.nom.split(" ")[1][0]}</p>
                   </div>
-                  {profile && <div className='bg-neutral-900 p-5 rounded-md'>
+              {false && (<div className='bg-neutral-900 p-5 rounded-md'>
                 <p className='text-lg font-bold'>{profile.nom}</p>
                 <p className='text-md font-bold'>ID - {profile.idUtilisateur}</p>
                 <div className='text-neutral-300 text-sm space-y-2 mt-3'>
@@ -190,7 +175,7 @@ export default function Dashboard() {
                 {/* <span className='flex items-center space-x-2'><HomeIcon className='h-5 w-5' /><p>{profile.adresse.numeroCivique} {profile.adresse.rue}, {profile.adresse.ville}, {profile.adresse.province}, {profile.adresse.codePostal}</p></span> */}
                 </div>
 
-              </div>}
+              </div>)}
                  
                 </div>
                 <div className="mt-3 max-w-3xl mx-auto px-2 space-y-1 sm:px-4">

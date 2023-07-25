@@ -5,7 +5,6 @@ import com.git619.auth.domain.User;
 import com.git619.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -13,10 +12,12 @@ import java.util.stream.StreamSupport;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final AuthTokenService authTokenService;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AuthTokenService authTokenService) {
         this.userRepository = userRepository;
+        this.authTokenService = authTokenService;
     }
 
     public User createUser(User user) {
@@ -49,6 +50,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
     public String createToken(User user) {
-        return UUID.randomUUID().toString();
+        return authTokenService.createToken(user.getUsername(), user.getRole());
+
     }
 }

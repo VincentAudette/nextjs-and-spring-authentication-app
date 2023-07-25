@@ -1,16 +1,13 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { AtSymbolIcon, BellIcon, CalendarIcon, HomeIcon, PhoneIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
-import CommandPaletteV2 from '@components/command-paletteV2'
-import StatsView from '@components/stats-view'
 import AdminView from '@components/films-view copy'
 import ETSLogo from '@components/SVG/ETSLogo'
 
 const DASHBOARD_STR = "dashboard";
-const FILMS_STR = "films";
-const LOCATIONS_STR = "locations";
+const GESTION_DE_MDP = "mot-de-passe";
+const CONFIG_MDP = "configurations-mot-de-passe";
 const STATS_STR = "stats";
 
 const userNavigation = [
@@ -30,9 +27,8 @@ export default function Dashboard() {
 
     const navigation = [
       { name: 'Dashboard', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
-      { name: 'Films', view:FILMS_STR, current: FILMS_STR === activePage },
-      { name: 'Locations', view:LOCATIONS_STR, current: LOCATIONS_STR === activePage },
-      { name: 'Statistiques', view:STATS_STR, current: STATS_STR === activePage },
+      { name: 'Gestion de mot de passe', view:GESTION_DE_MDP, current: GESTION_DE_MDP === activePage },
+      { name: 'Configurations d\'authentification', view:CONFIG_MDP, current: CONFIG_MDP === activePage },
     ];
 
 
@@ -40,7 +36,7 @@ export default function Dashboard() {
 
     
   return (
-    <div className="min-h-screen max-w-7xl mx-auto bg-neutral-700">
+    <div className="min-h-screen bg-neutral-700">
       <Popover
         as="header"
         className={({ open }) =>

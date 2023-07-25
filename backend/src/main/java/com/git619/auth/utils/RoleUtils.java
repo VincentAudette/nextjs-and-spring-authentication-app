@@ -5,9 +5,9 @@ public class RoleUtils {
     /**
      * Vérification de la validité du role.
      * Les rôles permis ici sont: (Voir la class Role)
-     * 1. ADMINISTRATEUR
-     * 2. PREPOSE_AUX_CLIENTS_RESIDENTIELS
-     * 3. PREPOSE_AUX_CLIENTS_DAFFAIRE
+     * 1. Administrateur
+     * 2. Préposé aux clients résidentiels
+     * 3. Préposé aux clients d'affaire
      *
      */
     public static Role getRoleFromString(String role) throws IllegalArgumentException {

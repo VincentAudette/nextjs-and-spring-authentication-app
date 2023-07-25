@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useWebflix } from "../context/webflix-context";
 import Notification from "./notification";
 import { useState } from "react";
-import {LockClosedIcon} from '@heroicons/react/24/solid'
 import Image from "next/image";
 import ETSLogo from "./SVG/ETSLogo";
 
@@ -41,6 +40,9 @@ export default function LoginView(){
         if( result.hasOwnProperty("data")){
             //load items in context
             setProfile(result.data);
+
+            //Check the role to redirect to the right page
+
             //then redirect
             router.push('/dashboard');
         }else{

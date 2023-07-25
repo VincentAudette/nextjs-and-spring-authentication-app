@@ -10,7 +10,7 @@ body{
     @apply appearance-none block w-full px-3 bg-neutral-800 focus:bg-neutral-700 py-2 border border-neutral-700 rounded-md shadow-sm placeholder-neutral-400 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm
 } 
 .titre-section{
-    @apply text-3xl font-semibold;
+    @apply text-2xl font-semibold;
 }
 
 .input-container{
