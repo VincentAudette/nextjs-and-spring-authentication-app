@@ -32,6 +32,9 @@ export default function Dashboard() {
     const [locationModalOpen, setLocationModalOpen] =useState(false)
     const [commandPalette, setCommandPalette] =useState(false)
 
+    console.log("profile", profile);
+    
+
 
     const navigation = [
       { name: 'Dashboard', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
@@ -184,7 +187,7 @@ export default function Dashboard() {
                 <span className='flex items-center space-x-2'><PhoneIcon className='h-5 w-5' /><p>{profile.numTel}</p></span>
                 <span className='flex items-center space-x-2'><AtSymbolIcon className='h-5 w-5' /><p>{profile.courriel}</p></span>
                 <span className='flex items-center space-x-2'><CalendarIcon className='h-5 w-5' /><p>{profile.dateDeNaissance}</p></span>
-                <span className='flex items-center space-x-2'><HomeIcon className='h-5 w-5' /><p>{profile.adresse.numeroCivique} {profile.adresse.rue}, {profile.adresse.ville}, {profile.adresse.province}, {profile.adresse.codePostal}</p></span>
+                {/* <span className='flex items-center space-x-2'><HomeIcon className='h-5 w-5' /><p>{profile.adresse.numeroCivique} {profile.adresse.rue}, {profile.adresse.ville}, {profile.adresse.province}, {profile.adresse.codePostal}</p></span> */}
                 </div>
 
               </div>}
@@ -252,7 +255,7 @@ export default function Dashboard() {
                 <span className='flex items-center space-x-2'><PhoneIcon className='h-5 w-5' /><p>{profile.numTel}</p></span>
                 <span className='flex items-center space-x-2'><AtSymbolIcon className='h-5 w-5' /><p>{profile.courriel}</p></span>
                 <span className='flex items-center space-x-2'><CalendarIcon className='h-5 w-5' /><p>{profile.dateDeNaissance}</p></span>
-                <span className='flex items-center space-x-2'><HomeIcon className='h-5 w-5' /><p>{profile.adresse.numeroCivique} {profile.adresse.rue}, {profile.adresse.ville}, {profile.adresse.province}, {profile.adresse.codePostal}</p></span>
+                {/* <span className='flex items-center space-x-2'><HomeIcon className='h-5 w-5' /><p>{profile.adresse.numeroCivique} {profile.adresse.rue}, {profile.adresse.ville}, {profile.adresse.province}, {profile.adresse.codePostal}</p></span> */}
                 </div>
               </div>}
             </div>

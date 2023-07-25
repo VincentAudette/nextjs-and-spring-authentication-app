@@ -24,7 +24,7 @@ export default function LoginView(){
           FRONTEND_URL+AUTH_ENDPOINT,
           {
             body: JSON.stringify({
-              email: event.target.email.value,
+              username: event.target.username.value,
               password: event.target.password.value
             }),
             headers: {
@@ -35,6 +35,8 @@ export default function LoginView(){
         );
     
         const result = await res.json()
+        console.log("RESULT=====",result);
+        
 
         if( result.hasOwnProperty("data")){
             //load items in context
@@ -80,15 +82,15 @@ export default function LoginView(){
                             <div className="mt-6">
                             <form onSubmit={loginUserHandler} className="space-y-6">
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-neutral-50">
-                                    Courriel
+                                    <label htmlFor="username" className="block text-sm font-medium text-neutral-50">
+                                    Nom d&apos;utilisateur
                                     </label>
                                     <div className="mt-1">
                                     <input
-                                        id="email"
-                                        name="email"
-                                        type="email"
-                                        autoComplete="email"
+                                        id="username"
+                                        name="username"
+                                        type="string"
+                                        autoComplete="username"
                                         required
                                         className="input"
                                     />

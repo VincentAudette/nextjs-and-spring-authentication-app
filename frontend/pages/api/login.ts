@@ -1,6 +1,6 @@
 import axios from "axios";
-import BACKEND_URL from "../../../utils/BE/urls";
-import { AUTH_ENDPOINT } from "../../../utils/FULL/endpoints";
+import BACKEND_URL from "utils/BE/urls";
+import { AUTH_ENDPOINT } from "utils/FULL/endpoints";
 
 export default async function handler(req, res) {
   try {

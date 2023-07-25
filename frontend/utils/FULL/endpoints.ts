@@ -1,4 +1,4 @@
-export const AUTH_ENDPOINT = "/api/hibernate/auth";
+export const AUTH_ENDPOINT = "/api/login";
 export const FILM_ENDPOINT = "/api/hibernate/films";
 export const FILM_RECHERCH = FILM_ENDPOINT+"/recherche";
 export const FILM_RECHERCH_NOM = FILM_ENDPOINT+"/recherche/nom";

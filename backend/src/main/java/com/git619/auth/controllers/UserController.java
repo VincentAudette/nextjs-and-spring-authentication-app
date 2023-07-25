@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,27 @@ import java.util.Map;
 @RequestMapping(value = "/api")
 public class UserController {
     @Autowired UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+    @PostMapping("/user")
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        // Here we encode the password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Then we create the user
+        User createdUser = userService.createUser(user);
+
+        // If user is not created successfully, return HTTP status 500
+        if (createdUser == null) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        // Return HTTP status 201 Created
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
 
     @GetMapping("/user")
     public ResponseEntity<String> getAllUsers(
@@ -49,22 +71,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new JSONObject(user).toString());
     }
 
-    @PostMapping("/user")
-    public ResponseEntity<String> createUser(
-            @RequestHeader Map<String, String> headers,
-            @RequestBody User user
-    ) {
-
-        //TODO: Check autorization (role) and return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); if not
-        try {
-            System.out.println(user);
-            userService.createUser(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
+//    @PostMapping("/user")
+//    public ResponseEntity<String> createUser(
+//            @RequestHeader Map<String, String> headers,
+//            @RequestBody User user
+//    ) {
+//
+//        //TODO: Check autorization (role) and return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); if not
+//        try {
+//            System.out.println(user);
+//            userService.createUser(user);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).build();
+//    }
 
     @PostMapping("/user/v2")
     @ResponseBody

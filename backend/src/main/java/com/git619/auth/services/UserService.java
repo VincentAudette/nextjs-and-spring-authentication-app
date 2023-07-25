@@ -5,7 +5,7 @@ import com.git619.auth.domain.User;
 import com.git619.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.UUID;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -43,5 +43,12 @@ public class UserService {
 
     public User getUserById(Long id) {
         return userRepository.findUserById(id);
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    public String createToken(User user) {
+        return UUID.randomUUID().toString();
     }
 }
