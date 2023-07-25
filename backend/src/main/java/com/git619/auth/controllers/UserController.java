@@ -1,7 +1,10 @@
 package com.git619.auth.controllers;
 
 import com.git619.auth.domain.User;
+import com.git619.auth.dto.UserDTO;
+import com.git619.auth.utils.Role;
 import com.git619.auth.services.UserService;
+import com.git619.auth.utils.RoleUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping(value = "/api")
 public class UserController {
@@ -23,21 +27,31 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        // Here we encode the password
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
 
-        // Then we create the user
+        // Ici, nous validons le rôle. Si ce n'est pas valide, une exception sera lancée
+        Role role = RoleUtils.getRoleFromString(userDTO.getRole());
+
+
+        // Association des valuers: nom d'utilisateur, mot de passe encrypté, salt et Role
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setSalt(userDTO.getSalt());
+        user.setRole(role);
+
+        // Puis, nous créons l'utilisateur
         User createdUser = userService.createUser(user);
 
-        // If user is not created successfully, return HTTP status 500
+        // Si l'utilisateur n'est pas créé avec succès, retourne le statut HTTP 500
         if (createdUser == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        // Return HTTP status 201 Created
+        // Retourne le statut HTTP 201 Created
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
+
 
     @GetMapping("/user")
     public ResponseEntity<String> getAllUsers(
@@ -98,9 +112,24 @@ public class UserController {
             String role
     ) {
 
-        //TODO: Check autorization (role) and return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); if not
+        /*
+         Vérification de la validité du role.
+
+         Les rôles permis ici sont:
+         1. ADMINISTRATEUR
+         2. PREPOSE_AUX_CLIENTS_RESIDENTIELS
+         3. PREPOSE_AUX_CLIENTS_DAFFAIRE
+         */
+        Role roleEnum;
         try {
-            User user = new User(username, password, salt, role);
+            roleEnum = Role.valueOf(role.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role");
+        }
+
+
+        try {
+            User user = new User(username, password, salt, roleEnum);
             System.out.println(user);
             userService.createUser(user);
         } catch (Exception e) {

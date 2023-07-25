@@ -1,6 +1,8 @@
 package com.git619.auth.domain;
 
 import javax.persistence.*;
+
+import com.git619.auth.utils.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,9 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 
+
+
+
 @Entity
 @Table(name="AUTH_USER")
 public class User implements UserDetails{
+
+
     @Id
     @Column(name = "USER_ID", columnDefinition = "NUMBER(38,0)")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +36,11 @@ public class User implements UserDetails{
     private String salt;
 
     @Column(name = "ROLE", columnDefinition = "VARCHAR2(255)")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public User(@NonNull String username, @NonNull String password, String salt, String role) {
+
+    public User(@NonNull String username, @NonNull String password, String salt, Role role) {
         this.username = username;
         this.password = password;
         this.salt = salt;
@@ -70,11 +79,11 @@ public class User implements UserDetails{
         this.salt = salt;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -92,7 +101,7 @@ public class User implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(role));
+        return Arrays.asList(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
