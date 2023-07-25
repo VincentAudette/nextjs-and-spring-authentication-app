@@ -50,6 +50,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
     public String createToken(User user) {
+        System.out.println(user);
         return authTokenService.createToken(user.getUsername(), user.getRole());
 
     }

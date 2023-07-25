@@ -18,6 +18,11 @@ export default async function handler(req, res) {
     const decoded = jwt.verify(response.data.token, process.env.SECRETE_AUTH_KEY);
 
     console.log('decoded JWT', decoded);
+    const username = decoded.username;
+    const role = decoded.role;
+    console.log('username', username);
+    console.log('role', role);
+    
 
     return res.status(200).json({
       data: response.data,

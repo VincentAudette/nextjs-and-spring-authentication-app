@@ -29,6 +29,9 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
 
+        System.out.println("USER DTO ==============");
+        System.out.println(userDTO);
+
         // Ici, nous validons le rôle. Si ce n'est pas valide, une exception sera lancée
         Role role = RoleUtils.getRoleFromString(userDTO.getRole());
 
@@ -39,6 +42,9 @@ public class UserController {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setSalt(userDTO.getSalt());
         user.setRole(role);
+
+        System.out.println("USER ==============");
+        System.out.println(user);
 
         // Puis, nous créons l'utilisateur
         User createdUser = userService.createUser(user);

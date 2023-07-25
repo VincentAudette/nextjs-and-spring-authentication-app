@@ -19,7 +19,9 @@ public class AuthTokenService {
     }
 
     public String createToken(String username, Role role) {
-        String jws = Jwts.builder().setSubject(username).claim("role",role).signWith(key).compact();
+        String roleName = (role != null) ? role.name() : "DEFAULT_ROLE";
+        String jws = Jwts.builder().setSubject(username).claim("role", roleName).signWith(key).compact();
         return jws;
     }
+
 }

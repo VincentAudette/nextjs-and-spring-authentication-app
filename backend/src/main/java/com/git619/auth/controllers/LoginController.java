@@ -40,10 +40,16 @@ public class LoginController {
             System.out.println(authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // If the user credentials are correct, a token will be returned
-            // Please note that you should implement createToken method in your userService or another dedicated service class
-            final String token = userService.createToken(user);
+            // Fetch the complete User object from the database
+            User authenticatedUser = userService.findByUsername(user.getUsername());
 
+            if (authenticatedUser == null) {
+                // handle case where user does not exist
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            // If the user credentials are correct, a token will be returned
+            final String token = userService.createToken(authenticatedUser);
 
             AuthToken authToken = new AuthToken(token);
             // Return the token

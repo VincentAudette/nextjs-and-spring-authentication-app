@@ -42,9 +42,16 @@ export default function LoginView(){
             setProfile(result.data);
 
             //Check the role to redirect to the right page
+            if(result.decoded.role === "ADMINISTRATEUR"){
+                router.push('/admin');
+            }else if(result.decoded.role === "PREPOSE_AUX_CLIENTS_RESIDENTIELS"){
+                //FIXME: REDIRECT TO PREPOSE_AUX_CLIENTS_RESIDENTIELS
+                router.push('/dashboard');
+            }else if(result.decoded.role === "PREPOSE_AUX_CLIENTS_DAFFAIRE"){
+                //FIXME: REDIRECT TO PREPOSE_AUX_CLIENTS_DAFFAIRE
+                router.push('/dashboard');
+            }
 
-            //then redirect
-            router.push('/dashboard');
         }else{
             setNotificationContent({
                 heading:"Pas authorisé",
