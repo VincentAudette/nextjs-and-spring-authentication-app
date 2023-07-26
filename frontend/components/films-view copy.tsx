@@ -1,5 +1,6 @@
+import DashboardView from "./dashboard-view";
 
-export default function AdminView({}){
+export default function AdminView({navigation, setActivePage}){
 
     
     
@@ -10,9 +11,8 @@ export default function AdminView({}){
             <div className="grow"/>
             
         </div>
-        <ul className="space-y-3">
-        INSERT CONTENT
-        </ul>
+        <DashboardView setActivePage={setActivePage} navigation={navigation} />
+        
 
     </div>)
   

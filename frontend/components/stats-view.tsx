@@ -1,10 +1,10 @@
 import { useState } from "react";
 import CommandPaletteStats from "./command-palette-stats";
-import { useWebflix } from "../context/webflix-context";
+import { useAuth } from "../context/auth-context";
 
 
 export default function StatsView(){
-    const {listeStats} = useWebflix()
+    const {listeStats} = useAuth()
     // const [locations, setLocations] = useState([]);
     // const router =useRouter();
 

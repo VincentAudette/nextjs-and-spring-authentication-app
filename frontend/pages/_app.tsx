@@ -1,9 +1,9 @@
-import { WebflixProvider } from '../context/webflix-context'
+import { AuthProvider } from '../context/auth-context'
 import '../styles/globals.css'
 
 export default function MyApp({ Component, pageProps }) {
-  return (<WebflixProvider>
+  return (<AuthProvider>
             <Component {...pageProps} />
-          </WebflixProvider>)
+          </AuthProvider>)
 }
 

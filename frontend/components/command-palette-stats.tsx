@@ -1,12 +1,12 @@
 import { Fragment, useState, useEffect } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { fetchFilteredFilm, fetchStatistics } from "../controllers/filmController";
-import { useWebflix } from "../context/webflix-context";
+import { useAuth } from "../context/auth-context";
 import Notification from "./notification";
 
 export default function CommandPaletteStats({ open, setOpen}) {
 	const { setLlisteStats, pageValue, setPageValue } =
-		useWebflix();
+		useAuth();
 		//Beter reset
 //https://stackoverflow.com/questions/54895883/reset-to-initial-state-with-react-hooks
 	const [groupeAge, setGroupeAge] = useState(-1);

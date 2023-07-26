@@ -2,7 +2,7 @@ import WebflixLogo from "./webflix_logo";
 import FRONTEND_URL from "../utils/FE/urls";
 import { AUTH_ENDPOINT } from "../utils/FULL/endpoints";
 import { useRouter } from "next/router";
-import { useWebflix } from "../context/webflix-context";
+import { useAuth } from "../context/auth-context";
 import Notification from "./notification";
 import { useState } from "react";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import ETSLogo from "./SVG/ETSLogo";
 export default function LoginView(){
 
     const router = useRouter();
-    const {setProfile, setShowNotification, showNotification} = useWebflix()
+    const {setProfile, setShowNotification, showNotification} = useAuth()
 
     const [notifcationContent, setNotificationContent] = useState({heading:"", description:"", IconColor:""})
 
@@ -39,7 +39,11 @@ export default function LoginView(){
 
         if( result.hasOwnProperty("data")){
             //load items in context
-            setProfile(result.data);
+            setProfile({
+                token: result.data.token,
+                username: result.decoded.sub,
+                role: result.decoded.role
+            });
 
             //Check the role to redirect to the right page
             if(result.decoded.role === "ADMINISTRATEUR"){
