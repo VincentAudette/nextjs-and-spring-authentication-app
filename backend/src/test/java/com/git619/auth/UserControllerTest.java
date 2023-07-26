@@ -71,7 +71,7 @@ public class UserControllerTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("user1");
         userDTO.setPassword("pass1");
-        userDTO.setRole("ADMINISTRATEUR");
+        userDTO.setRole("Administrateur");
 
         User user = new User();
         user.setUsername("user1");

@@ -13,8 +13,5 @@ public class AuthApplication {
 		SpringApplication.run(AuthApplication.class, args);
 	}
 
-	@Bean
-	public JwtAuthenticationFilter jwtAuthenticationFilter() {
-		return new JwtAuthenticationFilter("Q823Le0Ig+boU6tqItopkNxSIznjp858kC/fLH/28fY=");
-	}
+
 }

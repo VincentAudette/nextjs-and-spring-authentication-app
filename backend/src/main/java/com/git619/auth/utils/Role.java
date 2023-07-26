@@ -1,6 +1,7 @@
 package com.git619.auth.utils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Role {
     ADMINISTRATEUR("Administrateur"),
@@ -13,6 +14,7 @@ public enum Role {
         this.value = value;
     }
 
+    @JsonValue
     public String getValue() {
         return value;
     }

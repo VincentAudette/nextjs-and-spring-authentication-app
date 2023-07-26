@@ -1,6 +1,10 @@
 
+import ConfigurationsDeMotDePasseView from '@components/configurations-de-mdp-view';
 import AdminView from '@components/films-view copy'
+import GestionDeMotDePasseView from '@components/gestion-de-mdp-view';
 import Layout from '@components/layout'
+import PreposeAuxClientsAffaireView from '@components/prepose-aux-clients-affaire-view';
+import PreposeAuxClientsResidentielsView from '@components/prepose-aux-clients-residentiels-view';
 import { useState } from 'react';
 
 const DASHBOARD_STR = "dashboard";
@@ -30,7 +34,11 @@ export default function Dashboard() {
   return (
    <Layout navigation={navigation} setActivePage={setActivePage}>
     <div className="bg-neutral-900 md:rounded-md py-5 px-4">
-      <AdminView navigation={navigation} setActivePage={setActivePage} />
+     {navigation[0].current && <AdminView navigation={navigation} activePage={activePage} setActivePage={setActivePage} />}
+     {navigation[1].current && <PreposeAuxClientsResidentielsView />}
+     {navigation[2].current && <PreposeAuxClientsAffaireView />}
+      {navigation[3].current && <GestionDeMotDePasseView />}
+      {navigation[4].current && <ConfigurationsDeMotDePasseView />}
     </div>
    </Layout>
   )

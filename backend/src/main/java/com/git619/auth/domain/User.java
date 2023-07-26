@@ -2,6 +2,7 @@ package com.git619.auth.domain;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.git619.auth.utils.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
-
+import java.util.List;
 
 
 
@@ -98,29 +99,42 @@ public class User implements UserDetails{
                 '}';
     }
 
-
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority(role.name()));
     }
 
+    @Column(name = "ACCOUNT_NON_EXPIRED", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean accountNonExpired;
+
+    @Column(name = "ACCOUNT_NON_LOCKED", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean accountNonLocked;
+
+    @Column(name = "CREDENTIALS_NON_EXPIRED", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean credentialsNonExpired;
+
+    @Column(name = "ENABLED", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean enabled;
+
+
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return this.accountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.accountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return this.credentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 }

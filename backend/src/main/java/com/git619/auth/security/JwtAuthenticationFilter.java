@@ -1,5 +1,6 @@
 package com.git619.auth.security;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.logging.Logger;
@@ -26,8 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final Key jwtSecret;
 
     public JwtAuthenticationFilter(String jwtSecret) {
-        byte[] decodedKey = Base64.getDecoder().decode(jwtSecret);
-        this.jwtSecret = Keys.hmacShaKeyFor(decodedKey);
+        this.jwtSecret = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
 
@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             System.out.println("Token from request: " + token);
-            Jws<Claims> jws = Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token);
+            Jws<Claims> jws = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             System.out.println("Generated token: " + jws);
             String username = jws.getBody().getSubject();
             String role = jws.getBody().get("role", String.class);
@@ -60,10 +60,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority(role)));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        } catch (JwtException e) {
-            System.out.println("Exception: " + e.getMessage());
-            SecurityContextHolder.clearContext();
-        }
+        }  catch (JwtException e) {
+        System.out.println("Exception: " + e.getMessage());
+        SecurityContextHolder.clearContext();
+
+        // Respond with an error status.
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Invalid JWT token");
+        return;
+    }
+
+
 
         filterChain.doFilter(request, response);
     }
