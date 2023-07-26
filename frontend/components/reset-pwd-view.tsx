@@ -9,7 +9,7 @@ import Image from "next/image";
 import ETSLogo from "./SVG/ETSLogo";
 import Link from "next/link";
 
-export default function LoginView(){
+export default function ResetPwdView(){
 
     const router = useRouter();
     const {setProfile, setShowNotification, showNotification} = useAuth()
@@ -17,59 +17,11 @@ export default function LoginView(){
     const [notifcationContent, setNotificationContent] = useState({heading:"", description:"", IconColor:""})
 
 
-    const loginUserHandler = async event => {
-        event.preventDefault()
-
-        const res = await fetch(
-          FRONTEND_URL+AUTH_ENDPOINT,
-          {
-            body: JSON.stringify({
-              username: event.target.username.value,
-              password: event.target.password.value
-            }),
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            method: 'POST'
-          }
-        );
     
-        const result = await res.json()
-        console.log("RESULT=====",result);
-        
 
-        if( result.hasOwnProperty("data")){
-            //load items in context
-            setProfile({
-                token: result.data.token,
-                username: result.decoded.sub,
-                role: result.decoded.role
-            });
-
-            //Check the role to redirect to the right page
-            if(result.decoded.role === "ADMINISTRATEUR"){
-                router.push('/admin');
-            }else if(result.decoded.role === "PREPOSE_AUX_CLIENTS_RESIDENTIELS"){
-                //FIXME: REDIRECT TO PREPOSE_AUX_CLIENTS_RESIDENTIELS
-                router.push('/dashboard');
-            }else if(result.decoded.role === "PREPOSE_AUX_CLIENTS_DAFFAIRE"){
-                //FIXME: REDIRECT TO PREPOSE_AUX_CLIENTS_DAFFAIRE
-                router.push('/dashboard');
-            }
-
-        }else{
-            setNotificationContent({
-                heading:"Pas authorisé",
-                description:result.mes,
-                IconColor:"text-red-900"
-            });
-            setShowNotification(true);
-
-        }
-        
-      }
-
-
+    const resetPwd = async event => {
+        event.preventDefault()
+    };
 
 
 
@@ -86,7 +38,7 @@ export default function LoginView(){
                             <div className="mx-auto w-full max-w-sm lg:w-96">
                             <div>
                            <ETSLogo />
-                            <h2 className="mt-6 text-xl font-extrabold">Authentification par Équipe F - GTI619</h2>
+                            <h2 className="mt-6 text-xl font-extrabold">Mot de passe oublié?</h2>
                             
                             </div>  
 
@@ -94,7 +46,7 @@ export default function LoginView(){
                             
 
                             <div className="mt-6">
-                            <form onSubmit={loginUserHandler} className="space-y-6">
+                            <form onSubmit={resetPwd} className="space-y-6">
                                 <div>
                                     <label htmlFor="username" className="block text-sm font-medium text-neutral-50">
                                     Nom d&apos;utilisateur
@@ -127,26 +79,21 @@ export default function LoginView(){
                                     </div>
                                 </div>
 
-                               
+                         
 
                                 <div>
                                     <button
                                     type="submit"
                                     className="w-full flex justify-center py-2 px-4 rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-b from-red-400 to-red-700 hover:bg-gradient-to-b hover:from-red-300 hover:to-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
                                     >
-                                    Se connecter &rarr;
+                                    Modifier le mot de passe
                                     </button>
                                 </div>
-
-                                <div className="flex items-center justify-between">
-                                    
-
-                                    <div className="text-sm">
-                                    <Link href="reset-pwd" className="font-medium text-neutral-300 hover:text-white">
-                                        Oublier votre mot de passe?
+                                <div className="text-sm">
+                                    <Link href="/" className="font-medium text-neutral-300 hover:text-white">
+                                        &larr; Retour à la page de connexion
                                     </Link>
                                     </div>
-                                </div>
                             </form>
                             </div>
                             </div>
@@ -155,7 +102,7 @@ export default function LoginView(){
                         <div className="hidden lg:block relative w-0 flex-1">
                         <Image
                             className="absolute inset-0 h-full w-full object-cover"
-                            src="/pavillon-d.jpg"
+                            src="/reset-pwd-bib.jpg"
                             alt=""
                             height={4639}
                             width={6232}

@@ -29,7 +29,7 @@ public class UserService {
         ));
     }
 
-    public User ediUser(User userEdit) {
+    public User editUser(User userEdit) {
         return userRepository.save(userEdit);
     }
 
@@ -50,8 +50,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
     public String createToken(User user) {
-        System.out.println(user);
         return authTokenService.createToken(user.getUsername(), user.getRole());
-
     }
+
 }

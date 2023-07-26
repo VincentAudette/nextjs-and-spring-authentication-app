@@ -1,6 +1,6 @@
 import DashboardView from "./dashboard-view";
 
-export default function AdminView({navigation, setActivePage}){
+export default function AdminView({navigation,activePage, setActivePage}){
 
     
     
@@ -12,6 +12,8 @@ export default function AdminView({navigation, setActivePage}){
             
         </div>
         <DashboardView setActivePage={setActivePage} navigation={navigation} />
+
+        {/* TODO: add the correct active page views when ready */}
         
 
     </div>)

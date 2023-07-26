@@ -15,7 +15,7 @@ public class AuthTokenService {
     private Key key;
     private static final String SECRET_KEY ="Q823Le0Ig+boU6tqItopkNxSIznjp858kC/fLH/28fY=";
     public AuthTokenService() {
-        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8)); // this should be moved to a secure place
+        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
     public String createToken(String username, Role role) {

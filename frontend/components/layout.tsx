@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
-import { AtSymbolIcon, CalendarIcon, HomeIcon, PhoneIcon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import ETSLogo from '@components/SVG/ETSLogo'
 import { useAuth } from 'context/auth-context'
@@ -26,7 +26,8 @@ export default function Layout(
     
 
     return (
-        <div className="min-h-screen bg-neutral-700">
+        <>
+        <div className="min-h-screen bg-neutral-700 pb-5">
         <Popover
           as="header"
           className={({ open }) =>
@@ -48,14 +49,13 @@ export default function Layout(
                   
                   <div className="flex items-center md:absolute md:right-0 md:inset-y-0 lg:hidden">
                     {/* Mobile menu button */}
-                    <Popover.Button className="-mx-2 rounded-md p-2 inline-flex items-center justify-center text-neutral-400 hover:bg-neutral-100 hover:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500">
+                    <Popover.Button className="-mx-2 rounded-md p-2 inline-flex items-center justify-center text-neutral-400 hover:bg-neutral-100 hover:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500">
                       <span className="sr-only">Open menu</span>
                       {open ? (
                         <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                       ) : (
-                        // <MenuIcon className="block h-6 w-6" aria-hidden="true" />
-                        <div>
-                          MENU
+                        <div className='flex gap-2 items-center'>
+                         <Bars3Icon className='h-5 w-5' /> MENU
                         </div>
                       )}
                     </Popover.Button>
@@ -98,13 +98,6 @@ export default function Layout(
                         </Menu.Items>
                       </Transition>
                     </Menu>
-  
-                    {/* <a
-                      href="#"
-                      className="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
-                    >
-                      BOUTON FONCTION
-                    </a> */}
                   </div>
                 </div>
               </div>
@@ -152,13 +145,13 @@ export default function Layout(
   
         <div className="py-6">
           <div className=" mx-auto sm:px-6 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
-            <div className="hidden lg:block lg:col-span-3 xl:col-span-2 ">
+            <div className="hidden lg:block lg:col-span-3 xl:col-span-3 ">
               <nav aria-label="Sidebar" className="sticky top-6 space-y-2 flex flex-col ">
               {navigation.map((item) => (
                       <button
                         key={item.name}
                         onClick={()=>{setActivePage(item.view)}}
-                        className={`hidden lg:block py-2 px-3 text-base font-medium rounded-md  ${item.current ? "bg-neutral-900 text-neutral-50" :"  text-neutral-400 hover:bg-neutral-50 hover:text-neutral-900"}`}
+                        className={`hidden text-left lg:block py-2 px-3 text-base font-medium rounded-md  ${item.current ? "bg-neutral-900 text-neutral-50" :"  text-neutral-400 bg-neutral-800/50 hover:bg-neutral-50 hover:text-neutral-900"}`}
                       >
                         {item.name}
                       </button>
@@ -168,7 +161,7 @@ export default function Layout(
             <main className="lg:col-span-9 xl:col-span-6">
                 {children}
             </main>
-            <aside className="hidden xl:block xl:col-span-4">
+            <aside className="hidden xl:block xl:col-span-3">
               <div className="sticky top-6 space-y-4">
                 
                 {profile && <div className='bg-neutral-900 p-5 rounded-md'>
@@ -183,5 +176,10 @@ export default function Layout(
           </div>
         </div>
       </div>
+      <div className='fixed bottom-0 text-neutral-500 text-xs bg-neutral-900/80 w-screen py-1 px-2'>
+        {/* Add a copyright for École de technologie supérieur - GTI619 - Équipe F  */}
+        &copy; École de Technologie Supérieure &middot; GTI619 &middot; Équipe F &middot; ÉTÉ 2023
+      </div>
+      </>
     )
 }

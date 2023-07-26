@@ -153,7 +153,7 @@ public class UserController {
 
         //TODO: Check autorization (role) and return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); if not
         try {
-            userService.ediUser(user);
+            userService.editUser(user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
