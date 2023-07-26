@@ -132,7 +132,7 @@ export default function LoginView(){
                                 <div>
                                     <button
                                     type="submit"
-                                    className="w-full flex justify-center py-2 px-4 rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-b from-red-400 to-red-700 hover:bg-gradient-to-b hover:from-red-300 hover:to-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
+                                    className="btn-primary"
                                     >
                                     Se connecter &rarr;
                                     </button>
