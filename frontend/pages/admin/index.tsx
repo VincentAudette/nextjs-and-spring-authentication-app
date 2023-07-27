@@ -1,6 +1,6 @@
 
 import ConfigurationsDeMotDePasseView from '@components/configurations-de-mdp-view';
-import AdminView from '@components/films-view copy'
+import AdminView from '@components/admin-view'
 import GestionDeMotDePasseView from '@components/gestion-de-mdp-view';
 import Layout from '@components/layout'
 import PreposeAuxClientsAffaireView from '@components/prepose-aux-clients-affaire-view';
@@ -15,20 +15,22 @@ const CONFIG_MDP = "configurations-mot-de-passe";
 
 
 
-export default function Dashboard() {
-  
+export default function AdminPage() {
+
+
+
+ 
     const [activePage, setActivePage] =  useState(DASHBOARD_STR);
 
     const navigation = [
       { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
-      { name: 'Préposé aux clients résidentiels', view:CLIENTS_RESIDENTIELS, current: CLIENTS_RESIDENTIELS === activePage },
-      { name: 'Préposé aux clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage },
+      { name: 'Clients résidentiels', view:CLIENTS_RESIDENTIELS, current: CLIENTS_RESIDENTIELS === activePage },
+      { name: 'Clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage },
       { name: 'Gestion de mot de passe', view:GESTION_DE_MDP, current: GESTION_DE_MDP === activePage },
       { name: 'Configurations de mot de passe', view:CONFIG_MDP, current: CONFIG_MDP === activePage },
     ];
 
 
-   
 
     
   return (

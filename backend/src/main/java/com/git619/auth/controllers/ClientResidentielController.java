@@ -20,7 +20,7 @@ public class ClientResidentielController {
         this.clientResidentielService = clientResidentielService;
     }
 
-    @PreAuthorize("hasAuthority('Administrateur') or hasAuthority('Préposé aux clients résidentiels')")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR') or hasAuthority('ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS')")
     @GetMapping("/list")
     public Page<ClientResidentiel> getClients(int page, int size) {
         return clientResidentielService.getAll(PageRequest.of(page, size));

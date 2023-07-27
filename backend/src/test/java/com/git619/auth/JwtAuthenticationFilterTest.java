@@ -40,7 +40,7 @@ public class JwtAuthenticationFilterTest {
         User user = new User();
         user.setUsername("TestAdmin");
         user.setPassword(passwordEncoder.encode("123"));
-        user.setRole(Role.ADMINISTRATEUR);
+        user.setRole(Role.ROLE_ADMINISTRATEUR);
         userRepository.save(user);
     }
 
@@ -49,14 +49,15 @@ public class JwtAuthenticationFilterTest {
     public void testFilterWithValidToken() throws Exception {
         String username = "TestAdmin";
         String password = "123";
-        Role role = Role.ADMINISTRATEUR;
-        String token = authTokenService.createToken(username, role);
-
+        Role role = Role.ROLE_ADMINISTRATEUR;
         // Creating a mock user for the request body
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        user.setRole(role); // Assuming role is an instance of Role enum
+        user.setRole(role);
+
+        String token = authTokenService.createToken(user);
+
 
 
         ObjectMapper objectMapper = new ObjectMapper();

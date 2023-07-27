@@ -2,10 +2,13 @@ package com.git619.auth.domain;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-
 @Entity
 @Table(name="AUTH_SESSION")
 public class Session {
+
+    @ManyToOne
+    @JoinColumn(name="USER_ID", nullable=false)
+    private User user;
 
     @Id
     @Column(name = "SESSION_ID", columnDefinition = "NUMBER(38,0)")
@@ -15,23 +18,30 @@ public class Session {
     @Column(name = "ACTIVE", columnDefinition = "NUMBER(1,0)")
     private Boolean active;
 
-    @Column(name = "TOKEN", columnDefinition = "VARCHAR2(255)")
-    private String token;
-
     @Column(name = "CREATED_AT", columnDefinition = "TIMESTAMP(3)")
     private Timestamp createdAt;
 
     @Column(name = "LAST_ACCESSED", columnDefinition = "TIMESTAMP(3)")
     private Timestamp lastAccessed;
 
-    public Session(Boolean active, String token, Timestamp createdAt, Timestamp lastAccessed) {
-        this.active = active;
-        this.token = token;
-        this.createdAt = createdAt;
-        this.lastAccessed = lastAccessed;
+    public Session(User user) {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.active = true;
+        this.createdAt = now;
+        this.lastAccessed = now;
+        this.user = user;
     }
 
+
     public Session() {}
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;
@@ -43,14 +53,6 @@ public class Session {
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public Timestamp getCreatedAt() {
@@ -74,9 +76,9 @@ public class Session {
         return "Session{" +
                 "id=" + id +
                 ", active=" + active +
-                ", token='" + token + '\'' +
                 ", createdAt=" + createdAt +
                 ", lastAccessed=" + lastAccessed +
                 '}';
     }
 }
+

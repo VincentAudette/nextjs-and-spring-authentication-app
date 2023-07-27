@@ -1,6 +1,5 @@
 package com.git619.auth.controllers;
 
-import com.git619.auth.utils.Role;
 import com.git619.auth.domain.ClientAffaire;
 import com.git619.auth.services.ClientAffaireService;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,7 @@ public class ClientAffaireController {
         this.clientAffaireService = clientAffaireService;
     }
 
-    @PreAuthorize("hasAuthority('Administrateur') or hasAuthority('Préposé aux clients résidentiels')")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR') or hasAuthority('ROLE_PREPOSE_AUX_CLIENTS_DAFFAIRE')")
     @GetMapping("/list")
     public Page<ClientAffaire> getClients(int page, int size) {
         return clientAffaireService.getAll(PageRequest.of(page, size));

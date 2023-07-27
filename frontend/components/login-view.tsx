@@ -1,4 +1,3 @@
-import WebflixLogo from "./webflix_logo";
 import FRONTEND_URL from "../utils/FE/urls";
 import { AUTH_ENDPOINT } from "../utils/FULL/endpoints";
 import { useRouter } from "next/router";
@@ -47,13 +46,11 @@ export default function LoginView(){
             });
 
             //Check the role to redirect to the right page
-            if(result.decoded.role === "ADMINISTRATEUR"){
+            if(result.decoded.role === "ROLE_ADMINISTRATEUR"){
                 router.push('/admin');
-            }else if(result.decoded.role === "PREPOSE_AUX_CLIENTS_RESIDENTIELS"){
-                //FIXME: REDIRECT TO PREPOSE_AUX_CLIENTS_RESIDENTIELS
+            }else if(result.decoded.role === "ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS"){
                 router.push('/dashboard');
-            }else if(result.decoded.role === "PREPOSE_AUX_CLIENTS_DAFFAIRE"){
-                //FIXME: REDIRECT TO PREPOSE_AUX_CLIENTS_DAFFAIRE
+            }else if(result.decoded.role === "ROLE_PREPOSE_AUX_CLIENTS_DAFFAIRE"){
                 router.push('/dashboard');
             }
 

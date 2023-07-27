@@ -1,29 +1,26 @@
 import { useAuth } from "context/auth-context";
 import { useQuery } from "react-query";
+import LoadingQuery from "./loading-query";
+import ErrorQuery, { Error } from "./error-query";
 
 export default function PreposeAuxClientsResidentielsView(){
 
     const {profile} = useAuth();
 
     const fetchClients = async () => {
-        try{
-            const res = await fetch(`/api/getClientResidentielList?token=${profile.token}`);
-            if (!res.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return await res.json();
-        }catch(err){
-            throw new Error(err.message);
+        const res = await fetch(`/api/getClientResidentielList?token=${profile.token}`);
+        if (!res.ok) {
+            const errorObj = await res.json();
+            errorObj.status = res.status;
+            throw errorObj;
         }
+        return await res.json();
     };
     
     const { data: clientResidentiels, isLoading, isError, error } = useQuery('clientResidentielList', fetchClients);
     
-    if (isLoading) return <div>Loading...</div>
-    if (isError){
-        console.log(error);
-        return <div>Error occurred</div>
-    }
+    if (isLoading) return <LoadingQuery />
+    if (isError) return <ErrorQuery error={error as Error} />
 
     return (
         <div>
@@ -32,10 +29,10 @@ export default function PreposeAuxClientsResidentielsView(){
                 <h1 className="titre-section">Préposé aux clients résidentiels</h1>
                 <div className="grow"/>
                 </div>
-                <ul className="w-full py-3 flex flex-col gap-2">
+                <ul className="w-full  flex flex-col gap-2">
                     {clientResidentiels.content.length >=1 &&
-                        clientResidentiels.content.map(({name})=>(
-                            <li className="w-full text-lg font-semibold rounded-sm bg-neutral-200 text-black p-4" key={name}>
+                        clientResidentiels.content.map(({name},i)=>(
+                            <li key={name+i} className="w-full text-lg font-semibold rounded-sm bg-neutral-200 text-black p-4" >
                                 {name}
                                 </li>
                         ))

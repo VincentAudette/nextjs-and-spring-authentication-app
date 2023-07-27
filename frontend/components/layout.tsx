@@ -23,7 +23,23 @@ export default function Layout(
     ){
 
     const {profile} = useAuth();
-    
+
+    let roleDisplayName = '';
+
+    switch(profile?.role){
+        case 'ROLE_ADMINISTRATEUR':
+          roleDisplayName = 'Administrateur';
+          break;
+        case 'ROLE_PREPOSE_AUX_CLIENTS_DAFFAIRE':
+          roleDisplayName = 'Préposé aux clients d’affaire';
+          break;
+        case 'ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS':
+          roleDisplayName = 'Préposé aux clients résidentiels';
+          break;
+        default:
+          roleDisplayName = 'Aucun rôle';
+    };
+
 
     return (
         <>
@@ -41,7 +57,7 @@ export default function Layout(
             <>
               <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative flex justify-between items-center">
-                  <div className="flex md:absolute md:left-0 md:inset-y-0 lg:static xl:col-span-2">
+                  <div className="flex  md:left-0 md:inset-y-0 lg:static xl:col-span-2">
                     <div className="flex-shrink-0 flex items-center">
                     <ETSLogo className='h-auto w-20 pt-5 px-1 bg-red-500 my-auto mx-auto' />
                     </div>
@@ -166,7 +182,7 @@ export default function Layout(
                 
                 {profile && <div className='bg-neutral-900 p-5 rounded-md'>
                   <p className='text-lg font-bold'>{profile.username}</p>
-                  <p className='text-md font-bold'>Role - {profile.role}</p>
+                  <p className='text-base font-bold'>Role: {roleDisplayName}</p>
                 </div>}
                 {
                   focusedElement !== null &&  <div className='bg-neutral-900 p-5 rounded-md'>{focusedElement}</div>

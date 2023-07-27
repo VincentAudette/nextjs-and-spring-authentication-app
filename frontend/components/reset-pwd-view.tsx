@@ -1,6 +1,3 @@
-import WebflixLogo from "./webflix_logo";
-import FRONTEND_URL from "../utils/FE/urls";
-import { AUTH_ENDPOINT } from "../utils/FULL/endpoints";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/auth-context";
 import Notification from "./notification";

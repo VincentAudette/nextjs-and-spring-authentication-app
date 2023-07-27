@@ -1,16 +1,20 @@
 package com.git619.auth.services;
 
 import com.git619.auth.domain.Session;
+import com.git619.auth.domain.User;
 import com.git619.auth.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
 public class SessionService {
+
+    @Autowired
     private final SessionRepository sessionRepository;
 
     @Autowired
@@ -19,13 +23,10 @@ public class SessionService {
     }
 
     public Session createSession(Session session) {
-        return sessionRepository.save(new Session(
-                session.getActive(),
-                session.getToken(),
-                session.getCreatedAt(),
-                session.getLastAccessed()
-        ));
+        return sessionRepository.save(session);
     }
+
+
 
     public Session editSession(Session sessionEdit) {
         return sessionRepository.save(sessionEdit);
@@ -42,10 +43,8 @@ public class SessionService {
     }
 
     public Session getSessionById(Long id) {
-        return sessionRepository.findSessionById(id);
+        return sessionRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No Session found with id: " + id));
     }
 
-    public Session getSessionByToken(String token) {
-        return sessionRepository.findSessionByToken(token);
-    }
 }

@@ -71,12 +71,12 @@ public class UserControllerTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("user1");
         userDTO.setPassword("pass1");
-        userDTO.setRole("Administrateur");
+        userDTO.setRole("ROLE_ADMINISTRATEUR");
 
         User user = new User();
         user.setUsername("user1");
         user.setPassword(passwordEncoder.encode("pass1"));
-        user.setRole(Role.ADMINISTRATEUR);
+        user.setRole(Role.ROLE_ADMINISTRATEUR);
 
         when(userService.createUser(any(User.class))).thenReturn(user);
         when(passwordEncoder.encode(any())).thenReturn("encodedPassword");

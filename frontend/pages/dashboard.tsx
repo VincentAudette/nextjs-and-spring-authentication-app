@@ -1,53 +1,41 @@
-import { Fragment, useEffect, useState } from 'react'
-import { Menu, Popover, Transition } from '@headlessui/react'
-import { AtSymbolIcon, BellIcon, CalendarIcon, HomeIcon, PhoneIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import WebflixLogo from '../components/webflix_logo'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
 import DashboardView from '../components/dashboard-view'
-import FilmsView from '../components/films-view'
-import LocationsView from '../components/locations-view'
 import { useAuth } from '../context/auth-context'
-import LocationModal from '@components/location-modal'
-import CommandPaletteV2 from '@components/command-paletteV2'
-import StatsView from '@components/stats-view'
-import ETSLogo from '@components/SVG/ETSLogo'
 import Layout from '@components/layout'
+import { useEffect, useState } from 'react'
+import PreposeAuxClientsResidentielsView from '@components/prepose-aux-clients-residentiels-view'
+import PreposeAuxClientsAffaireView from '@components/prepose-aux-clients-affaire-view'
+import { useRouter } from 'next/router'
+import ETSLogo from '@components/SVG/ETSLogo'
+import RoleBasedRedirection from '@components/role-based-redirection'
 
 const DASHBOARD_STR = "dashboard";
-const FILMS_STR = "films";
-const LOCATIONS_STR = "locations";
-const STATS_STR = "stats";
+const CLIENTS_RESIDENTIELS = "clients-residentiels";
+const CLIENTS_AFFAIRE = "clients-affaire";
 
-const userNavigation = [
-  { name: 'Sign out', href: '/' },
-]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Dashboard() {
-    const {profile, listeFilms, setListeFilms, pageValue, setPageValue} = useAuth()
+    const {profile} = useAuth()
     const [activePage, setActivePage] =  useState(DASHBOARD_STR);
     const [focusedElement, setFocusedElement] =useState(null)
 
-    console.log("profile", profile);
-    
 
-
-    const navigation = [
+    const navigation = profile?.role === "ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS" ? [
       { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
-      { name: 'Locations', view:LOCATIONS_STR, current: LOCATIONS_STR === activePage },
-      { name: 'Statistiques', view:STATS_STR, current: STATS_STR === activePage },
+      { name: 'Clients résidentiels', view:CLIENTS_RESIDENTIELS, current: CLIENTS_RESIDENTIELS === activePage },
+    ]:[
+      { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
+      { name: 'Clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage },
     ];
 
 
-
-   
-
+    
     
   return (
+    <RoleBasedRedirection allowedRoles={["ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS", "PREPOSE_AUX_CLIENTS_AFFAIRE"]}>
     <Layout
       navigation={navigation}
       setActivePage={setActivePage}
@@ -61,14 +49,15 @@ export default function Dashboard() {
                 DASHBOARD_STR === activePage && <DashboardView setActivePage={setActivePage} navigation={navigation} />
               }
               {
-                LOCATIONS_STR === activePage && <LocationsView idUtilisateur={profile.idUtilisateur} />
+                CLIENTS_RESIDENTIELS === activePage && <PreposeAuxClientsResidentielsView />
               }
               {
-                STATS_STR === activePage && <StatsView />
+                CLIENTS_AFFAIRE === activePage && <PreposeAuxClientsAffaireView />
               }
               
               </div>
     </Layout>
+    </RoleBasedRedirection>
     
 
         

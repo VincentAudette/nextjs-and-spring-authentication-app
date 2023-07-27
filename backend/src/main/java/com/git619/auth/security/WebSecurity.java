@@ -1,34 +1,39 @@
 package com.git619.auth.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Order(1)
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     /**
      * Variables de la Configuration de sécurité
      */
     private final UserDetailsService userDetailsService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Constructeur avec détails utilisateur et encodeur de mdp
      * @param userDetailsService
      */
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public WebSecurity(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -56,13 +61,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider() {
+            @Override
+            protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+                String rawPassword = (String) authentication.getCredentials();
+
+                if (!passwordEncoder.matches(rawPassword, userDetails.getPassword())) {
+                    throw new BadCredentialsException("Bad credentials");
+                }
+            }
+        };
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
-
-
 
 
 
@@ -74,11 +86,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(HttpSecurity http) throws Exception{
-        http
-                .csrf().disable()
+        http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user").permitAll()
-                .antMatchers("/api/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -97,10 +108,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @param provider
      * @throws Exception
      */
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth,
-                                DaoAuthenticationProvider provider)
-            throws Exception {
-        auth.authenticationProvider(provider);
+                                DaoAuthenticationProvider provider) throws Exception {
+        auth
+                .authenticationProvider(provider);
     }
+
 }

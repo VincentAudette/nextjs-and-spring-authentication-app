@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 
 
@@ -106,16 +105,16 @@ public class User implements UserDetails{
     }
 
     @Column(name = "ACCOUNT_NON_EXPIRED", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean accountNonExpired;
+    private boolean accountNonExpired = true;
 
     @Column(name = "ACCOUNT_NON_LOCKED", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean accountNonLocked;
+    private boolean accountNonLocked = true;
 
     @Column(name = "CREDENTIALS_NON_EXPIRED", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean credentialsNonExpired;
+    private boolean credentialsNonExpired = true;
 
     @Column(name = "ENABLED", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean enabled;
+    private boolean enabled = true;
 
 
     @Override
