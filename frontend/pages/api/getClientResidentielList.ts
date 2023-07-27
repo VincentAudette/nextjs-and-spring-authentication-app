@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default async function handler(req, res) {
     try {
-        const axiosRes = await axios.get('http://localhost:8080/clientResidentiel/list?page=0&size=10', {
+        const axiosRes = await axios.get(`http://localhost:8080/clientResidentiel/list?page=${req.query.page}&size=10`, {
             headers: {
                 Authorization: `Bearer ${req.query.token}}`,
             },

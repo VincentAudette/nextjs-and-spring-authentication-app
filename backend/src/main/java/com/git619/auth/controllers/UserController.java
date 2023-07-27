@@ -7,11 +7,13 @@ import com.git619.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.List;
 
 
 @RestController
@@ -51,6 +53,26 @@ public class UserController {
         // L'utilisateur est bien créer, on retourne Statut HTTP 201
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR')")
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers() {
+        List<User> users = userService.getAll();
+
+        if (users == null || users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/users")
+    public ResponseEntity<?> deleteAllUsers() {
+        userService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
 
 
 

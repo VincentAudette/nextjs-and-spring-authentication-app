@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
     private boolean isSessionExpired(Session session) {
         // La valeur du timeout est déterminée par le premier des trois chiffres en minutes
-        long sessionTimeoutMillis = 1 * 60 * 1000;
+        long sessionTimeoutMillis = 30 * 60 * 1000;
 
         long currentTimeMillis = System.currentTimeMillis();
         long lastAccessedTimeMillis = session.getLastAccessed().getTime();

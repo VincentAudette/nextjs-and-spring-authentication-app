@@ -37,10 +37,16 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public List<User> getAll() {
-        System.out.println(userRepository.findAll());
-        return StreamSupport.stream(userRepository.findAll().spliterator(), false).collect(Collectors.toList());
+    public void deleteAll() {
+        userRepository.deleteAll();
     }
+
+
+    public List<User> getAll() {
+        return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
 
     public User getUserById(Long id) {
         return userRepository.findUserById(id);
