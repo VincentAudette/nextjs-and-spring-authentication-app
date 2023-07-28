@@ -10,7 +10,7 @@ function SessionTableRow({ session }) {
     <tr key={session.id}>
       <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
         <div className="flex items-center gap-x-4">
-          <div className="truncate text-sm font-medium leading-6 ">Session #{session.id}</div>
+          <div className="truncate text-sm font-medium leading-6 ">{session.id}</div>
         </div>
       </td>
       <td className="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20">
@@ -24,7 +24,7 @@ function SessionTableRow({ session }) {
       <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-neutral-700 md:table-cell lg:pr-20">
         {new Date(session.createdAt).toLocaleString()}
       </td>
-      <td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-neutral-700 sm:table-cell sm:pr-6 lg:pr-8">
+      <td className="hidden py-4 pl-0 pr-4 text-sm leading-6 text-neutral-700 sm:table-cell sm:pr-6 lg:pr-8">
         {new Date(session.lastAccessed).toLocaleString()}
       </td>
     </tr>

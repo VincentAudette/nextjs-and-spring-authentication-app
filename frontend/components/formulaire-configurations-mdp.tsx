@@ -11,7 +11,7 @@ export default function FormulaireConfigurationsMdp({setOpen, configurations, se
     return (
         <form
                 onSubmit={handleConfigurationChanges}
-                className="font-semibold text-lg p-5 rounded-md flex flex-col gap-5">
+                className="font-semibold text-lg p-5 rounded-md flex flex-col gap-5 text-neutral-900">
                         
                         <div>
                             <div className="flex justify-between mb-2">
@@ -29,7 +29,7 @@ export default function FormulaireConfigurationsMdp({setOpen, configurations, se
                         </div>
 
 
-                        <hr className="mt-5 border border-neutral-500/30 rounded-full" />
+                        <hr className="mt-5 border  border-neutral-500/30 rounded-full" />
 
                         <div>
                             <div className="flex justify-between mb-2">

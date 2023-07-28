@@ -5,6 +5,8 @@ import com.git619.auth.domain.User;
 import com.git619.auth.repository.SessionRepository;
 import com.git619.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,8 @@ public class SessionService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Session> getAllSessionsByUser(User user) {
-        return sessionRepository.findByUser(user);
+    public Page<Session> getAllSessionsByUser(User user, Pageable pageable) {
+       return sessionRepository.findSessionsByUserOrderedByCreatedAtDesc(user, pageable);
     }
     @Autowired
     public SessionService(SessionRepository sessionRepository) {

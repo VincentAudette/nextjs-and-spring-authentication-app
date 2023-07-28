@@ -43,8 +43,8 @@ export default function ModalGeneric({ children, titre, open, setOpen}){
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <div className="relative inline-block align-bottom bg-neutral-500/50 backdrop-blur-md rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-                <h2 className="titre-section ">{titre}</h2>
+                <div className="relative inline-block align-bottom bg-neutral-200/70 backdrop-blur-md rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                <h2 className="titre-section text-neutral-950">{titre}</h2>
                 <div className="h-5" />
                 {children}
                 
