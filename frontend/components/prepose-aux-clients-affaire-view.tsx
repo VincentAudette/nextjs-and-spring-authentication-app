@@ -37,8 +37,8 @@ export default function PreposeAuxClientsAffaireView(){
     return (
         <div>
             <title>Clients résidentiels | GTI619 | Labo 5</title>
-            <div className="flex flex-col justify-center mb-3">
-                <div className='flex items-center'>
+            <div className="flex flex-col justify-center ">
+                <div className='flex items-center mb-3'>
                     <h1 className="titre-section">Clients affaire</h1>
                     <div className='grow'/>
                     <div className="flex gap-2 items-center">
@@ -47,10 +47,10 @@ export default function PreposeAuxClientsAffaireView(){
                             <button className="bg-neutral-700 py-2 px-4 rounded-md focus-dark" onClick={()=>setPage(page+1)} disabled={clientsAffaire.last}>Page suivante &rarr;</button>
                         </div>
                 </div>
-                <ul className="w-full py-3 flex flex-col gap-2">
+                <ul className="w-full flex flex-col gap-2 ">
                     {clientsAffaire.content.length >=1 &&
                         clientsAffaire.content.map(({name})=>(
-                            <li className="w-full font-semibold rounded-xl bg-neutral-200 text-black p-4" key={name}>
+                            <li className="w-full font-semibold px-12 py-6 rounded-xl bg-neutral-200 text-black" key={name}>
                                 {name}
                                 </li>
                         ))

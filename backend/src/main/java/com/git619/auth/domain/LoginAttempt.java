@@ -12,8 +12,10 @@ public class LoginAttempt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USER_ID", columnDefinition = "NUMBER(38,0)")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name="USER_ID", nullable=false, updatable=false)
+    private User user;
+
 
     @Column(name = "ATTEMPT_TIME", columnDefinition = "TIMESTAMP(3)")
     private Timestamp attemptTime;
@@ -25,12 +27,12 @@ public class LoginAttempt {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Timestamp getAttemptTime() {

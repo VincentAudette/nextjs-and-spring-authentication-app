@@ -1,7 +1,9 @@
 package com.git619.auth.controllers;
 
+import com.git619.auth.domain.Session;
 import com.git619.auth.domain.User;
 import com.git619.auth.dto.UserDTO;
+import com.git619.auth.services.SessionService;
 import com.git619.auth.utils.Role;
 import com.git619.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,20 @@ public class UserController {
     UserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    SessionService sessionService;
+
+    @GetMapping("/user/{userId}/sessions")
+    public ResponseEntity<?> getUserSessions(@PathVariable Long userId) {
+        User user = userService.getUserById(userId);
+        List<Session> sessions = sessionService.getAllSessionsByUser(user);
+
+        if (sessions.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(sessions, HttpStatus.OK);
+    }
 
     @PostMapping("/user")
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {

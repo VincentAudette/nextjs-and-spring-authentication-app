@@ -3,6 +3,7 @@ package com.git619.auth.services;
 import com.git619.auth.domain.Session;
 import com.git619.auth.domain.User;
 import com.git619.auth.repository.SessionRepository;
+import com.git619.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,12 @@ public class SessionService {
 
     @Autowired
     private final SessionRepository sessionRepository;
+    @Autowired
+    private UserRepository userRepository;
 
+    public List<Session> getAllSessionsByUser(User user) {
+        return sessionRepository.findByUser(user);
+    }
     @Autowired
     public SessionService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;

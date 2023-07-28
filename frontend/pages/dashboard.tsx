@@ -1,11 +1,9 @@
 import DashboardView from '../components/dashboard-view'
 import { useAuth } from '../context/auth-context'
 import Layout from '@components/layout'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import PreposeAuxClientsResidentielsView from '@components/prepose-aux-clients-residentiels-view'
 import PreposeAuxClientsAffaireView from '@components/prepose-aux-clients-affaire-view'
-import { useRouter } from 'next/router'
-import ETSLogo from '@components/SVG/ETSLogo'
 import RoleBasedRedirection from '@components/role-based-redirection'
 
 const DASHBOARD_STR = "dashboard";

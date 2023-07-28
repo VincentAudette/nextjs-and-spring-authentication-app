@@ -37,9 +37,8 @@ const { data: clientResidentiels, isLoading, isError, error } = useQuery(['clien
                         <button className="bg-neutral-700 py-2 px-4 rounded-md focus-dark" onClick={()=>setPage(page-1)} disabled={page===0}>&larr; Page précédente</button>
                         <button className="bg-neutral-700 py-2 px-4 rounded-md focus-dark" onClick={()=>setPage(page+1)} disabled={clientResidentiels.last}>Page suivante &rarr;</button>
                     </div>
-
                 </div>
-                <ul className="w-full  flex flex-col gap-2">
+                <ul className="w-full flex flex-col gap-2">
                     {clientResidentiels.content.length >=1 &&
                         clientResidentiels.content.map(({name},i)=>(
                             <li key={name+i} className="w-full font-semibold rounded-xl bg-neutral-200 text-black p-4" >

@@ -13,8 +13,6 @@ export default function AdminView({navigation,activePage, setActivePage}){
         </div>
         <DashboardView setActivePage={setActivePage} navigation={navigation} />
 
-        {/* TODO: add the correct active page views when ready */}
-        
 
     </div>)
   

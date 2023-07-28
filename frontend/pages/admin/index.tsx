@@ -6,6 +6,7 @@ import Layout from '@components/layout'
 import PreposeAuxClientsAffaireView from '@components/prepose-aux-clients-affaire-view';
 import PreposeAuxClientsResidentielsView from '@components/prepose-aux-clients-residentiels-view';
 import { useState } from 'react';
+import { AcademicCapIcon, GlobeAmericasIcon, IdentificationIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 const DASHBOARD_STR = "dashboard";
 const CLIENTS_RESIDENTIELS = "clients-residentiels";
@@ -23,11 +24,11 @@ export default function AdminPage() {
     const [activePage, setActivePage] =  useState(DASHBOARD_STR);
 
     const navigation = [
-      { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
-      { name: 'Clients résidentiels', view:CLIENTS_RESIDENTIELS, current: CLIENTS_RESIDENTIELS === activePage },
-      { name: 'Clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage },
-      { name: 'Liste d\'utilisateurs', view:GESTION_DE_MDP, current: GESTION_DE_MDP === activePage },
-      { name: 'Configurations de mot de passe', view:CONFIG_MDP, current: CONFIG_MDP === activePage },
+      { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage, icon: null },
+      { name: 'Clients résidentiels', view:CLIENTS_RESIDENTIELS, current: CLIENTS_RESIDENTIELS === activePage, icon: AcademicCapIcon },
+      { name: 'Clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage, icon: GlobeAmericasIcon },
+      { name: 'Liste d\'utilisateurs', view:GESTION_DE_MDP, current: GESTION_DE_MDP === activePage, icon: IdentificationIcon },
+      { name: 'Configurations de mot de passe', view:CONFIG_MDP, current: CONFIG_MDP === activePage, icon: ShieldCheckIcon },
     ];
 
 
