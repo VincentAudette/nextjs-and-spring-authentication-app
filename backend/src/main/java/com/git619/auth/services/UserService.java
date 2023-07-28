@@ -1,6 +1,5 @@
 package com.git619.auth.services;
 
-import com.git619.auth.domain.Session;
 import com.git619.auth.domain.User;
 import com.git619.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

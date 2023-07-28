@@ -1,6 +1,7 @@
 package com.git619.auth.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -89,8 +90,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/login").permitAll().and()
+                .authorizeRequests().antMatchers("/h2-console/**").permitAll().and()
+                .authorizeRequests().antMatchers("/favicon.ico").permitAll()
                 .anyRequest().authenticated()
+                .and().headers().frameOptions().disable()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
@@ -115,5 +119,4 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         auth
                 .authenticationProvider(provider);
     }
-
 }
