@@ -21,7 +21,7 @@ Ce projet est une site web qui implémente certaines fonctionnalités de sécuri
 
 4. Lancer `AuthApplication.java`
 5. Le backend ouvre sur [http://localhost:8080](http://localhost:8080)
-6. LA bd locale h2 peut être accédée sur 4. Le backend ouvre sure [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+6. LA bd locale h2 peut être accédée sur [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 ### Frontend
 1. Installer `Node`
 2. `npm install` dans le dossier `/frontend`
