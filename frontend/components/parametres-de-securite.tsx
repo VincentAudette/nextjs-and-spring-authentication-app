@@ -3,7 +3,7 @@ import { Settings2 } from "lucide-react";
 import ModalGeneric from "./modal-generic";
 import FormulaireConfigurationsMdp from "./formulaire-configurations-mdp";
 
-export default function ConfigurationsDeMotDePasseView(){
+export default function ParametresDeSecurite(){
     const [configurations, setConfigurations] = useState({
         specialCaracter: false,
         uppercase: true,
@@ -13,13 +13,13 @@ export default function ConfigurationsDeMotDePasseView(){
     const [open, setOpen] = useState(false);
     return( 
         <>
-        <ModalGeneric {...{open, setOpen, titre:"Modification des configurations de mot de passe"}}>
+        <ModalGeneric {...{open, setOpen, titre:"Modification des paramètres de sécurité"}}>
             <FormulaireConfigurationsMdp {...{configurations, setConfigurations, setOpen}}/>
         </ModalGeneric>
         <div>
-             <title>Configurations de mot de passe | GTI619 | Labo 5</title>
+             <title>Paramètres de sécurité | GTI619 | Labo 5</title>
                 <div className="flex items-center justify-center mb-3">
-                 <h1 className="titre-section">Configurations de mot de passe</h1>
+                 <h1 className="titre-section">Paramètres de sécurité</h1>
                  <div className="grow"/>
                  <button 
                  onClick={()=>{setOpen(true)}}

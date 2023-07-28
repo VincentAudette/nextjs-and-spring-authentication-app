@@ -1,5 +1,7 @@
 package com.git619.auth.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 @Entity
@@ -8,6 +10,7 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name="USER_ID", nullable=false)
+    @JsonIgnore
     private User user;
 
     @Id

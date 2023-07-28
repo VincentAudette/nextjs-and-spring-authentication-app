@@ -10,18 +10,18 @@ export default function GestionDeMotDePasseView(){
     const {profile} = useAuth();
    
    
-    const fetchUsers = async () => {
-        const res = await fetch(`/api/getUsers?token=${profile.token}`);
-        if (!res.ok) {
-            const errorObj = await res.json();
-            errorObj.status = res.status;
-            throw errorObj;
-        }
-        return await res.json();
-    };
+        const fetchUsers = async () => {
+            const res = await fetch(`/api/getUsers?token=${profile.token}`);
+            if (!res.ok) {
+                const errorObj = await res.json();
+                errorObj.status = res.status;
+                throw errorObj;
+            }
+            return await res.json();
+        };
     
 
-    const { data: users, isLoading, isError, error } = useQuery('users',fetchUsers);
+    const { data: users, isLoading, isError, error } = useQuery('users', fetchUsers);
 
     console.log(users);
 

@@ -59,7 +59,7 @@ export default function Layout(
                 <div className="relative flex justify-between items-center">
                   <div className="flex  md:left-0 md:inset-y-0 lg:static xl:col-span-2">
                     <div className="flex-shrink-0 flex items-center">
-                    <ETSLogo className='h-auto w-20 pt-5 px-1 bg-red-500 my-auto mx-auto' />
+                    <ETSLogo className='h-20 w-20 pt-5 px-[11px] bg-red-500 my-auto mx-auto' />
                     </div>
                   </div>
                   
@@ -80,7 +80,7 @@ export default function Layout(
                     {/* Profile dropdown */}
                     <Menu as="div" className="flex-shrink-0 relative ml-5">
                       <div>
-                        <Menu.Button className="border border-neutral-700 p-4 rounded-full items-center align-middle flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
+                        <Menu.Button className="border bg-neutral-700 border-neutral-700 p-4 rounded-full items-center align-middle flex focus-dark">
                           <span className="sr-only">Ouvrir le menu</span>
                           <UserIcon className="h-6 w-6 text-neutral-100" aria-hidden="true" />
                         </Menu.Button>

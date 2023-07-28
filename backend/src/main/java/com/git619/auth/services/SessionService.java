@@ -38,6 +38,10 @@ public class SessionService {
         return sessionRepository.save(sessionEdit);
     }
 
+    public List<Session> getAllActiveSessions() {
+        return sessionRepository.findAllActiveSessions();
+    }
+
     public void delete(Long id) {
         sessionRepository.deleteById(id);
     }

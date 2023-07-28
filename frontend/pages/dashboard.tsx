@@ -5,10 +5,13 @@ import { useState } from 'react'
 import PreposeAuxClientsResidentielsView from '@components/prepose-aux-clients-residentiels-view'
 import PreposeAuxClientsAffaireView from '@components/prepose-aux-clients-affaire-view'
 import RoleBasedRedirection from '@components/role-based-redirection'
+import { AcademicCapIcon, GlobeAmericasIcon, KeyIcon } from '@heroicons/react/24/outline'
+import NotificationAvecAction from '@components/notification-avec-action'
 
 const DASHBOARD_STR = "dashboard";
 const CLIENTS_RESIDENTIELS = "clients-residentiels";
 const CLIENTS_AFFAIRE = "clients-affaire";
+const GESTION_DE_COMPTE = "gestion-de-compte";
 
 
 function classNames(...classes) {
@@ -22,11 +25,13 @@ export default function Dashboard() {
 
 
     const navigation = profile?.role === "ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS" ? [
-      { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
-      { name: 'Clients résidentiels', view:CLIENTS_RESIDENTIELS, current: CLIENTS_RESIDENTIELS === activePage },
+      { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage, icon:null },
+      { name: 'Clients résidentiels', view:CLIENTS_RESIDENTIELS, current: CLIENTS_RESIDENTIELS === activePage, icon: AcademicCapIcon},
+      { name: 'Gestion de compte', view:GESTION_DE_COMPTE, current: GESTION_DE_COMPTE === activePage, icon: KeyIcon}
     ]:[
-      { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
-      { name: 'Clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage },
+      { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage, icon:null },
+      { name: 'Clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage, icon: GlobeAmericasIcon  },
+      { name: 'Gestion de compte', view:GESTION_DE_COMPTE, current: GESTION_DE_COMPTE === activePage, icon: KeyIcon}
     ];
 
 
