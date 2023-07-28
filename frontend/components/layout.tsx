@@ -5,7 +5,8 @@ import Link from 'next/link'
 import ETSLogo from '@components/SVG/ETSLogo'
 import { useAuth } from 'context/auth-context'
 const userNavigation = [
-    { name: 'Sign out', href: '/' },
+    { name: 'Déconnexion', href: '/' },
+    { name: 'Modifier mot de passe', href:'#modifier-mot-de-passe'}
   ]
   
   function classNames(...classes) {

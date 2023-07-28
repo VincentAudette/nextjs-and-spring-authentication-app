@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Settings2 } from "lucide-react";
 import ConfigurationMdpModal from "./configuration-mdp-modal";
+import FormulaireConfigurationsMdp from "./formulaire-configurations-mdp";
 
 export default function ConfigurationsDeMotDePasseView(){
     const [configurations, setConfigurations] = useState({
@@ -12,7 +13,9 @@ export default function ConfigurationsDeMotDePasseView(){
     const [open, setOpen] = useState(false);
     return( 
         <>
-        <ConfigurationMdpModal {...{open, setOpen, configurations, setConfigurations}} />
+        <ConfigurationMdpModal {...{open, setOpen, titre:"Modification des configurations de mot de passe"}}>
+            <FormulaireConfigurationsMdp {...{configurations, setConfigurations, setOpen}}/>
+        </ConfigurationMdpModal>
         <div>
              <title>Configurations de mot de passe | GTI619 | Labo 5</title>
                 <div className="flex items-center justify-center mb-3">
