@@ -12,6 +12,20 @@ const userNavigation = [
     return classes.filter(Boolean).join(' ')
   }
 
+  export const getDisplayNameRole = (role) => {
+    switch(role){
+      case 'ROLE_ADMINISTRATEUR':
+        return 'Administrateur';
+      case 'ROLE_PREPOSE_AUX_CLIENTS_DAFFAIRE':
+        return 'Préposé aux clients d’affaire';
+      case 'ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS':
+        return 'Préposé aux clients résidentiels';
+      default:
+        return 'Aucun rôle';
+  };
+
+  }
+
 export default function Layout(
     {children, navigation, setActivePage, setFocusedElement, focusedElement=null}:{
         children: React.ReactNode,
@@ -24,21 +38,6 @@ export default function Layout(
 
     const {profile} = useAuth();
 
-    let roleDisplayName = '';
-
-    switch(profile?.role){
-        case 'ROLE_ADMINISTRATEUR':
-          roleDisplayName = 'Administrateur';
-          break;
-        case 'ROLE_PREPOSE_AUX_CLIENTS_DAFFAIRE':
-          roleDisplayName = 'Préposé aux clients d’affaire';
-          break;
-        case 'ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS':
-          roleDisplayName = 'Préposé aux clients résidentiels';
-          break;
-        default:
-          roleDisplayName = 'Aucun rôle';
-    };
 
 
     return (
@@ -182,7 +181,7 @@ export default function Layout(
                 
                 {profile && <div className='bg-neutral-900 p-5 rounded-md'>
                   <p className='text-lg font-bold'>{profile.username}</p>
-                  <p className='text-base font-bold'>Role: {roleDisplayName}</p>
+                  <p className='text-base font-bold'>Role: {getDisplayNameRole(profile?.role)}</p>
                 </div>}
                 {
                   focusedElement !== null &&  <div className='bg-neutral-900 p-5 rounded-md'>{focusedElement}</div>

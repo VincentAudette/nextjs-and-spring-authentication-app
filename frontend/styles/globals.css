@@ -10,7 +10,7 @@ body{
     @apply appearance-none block w-full px-3 bg-neutral-800 focus:bg-neutral-700 py-2 border border-neutral-700 rounded-md shadow-sm placeholder-neutral-400 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm
 } 
 .titre-section{
-    @apply text-2xl font-semibold;
+    @apply text-xl font-semibold;
 }
 
 .input-container{
@@ -23,4 +23,12 @@ body{
 
 .btn-primary{
     @apply w-full flex justify-center py-2 px-4 rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-b from-red-400 to-red-700 hover:bg-gradient-to-b hover:from-red-300 hover:to-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600;
+}
+
+.focus-light{
+    @apply focus:ring-2 focus:ring-red-300 focus:border-red-400 border;
+}
+
+.focus-dark{
+    @apply focus:ring-2 focus:ring-red-500 focus:border-red-800 border;
 }

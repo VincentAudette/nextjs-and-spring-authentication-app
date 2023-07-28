@@ -30,17 +30,16 @@ export default function PreposeAuxClientsAffaireView(){
     if (isLoading) return <LoadingQuery />
     if (isError) return <ErrorQuery error={error as Error} />
 
-    console.log(clientsAffaire);
     
     
     
     
     return (
         <div>
-            <title>Préposé aux clients résidentiels | GTI619 | Labo 5</title>
+            <title>Clients résidentiels | GTI619 | Labo 5</title>
             <div className="flex flex-col justify-center mb-3">
-                <div className='flex'>
-                    <h1 className="titre-section">Préposé aux clients affaire</h1>
+                <div className='flex items-center'>
+                    <h1 className="titre-section">Clients affaire</h1>
                     <div className='grow'/>
                     <div className="flex gap-2 items-center">
                             Page {page+1} / {clientsAffaire.totalPages}
@@ -51,7 +50,7 @@ export default function PreposeAuxClientsAffaireView(){
                 <ul className="w-full py-3 flex flex-col gap-2">
                     {clientsAffaire.content.length >=1 &&
                         clientsAffaire.content.map(({name})=>(
-                            <li className="w-full text-lg font-semibold rounded-sm bg-neutral-200 text-black p-4" key={name}>
+                            <li className="w-full font-semibold rounded-xl bg-neutral-200 text-black p-4" key={name}>
                                 {name}
                                 </li>
                         ))

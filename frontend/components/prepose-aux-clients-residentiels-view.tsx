@@ -28,9 +28,9 @@ const { data: clientResidentiels, isLoading, isError, error } = useQuery(['clien
 
     return (
         <div>
-            <title>Préposé aux clients résidentiels | GTI619 | Labo 5</title>
+            <title>Clients résidentiels | GTI619 | Labo 5</title>
                 <div className="flex items-center justify-center mb-3">
-                    <h1 className="titre-section">Préposé aux clients résidentiels</h1>
+                    <h1 className="titre-section">Clients résidentiels</h1>
                     <div className="grow"/>
                     <div className="flex gap-2 items-center">
                         Page {page+1} / {clientResidentiels.totalPages}
@@ -42,7 +42,7 @@ const { data: clientResidentiels, isLoading, isError, error } = useQuery(['clien
                 <ul className="w-full  flex flex-col gap-2">
                     {clientResidentiels.content.length >=1 &&
                         clientResidentiels.content.map(({name},i)=>(
-                            <li key={name+i} className="w-full text-lg font-semibold rounded-sm bg-neutral-200 text-black p-4" >
+                            <li key={name+i} className="w-full font-semibold rounded-xl bg-neutral-200 text-black p-4" >
                                 {name}
                                 </li>
                         ))

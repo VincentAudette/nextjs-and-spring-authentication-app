@@ -27,22 +27,23 @@ export default function ConfigurationsDeMotDePasseView(){
                  <hr className="my-5 border border-neutral-800" />
                  <h2 className="mb-5">Valeurs actuels des configurations</h2>
                  <div className=" gap-2 flex-col w-full grid sm:grid-cols-2">
-                    <div className="flex justify-between  flex-col border-2 border-neutral-800 blue p-2 rounded-lg">
-                        <label className="block " htmlFor="nombreCaracteres">Nombre de caractères requis</label>
-                        <p className="text-3xl">{configurations.nombreCaracteres[0]}</p>
-                    </div>
-                    <div className="flex justify-between  flex-col border-2 border-neutral-800 blue p-2 rounded-lg">
-                        <label className="block " htmlFor="majuscule">Caractère en majuscule requis</label>
-                        <p className="text-3xl">{configurations.uppercase ? "Oui":"Non"}</p>
-                    </div>
-                    <div className="flex justify-between  flex-col border-2 border-neutral-800 blue p-2 rounded-lg">
-                        <label className="block " htmlFor="numeros">Numéros requis</label>
-                        <p className="text-3xl">{configurations.numeros ? "Oui":"Non"}</p>
-                    </div>
-                    <div className="flex justify-between  flex-col border-2 border-neutral-800 blue p-2 rounded-lg">
-                        <label className="block " htmlFor="nombreCaracteres">Caractères spéciale requis</label>
-                        <p className="text-3xl">{configurations.specialCaracter ? "Oui":"Non"}</p>
-                    </div>
+                    {
+                        [
+                            {label: "Nombre de caractères requis", value: configurations.nombreCaracteres[0]},
+                            {label: "Caractères spéciaux", value: configurations.specialCaracter ? "Oui":"Non"},
+                            {label: "Caractères en majuscule", value: configurations.uppercase ? "Oui":"Non"},
+                            {label: "Numéros", value: configurations.numeros ? "Oui":"Non"},
+                            
+                        ].map(({label, value})=>(
+                            <div
+                            key={label}
+                            className="flex justify-between  flex-col bg-white text-neutral-800 p-2 rounded-lg">
+                                <label className="block " htmlFor="nombreCaracteres">{label}</label>
+                                <p className="text-3xl">{value}</p>
+                            </div>
+                        ))
+                    }
+                    
                  </div>
 
                  

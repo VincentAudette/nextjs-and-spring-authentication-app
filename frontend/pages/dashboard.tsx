@@ -35,7 +35,7 @@ export default function Dashboard() {
     
     
   return (
-    <RoleBasedRedirection allowedRoles={["ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS", "PREPOSE_AUX_CLIENTS_AFFAIRE"]}>
+    <RoleBasedRedirection allowedRoles={["ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS", "ROLE_PREPOSE_AUX_CLIENTS_DAFFAIRE"]}>
     <Layout
       navigation={navigation}
       setActivePage={setActivePage}

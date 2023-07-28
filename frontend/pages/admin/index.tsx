@@ -26,7 +26,7 @@ export default function AdminPage() {
       { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage },
       { name: 'Clients résidentiels', view:CLIENTS_RESIDENTIELS, current: CLIENTS_RESIDENTIELS === activePage },
       { name: 'Clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage },
-      { name: 'Gestion de mot de passe', view:GESTION_DE_MDP, current: GESTION_DE_MDP === activePage },
+      { name: 'Liste d\'utilisateurs', view:GESTION_DE_MDP, current: GESTION_DE_MDP === activePage },
       { name: 'Configurations de mot de passe', view:CONFIG_MDP, current: CONFIG_MDP === activePage },
     ];
 
