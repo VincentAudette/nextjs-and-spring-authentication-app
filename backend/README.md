@@ -2,10 +2,11 @@
 
 1. Go To File > Project structure (IntelliJ) and set Java version to `11`<br>
 2. `maven install`<br>
-3. Run > AuthApplication.java
-4. Open on localhost:8080
-5. You can go to localhost:8080/h2-console to access local bd
-6. the .sh can be used with Git Bash to create users and look up the bd info 
+3. if you are using the backend folder as project root, change `backend/src/main/resources/application.properties` `spring.datasource.url=` to `jdbc:h2:./userinfo`
+4. Run > AuthApplication.java
+5. Open on localhost:8080
+6. You can go to localhost:8080/h2-console to access local bd
+7. the .sh can be used with Git Bash to create users and look up the bd info 
 
 #### Ways to use h2
 - to create new db and update attributes -> spring.jpa.hibernate.ddl-auto=update
