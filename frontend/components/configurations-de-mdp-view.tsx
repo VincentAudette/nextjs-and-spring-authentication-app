@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Settings2 } from "lucide-react";
-import ConfigurationMdpModal from "./configuration-mdp-modal";
+import ModalGeneric from "./modal-generic";
 import FormulaireConfigurationsMdp from "./formulaire-configurations-mdp";
 
 export default function ConfigurationsDeMotDePasseView(){
@@ -13,9 +13,9 @@ export default function ConfigurationsDeMotDePasseView(){
     const [open, setOpen] = useState(false);
     return( 
         <>
-        <ConfigurationMdpModal {...{open, setOpen, titre:"Modification des configurations de mot de passe"}}>
+        <ModalGeneric {...{open, setOpen, titre:"Modification des configurations de mot de passe"}}>
             <FormulaireConfigurationsMdp {...{configurations, setConfigurations, setOpen}}/>
-        </ConfigurationMdpModal>
+        </ModalGeneric>
         <div>
              <title>Configurations de mot de passe | GTI619 | Labo 5</title>
                 <div className="flex items-center justify-center mb-3">
@@ -23,7 +23,7 @@ export default function ConfigurationsDeMotDePasseView(){
                  <div className="grow"/>
                  <button 
                  onClick={()=>{setOpen(true)}}
-                 className="rounded-full bg-white text-black p-4 hover:bg-neutral-200">
+                 className="rounded-full bg-white text-black p-4 hover:bg-neutral-200 focus-dark">
                     <Settings2  />
                  </button>
                  </div>
@@ -40,8 +40,8 @@ export default function ConfigurationsDeMotDePasseView(){
                         ].map(({label, value})=>(
                             <div
                             key={label}
-                            className="flex justify-between  flex-col bg-white text-neutral-800 p-2 rounded-lg">
-                                <label className="block " htmlFor="nombreCaracteres">{label}</label>
+                            className="flex justify-between items-center flex-col bg-neutral-200 text-neutral-800 p-2 rounded-lg">
+                                <label className="block text-neutral-700 " htmlFor="nombreCaracteres">{label}</label>
                                 <p className="text-3xl">{value}</p>
                             </div>
                         ))

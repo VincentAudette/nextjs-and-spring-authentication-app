@@ -2,7 +2,7 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
 import Notification from "@components/notification";
-export default function ConfigurationMdpModal({ children, titre, open, setOpen}){
+export default function ModalGeneric({ children, titre, open, setOpen}){
   
 
       const [errorModal, setErrorModal] = useState(false)
@@ -27,7 +27,7 @@ export default function ConfigurationMdpModal({ children, titre, open, setOpen})
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Dialog.Overlay className="fixed inset-0 bg-neutral-900/75 transition-opacity backdrop-blur-xl" />
+                <Dialog.Overlay className="fixed inset-0 bg-black/75 transition-opacity" />
               </Transition.Child>
     
               {/* This element is to trick the browser into centering the modal contents. */}
@@ -43,7 +43,7 @@ export default function ConfigurationMdpModal({ children, titre, open, setOpen})
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <div className="relative inline-block align-bottom bg-neutral-50/20 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                <div className="relative inline-block align-bottom bg-neutral-600/60 backdrop-blur-md rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                 <h2 className="titre-section ">{titre}</h2>
                 <div className="h-5" />
                 {children}

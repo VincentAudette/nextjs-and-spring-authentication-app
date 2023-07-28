@@ -29,7 +29,7 @@ export default function FormulaireConfigurationsMdp({setOpen, configurations, se
                         </div>
 
 
-                        <hr className="mt-5 border border-neutral-600" />
+                        <hr className="mt-5 border border-neutral-500/30 rounded-full" />
 
                         <div>
                             <div className="flex justify-between mb-2">
