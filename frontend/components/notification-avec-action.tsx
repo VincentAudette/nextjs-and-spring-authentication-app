@@ -2,9 +2,10 @@ import { Fragment, useState } from 'react'
 import { Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { KeyIcon } from '@heroicons/react/24/outline'
+import { useAuth } from 'context/auth-context';
 
 export default function NotificationAvecAction() {
-  const [show, setShow] = useState(true)
+  const {showNotification, setShowNotification} = useAuth();
 
   return (
     <>
@@ -14,7 +15,7 @@ export default function NotificationAvecAction() {
       >
         <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
           <Transition
-            show={show}
+            show={showNotification}
             as={Fragment}
             enter="transform ease-out duration-300 transition"
             enterFrom="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
@@ -52,7 +53,7 @@ export default function NotificationAvecAction() {
                       type="button"
                       className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       onClick={() => {
-                        setShow(false)
+                        setShowNotification(false)
                       }}
                     >
                       <span className="sr-only">Fermer</span>

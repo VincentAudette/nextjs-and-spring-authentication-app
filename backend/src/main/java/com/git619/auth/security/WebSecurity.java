@@ -89,10 +89,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception{
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/user").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/login").permitAll().and()
-                .authorizeRequests().antMatchers("/h2-console/**").permitAll().and()
-                .authorizeRequests().antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/api/user", "/api/login", "/h2-console/**", "/favicon.ico", "/api/logout").permitAll()
                 .anyRequest().authenticated()
                 .and().headers().frameOptions().disable()
                 .and()
@@ -100,6 +97,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
+
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {

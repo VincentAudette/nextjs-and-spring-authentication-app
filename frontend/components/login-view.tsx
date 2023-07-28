@@ -20,7 +20,7 @@ export default function LoginView(){
         event.preventDefault()
 
         const res = await fetch(
-          FRONTEND_URL+AUTH_ENDPOINT,
+          "/api/login",
           {
             body: JSON.stringify({
               username: event.target.username.value,

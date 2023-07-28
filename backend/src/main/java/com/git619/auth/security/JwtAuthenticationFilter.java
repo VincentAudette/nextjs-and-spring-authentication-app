@@ -43,9 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        //Ignorer pour /api/login
-        LOGGER.info("REQ URI: "+request.getRequestURI());
-        if(request.getRequestURI().equals("/api/login") || request.getRequestURI().contains("/h2-console")) {
+        //Ignore for /api/login
+        LOGGER.info("Request URI: "+request.getRequestURI());
+        if(request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/logout") || request.getRequestURI().contains("/h2-console")) {
+            LOGGER.info("Continue the filter chain...");
             filterChain.doFilter(request, response);
             return;
         }
@@ -70,9 +71,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Long sessionId = jws.getBody().get("sessionId", Long.class);
             LOGGER.info("Session ID is: "+sessionId);
             Session session = sessionService.getSessionById(sessionId);
-            if(session == null || isSessionExpired(session)){
+            if(session == null || isSessionExpired(session) || !session.getActive()){
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("SESSION_EXPIRED");
+                response.getWriter().write("SESSION_EXPIRED_OR_INACTIVE");
                 return;
             }
 
@@ -84,16 +85,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             sessionService.editSession(session);
 
         }  catch (JwtException e) {
-        System.out.println("Exception: " + e.getMessage());
-        SecurityContextHolder.clearContext();
+            System.out.println("Exception: " + e.getMessage());
+            SecurityContextHolder.clearContext();
 
-        // Respond with an error status.
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Invalid JWT token");
-        return;
+            // Respond with an error status.
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT token");
+            return;
         }
         filterChain.doFilter(request, response);
     }
+
     private boolean isSessionExpired(Session session) {
         // La valeur du timeout est déterminée par le premier des trois chiffres en minutes
         long sessionTimeoutMillis = 30 * 60 * 1000;

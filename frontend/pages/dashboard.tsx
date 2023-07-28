@@ -1,12 +1,13 @@
 import DashboardView from '../components/dashboard-view'
 import { useAuth } from '../context/auth-context'
 import Layout from '@components/layout'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PreposeAuxClientsResidentielsView from '@components/prepose-aux-clients-residentiels-view'
 import PreposeAuxClientsAffaireView from '@components/prepose-aux-clients-affaire-view'
 import RoleBasedRedirection from '@components/role-based-redirection'
 import { AcademicCapIcon, GlobeAmericasIcon, KeyIcon } from '@heroicons/react/24/outline'
 import NotificationAvecAction from '@components/notification-avec-action'
+import { useRouter } from 'next/router'
 
 const DASHBOARD_STR = "dashboard";
 const CLIENTS_RESIDENTIELS = "clients-residentiels";
@@ -22,7 +23,7 @@ export default function Dashboard() {
     const {profile} = useAuth()
     const [activePage, setActivePage] =  useState(DASHBOARD_STR);
     const [focusedElement, setFocusedElement] =useState(null)
-
+    const router = useRouter();
 
     const navigation = profile?.role === "ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS" ? [
       { name: 'Tableau de bord', view:DASHBOARD_STR, current: DASHBOARD_STR === activePage, icon:null },
@@ -34,6 +35,12 @@ export default function Dashboard() {
       { name: 'Gestion de compte', view:GESTION_DE_COMPTE, current: GESTION_DE_COMPTE === activePage, icon: KeyIcon}
     ];
 
+
+    useEffect(() => {
+      if (!profile) {
+        router.push('/');
+      }
+    }, [profile, router]);
 
     
     

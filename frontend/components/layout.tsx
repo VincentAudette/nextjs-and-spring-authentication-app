@@ -4,10 +4,12 @@ import { Bars3Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import ETSLogo from '@components/SVG/ETSLogo'
 import { useAuth } from 'context/auth-context'
-const userNavigation = [
-  { name: 'Modifier mot de passe', href:'#modifier-mot-de-passe'},
-  { name: 'Déconnexion', href: '/' },
-  ]
+import { useRouter } from 'next/router'
+import useIsClient from 'utils/use-is-client'
+
+
+
+
   
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -37,7 +39,33 @@ export default function Layout(
     }
     ){
 
+    const router = useRouter();
+    const isClient = useIsClient();
     const {profile} = useAuth();
+
+ 
+    const logout = async () => {
+      const res = await fetch(`/api/logout?token=${profile.token}`);
+      if (!res.ok) {
+        const errorObj = await res.json();
+        errorObj.status = res.status;
+        throw errorObj;
+      } else {
+        // Clear the client-side storage
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("profile");
+        }
+    
+        router.push('/');
+      }
+    }
+    
+
+    const userNavigation = [
+      { name: 'Modifier mot de passe', href:'#modifier-mot-de-passe', onClick: ()=>setActivePage('mot-de-passe') },
+      { name: 'Déconnexion', href: '/', onClick: logout },
+    ]
+    
 
 
 
@@ -98,16 +126,12 @@ export default function Layout(
                           {userNavigation.map((item) => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
-                                <Link
-                                  href={item.href}
-                                  passHref
-                                >
                                  <button 
+                                 onClick={item.onClick}
                                  className={classNames(
                                     active ? 'bg-neutral-300 ' : '',
                                     'block py-2 px-4 text-sm w-full text-neutral-700'
                                   )}> {item.name}</button>
-                                </Link>
                               )}
                             </Menu.Item>
                           ))}
@@ -178,7 +202,7 @@ export default function Layout(
                 {children}
             </main>
             <aside className="hidden xl:block xl:col-span-3">
-              <div className="sticky top-6 space-y-4">
+              {isClient && <div className="sticky top-6 space-y-4">
                 
                 {profile && <div className='bg-neutral-900 p-5 rounded-md'>
                   <p className='text-lg font-bold'>{profile.username}</p>
@@ -187,7 +211,7 @@ export default function Layout(
                 {
                   focusedElement !== null &&  <div className='bg-neutral-900 p-5 rounded-md'>{focusedElement}</div>
                 }
-              </div>
+              </div>}
             </aside>
           </div>
         </div>
