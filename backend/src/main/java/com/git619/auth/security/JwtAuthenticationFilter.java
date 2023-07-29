@@ -4,9 +4,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.sql.Timestamp;
 import java.util.logging.Logger;
-
 import com.git619.auth.domain.Session;
+import com.git619.auth.domain.User;
 import com.git619.auth.services.SessionService;
+import com.git619.auth.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -31,6 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final Key jwtSecret;
     @Autowired
     private SessionService sessionService;
+    @Autowired
+    private UserService userService;
 
     public JwtAuthenticationFilter(String jwtSecret) {
         this.jwtSecret = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -60,12 +63,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = authorizationHeader.substring("Bearer ".length());
+        String username = null;
 
         try {
             System.out.println("Token from request: " + token);
             Jws<Claims> jws = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             System.out.println("Generated token: " + jws);
-            String username = jws.getBody().getSubject();
+            username = jws.getBody().getSubject();
             String role = jws.getBody().get("role", String.class);
             LOGGER.info("Authentication successful for user: " + username + ", with role: " + role);
             Long sessionId = jws.getBody().get("sessionId", Long.class);
@@ -80,15 +84,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority(role)));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // On met à jour le temps de dernière accès quand un requête vers la Base de Données est fait.
+            // Update the session's last access time
             session.setLastAccessed(new Timestamp(System.currentTimeMillis()));
             sessionService.editSession(session);
+        } catch (JwtException e) {
+            // On failed authentication, log the failed login
+            User user = userService.findByUsername(username);
+            userService.loginFailed(user);
 
-        }  catch (JwtException e) {
+            // Handle the exception
             System.out.println("Exception: " + e.getMessage());
             SecurityContextHolder.clearContext();
 
-            // Respond with an error status.
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Invalid JWT token");
             return;

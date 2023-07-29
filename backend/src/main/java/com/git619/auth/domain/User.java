@@ -3,7 +3,9 @@ package com.git619.auth.domain;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.git619.auth.utils.Role;
+import org.springframework.data.domain.Page;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
-
+import java.util.List;
 
 
 @Entity
@@ -38,6 +40,10 @@ public class User implements UserDetails{
     @Column(name = "ROLE", columnDefinition = "VARCHAR2(255)")
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<LoginAttempt> loginAttempts;
 
 
     public User(@NonNull String username, @NonNull String password, String salt, Role role) {

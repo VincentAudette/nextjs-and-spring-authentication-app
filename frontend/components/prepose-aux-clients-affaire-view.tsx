@@ -3,11 +3,12 @@ import { useQuery } from 'react-query';
 import ErrorQuery, { Error } from './error-query';
 import LoadingQuery from './loading-query';
 import { useState } from 'react';
+import Pagination from './pagination';
 
 
 export default function PreposeAuxClientsAffaireView(){
 
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState<number>(0);
 
     const {profile} = useAuth();
 
@@ -30,7 +31,9 @@ export default function PreposeAuxClientsAffaireView(){
     if (isLoading) return <LoadingQuery />
     if (isError) return <ErrorQuery error={error as Error} />
 
-    
+    const onPageChange = (newPage) => {
+        setPage(newPage);
+      };
     
     
     
@@ -41,11 +44,13 @@ export default function PreposeAuxClientsAffaireView(){
                 <div className='flex items-center mb-3'>
                     <h1 className="titre-section">Clients affaire</h1>
                     <div className='grow'/>
-                    <div className="flex gap-2 items-center">
-                            Page {page+1} / {clientsAffaire.totalPages}
-                            <button className="bg-neutral-700 py-2 px-4 rounded-md focus-dark" onClick={()=>setPage(page-1)} disabled={page===0}>&larr; Page précédente</button>
-                            <button className="bg-neutral-700 py-2 px-4 rounded-md focus-dark" onClick={()=>setPage(page+1)} disabled={clientsAffaire.last}>Page suivante &rarr;</button>
-                        </div>
+                    <Pagination
+                    darkMode={true}
+                    currentPage={page}
+                    totalPages={clientsAffaire.totalPages}
+                    onPageChange={onPageChange}
+                    />
+                   
                 </div>
                 <ul className="w-full flex flex-col gap-2 ">
                     {clientsAffaire.content.length >=1 &&

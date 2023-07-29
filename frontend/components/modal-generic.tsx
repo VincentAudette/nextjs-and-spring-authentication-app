@@ -5,7 +5,7 @@ import Notification from "@components/notification";
 export default function ModalGeneric({ children, titre, open, setOpen}){
   
 
-      const [errorModal, setErrorModal] = useState(false)
+      const [errorModal, setErrorModal] = useState(true)
       const [errorMessage, setErrorMessage] = useState('')
 
      
@@ -14,7 +14,6 @@ export default function ModalGeneric({ children, titre, open, setOpen}){
       const cancelButtonRef = useRef(null)
     
       return (<>
-            <Notification showNotification={errorModal}  setShowNotification={setErrorModal} description={errorMessage} heading={'ERROR'}/>
             <Transition.Root show={open} as={Fragment}>
           <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" initialFocus={cancelButtonRef} onClose={setOpen}>
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -29,6 +28,12 @@ export default function ModalGeneric({ children, titre, open, setOpen}){
               >
                 <Dialog.Overlay className="fixed inset-0 bg-neutral-950/75 transition-opacity" />
               </Transition.Child>
+              {
+                errorModal && <div className='z-50 flex flex-col-reverse fixed bottom-0 md:top-0 md:bottom-auto md:right-0 sm:inset-x-auto inset-x-0 p-5 max-h-screen overflow-scroll gap-3'>
+                <Notification description={errorMessage} heading={'ERROR'}/>
+              </div>
+              }
+             
     
               {/* This element is to trick the browser into centering the modal contents. */}
               <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
@@ -43,7 +48,7 @@ export default function ModalGeneric({ children, titre, open, setOpen}){
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <div className="relative inline-block align-bottom bg-neutral-200/90 backdrop-blur-sm rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                <div className="relative inline-block align-bottom bg-neutral-200/80 backdrop-blur-sm rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                 <h2 className="titre-section text-neutral-950">{titre}</h2>
                 <div className="h-5" />
                 {children}

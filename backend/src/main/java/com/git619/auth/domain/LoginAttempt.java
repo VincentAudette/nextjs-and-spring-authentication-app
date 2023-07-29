@@ -1,5 +1,7 @@
 package com.git619.auth.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -14,6 +16,7 @@ public class LoginAttempt {
 
     @ManyToOne
     @JoinColumn(name="USER_ID", nullable=false, updatable=false)
+    @JsonBackReference
     private User user;
 
 

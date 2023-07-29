@@ -12,8 +12,10 @@ export default function LoginView(){
 
     const router = useRouter();
     const {setProfile, setShowNotification, showNotification} = useAuth()
+    const [notifications, setNotifications] = useState([]);
 
-    const [notifcationContent, setNotificationContent] = useState({heading:"", description:"", IconColor:""})
+
+    const [notifcationContent, setNotificationContent] = useState({heading:"", description:""})
 
 
     const loginUserHandler = async event => {
@@ -55,16 +57,35 @@ export default function LoginView(){
             }
 
         }else{
-            setNotificationContent({
-                heading:"Pas authorisé",
-                description:result.mes,
-                IconColor:"text-red-900"
-            });
-            setShowNotification(true);
+            console.log("ERROR=====",result.err);
+            
+            if(result.err.status === 429){
+                setNotifications(notifications => [
+                    ...notifications,
+                    {
+                        heading:"Trop de tentatives",
+                        description:"Vous avez trop tenté de vous connecter. Veuillez réessayer plus tard.",
+                    }
+                ]);
+                setTimeout(() => setNotifications(notifications => notifications.slice(1)), 3000); 
+            }
+            if(result.err.status === 401){
+                setNotifications(notifications => [
+                    ...notifications,
+                {
+                    heading:"Erreur d'authentification",
+                    description:"Nom d'utilisateur ou mot de passe invalide.",
+                }]);
+                setTimeout(() => setNotifications(notifications => notifications.slice(1)), 3000); 
+                return;
+            }
 
         }
         
       }
+
+      console.log("NOTIFICATIONS=====",notifications);
+      
 
 
 
@@ -73,10 +94,14 @@ export default function LoginView(){
     return (
         <>
         <title>Authentification ÉTS | GTI619</title>
-    <Notification {...notifcationContent} setShowNotification={setShowNotification} showNotification={showNotification} />
-    <div className="h-full bg-neutral-700 text-white">
+        <div className="flex flex-col-reverse fixed bottom-0 md:top-0 md:bottom-auto md:right-0 sm:inset-x-auto inset-x-0 z-10 p-5 max-h-screen overflow-scroll gap-3">
+  {notifications.length >= 1 && notifications.map((notification, index) => (
+    <Notification key={index} {...notification} setShowNotification={setShowNotification} showNotification={showNotification} />
+  ))}
+</div>
+
+        <div className="h-full bg-neutral-700 text-white">
                 <div className="h-full">
-                  
                 
                     <div className="min-h-screen flex">
                         <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">

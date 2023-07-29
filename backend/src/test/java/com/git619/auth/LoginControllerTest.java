@@ -14,10 +14,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,11 +31,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class LoginControllerTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginControllerTest.class);
+
     @Mock
     private UserService userService;
 
     @Mock
     private AuthenticationManager authenticationManager;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private LoginController loginController;
@@ -46,12 +57,13 @@ public class LoginControllerTest {
         User user = new User();
         user.setUsername("user1");
         user.setPassword("pass1");
+        user.setSalt("salt");
 
         Authentication authentication = new UsernamePasswordAuthenticationToken("user1", "pass1");
 
-        when(authenticationManager.authenticate(any())).thenReturn(authentication);
         when(userService.findByUsername(any())).thenReturn(user);
         when(userService.createToken(any())).thenReturn("mockToken");
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -60,5 +72,49 @@ public class LoginControllerTest {
                         .content("{\"username\":\"user1\", \"password\":\"pass1\"}"))
                 .andExpect(status().isOk());
     }
-}
 
+    @Test
+    public void loginFailMaxAttemptsTest() throws Exception {
+
+        User user = new User();
+        user.setUsername("user1");
+        user.setPassword("pass1");
+        user.setSalt("salt");
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken("user1", "pass1");
+
+        when(userService.findByUsername(any())).thenReturn(user);
+        when(userService.createToken(any()))
+                .thenReturn("mockToken")
+                .thenThrow(new RuntimeException("Nombre d’essais autorisés dépassé."));
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        AtomicInteger callCount = new AtomicInteger();
+
+        when(userService.createToken(any())).thenAnswer(invocation -> {
+            if (callCount.incrementAndGet() > 4) {
+                throw new RuntimeException("Nombre d’essais autorisés dépassé.");
+            }
+            return "mockToken";
+        });
+
+
+        for (int i = 0; i < 5; i++) {
+            try {
+                mockMvc.perform(post("/api/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"username\":\"user1\", \"password\":\"pass1\"}"))
+                        .andExpect(i < 4 ? status().isOk() : status().isTooManyRequests());
+            } catch (Exception e) {
+                LOGGER.error("Error on attempt number " + i + ": " + e.getMessage());
+                throw e;
+            }
+        }
+
+    }
+
+
+
+}

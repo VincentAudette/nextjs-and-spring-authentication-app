@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import LoadingQuery from "./loading-query";
 import ErrorQuery, { Error } from "./error-query";
 import { useState } from "react";
+import Pagination from "./pagination";
 
 export default function PreposeAuxClientsResidentielsView(){
 
@@ -26,6 +27,10 @@ const { data: clientResidentiels, isLoading, isError, error } = useQuery(['clien
     if (isLoading) return <LoadingQuery />
     if (isError) return <ErrorQuery error={error as Error} />
 
+    const onPageChange = (newPage) => {
+        setPage(newPage);
+      };
+
     return (
         <div>
             <title>Clients résidentiels | GTI619 | Labo 5</title>
@@ -33,9 +38,12 @@ const { data: clientResidentiels, isLoading, isError, error } = useQuery(['clien
                     <h1 className="titre-section">Clients résidentiels</h1>
                     <div className="grow"/>
                     <div className="flex gap-2 items-center">
-                        Page {page+1} / {clientResidentiels.totalPages}
-                        <button className="bg-neutral-700 py-2 px-4 rounded-md focus-dark" onClick={()=>setPage(page-1)} disabled={page===0}>&larr; Page précédente</button>
-                        <button className="bg-neutral-700 py-2 px-4 rounded-md focus-dark" onClick={()=>setPage(page+1)} disabled={clientResidentiels.last}>Page suivante &rarr;</button>
+                    <Pagination
+                    darkMode={true}
+                    currentPage={page}
+                    totalPages={clientResidentiels.totalPages}
+                    onPageChange={onPageChange}
+                    />
                     </div>
                 </div>
                 <ul className="w-full flex flex-col gap-2">

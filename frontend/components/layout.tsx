@@ -185,7 +185,7 @@ export default function Layout(
   
         <div className="py-6">
           <div className=" mx-auto sm:px-6 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
-            <div className="hidden lg:block lg:col-span-3 xl:col-span-3 ">
+            <div className="hidden lg:block lg:col-span-2 2xl:col-span-3 ">
               <nav aria-label="Sidebar" className="sticky top-6 space-y-2 flex flex-col ">
               {navigation.map((item) => (
                       <button
@@ -198,10 +198,10 @@ export default function Layout(
                     ))}
               </nav>
             </div>
-            <main className="lg:col-span-9 xl:col-span-6">
+            <main className=" lg:col-span-8 2xl:col-span-6">
                 {children}
             </main>
-            <aside className="hidden xl:block xl:col-span-3">
+            <aside className="hidden lg:col-span-2 xl:block 2xl:col-span-3">
               {isClient && <div className="sticky top-6 space-y-4">
                 
                 {profile && <div className='bg-neutral-900 p-5 rounded-md'>

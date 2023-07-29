@@ -1,5 +1,6 @@
 package com.git619.auth.controllers;
 
+import com.git619.auth.domain.LoginAttempt;
 import com.git619.auth.domain.Session;
 import com.git619.auth.domain.User;
 import com.git619.auth.dto.UserDTO;
@@ -96,6 +97,15 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
+    @GetMapping("/users/{userId}/login-attempts")
+    public ResponseEntity<Page<LoginAttempt>> getLoginAttempts(@PathVariable Long userId, Pageable pageable) {
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(userService.getLoginAttempts(user, pageable), HttpStatus.OK);
+    }
 
 
 
