@@ -2,6 +2,11 @@ package com.git619.auth.services;
 
 import com.git619.auth.domain.LoginAttempt;
 import com.git619.auth.domain.User;
+import com.git619.auth.dto.UpdatePasswordDTO;
+import com.git619.auth.exceptions.CurrentPasswordMismatchException;
+import com.git619.auth.exceptions.InvalidPasswordException;
+import com.git619.auth.exceptions.PasswordConfirmationMismatchException;
+import com.git619.auth.exceptions.PasswordUsedBeforeException;
 import com.git619.auth.repository.LoginAttemptRepository;
 import com.git619.auth.repository.UserRepository;
 import org.slf4j.Logger;
@@ -9,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,12 +33,19 @@ public class UserService {
     @Autowired
     private LoginAttemptRepository loginAttemptRepository;
 
+    @Autowired
+    private PasswordConfigService passwordConfigService;
+
+    private PasswordEncoder passwordEncoder;
+
 
 
     @Autowired
-    public UserService(UserRepository userRepository, AuthTokenService authTokenService) {
+    public UserService(UserRepository userRepository, AuthTokenService authTokenService,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authTokenService = authTokenService;
+        this.passwordEncoder= passwordEncoder;
     }
 
     public User createUser(User user) {
@@ -42,6 +55,11 @@ public class UserService {
                 user.getSalt(),
                 user.getRole()
         ));
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Page<LoginAttempt> getLoginAttempts(User user, Pageable pageable) {
@@ -101,5 +119,54 @@ public class UserService {
             throw ex;
         }
     }
+
+
+
+    public boolean updatePassword(User user, UpdatePasswordDTO updatePasswordDTO) {
+        if (!passwordEncoder.matches(updatePasswordDTO.getCurrentPassword() + user.getSalt(), user.getPassword())) {
+            // Mot de passe n'est pas identique à l'acutel
+            throw new CurrentPasswordMismatchException();
+        }
+
+
+
+        if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getNewPasswordConfirmation())) {
+            // La confirmation de mot de passe n'est pas identique que le nouveau mot de passe
+            throw new PasswordConfirmationMismatchException();
+        }
+
+        String validationMessage = passwordConfigService.validatePassword(updatePasswordDTO.getNewPassword());
+        if (!validationMessage.equals("OK")) {
+            // L'erreur est envoyé avec un message indiquant lequel n'est pas respecté
+            throw new InvalidPasswordException(validationMessage);
+        }
+
+
+        boolean isPasswordUsedBefore = user.getOldPasswords().stream()
+                .anyMatch(oldPassword -> passwordEncoder.matches(updatePasswordDTO.getNewPassword() + user.getSalt(), oldPassword));
+
+        if (isPasswordUsedBefore) {
+            // Le nouveau mot de passe à été utilisé au paravant
+            throw new PasswordUsedBeforeException();
+        }
+
+
+        // Tous les conditions sont valide
+        user.getOldPasswords().add(user.getPassword());
+        user.setPassword(passwordEncoder.encode(updatePasswordDTO.getNewPassword() + user.getSalt()));
+        userRepository.save(user);
+
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
 
 }

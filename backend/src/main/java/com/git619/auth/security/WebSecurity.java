@@ -27,25 +27,17 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
      * Variables de la Configuration de sécurité
      */
     private final UserDetailsService userDetailsService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Constructeur avec détails utilisateur et encodeur de mdp
      * @param userDetailsService
      */
-    public WebSecurity(UserDetailsService userDetailsService) {
+    public WebSecurity(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
+        this.passwordEncoder=passwordEncoder;
     }
 
-    /**
-     * Encodeur de mdp
-     * @return Le mot de passe encodé.
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Override
     @Bean
@@ -64,7 +56,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider() {
             @Override
-            protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+            protected void additionalAuthenticationChecks(UserDetails userDetails,
+                                                          UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
                 String rawPassword = (String) authentication.getCredentials();
 
                 if (!passwordEncoder.matches(rawPassword, userDetails.getPassword())) {
@@ -73,7 +66,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
             }
         };
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
@@ -89,7 +82,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception{
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/user", "/api/login", "/h2-console/**", "/favicon.ico", "/api/logout").permitAll()
+                .antMatchers("/api/user/create", "/api/login", "/h2-console/**", "/favicon.ico", "/api/logout").permitAll()
                 .anyRequest().authenticated()
                 .and().headers().frameOptions().disable()
                 .and()
@@ -114,7 +107,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth,
                                 DaoAuthenticationProvider provider) throws Exception {
-        auth
-                .authenticationProvider(provider);
+        auth.authenticationProvider(provider);
     }
 }

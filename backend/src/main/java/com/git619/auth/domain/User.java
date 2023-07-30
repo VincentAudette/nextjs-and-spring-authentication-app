@@ -45,6 +45,10 @@ public class User implements UserDetails{
     @JsonManagedReference
     private List<LoginAttempt> loginAttempts;
 
+    @ElementCollection
+    private List<String> oldPasswords;
+
+
 
     public User(@NonNull String username, @NonNull String password, String salt, Role role) {
         this.username = username;
@@ -91,6 +95,14 @@ public class User implements UserDetails{
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<String> getOldPasswords() {
+        return oldPasswords;
+    }
+
+    public void setOldPasswords(List<String> oldPasswords) {
+        this.oldPasswords = oldPasswords;
     }
 
     @Override

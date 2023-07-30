@@ -3,10 +3,17 @@ package com.git619.auth.controllers;
 import com.git619.auth.domain.LoginAttempt;
 import com.git619.auth.domain.Session;
 import com.git619.auth.domain.User;
+import com.git619.auth.dto.UpdatePasswordDTO;
 import com.git619.auth.dto.UserDTO;
+import com.git619.auth.exceptions.CurrentPasswordMismatchException;
+import com.git619.auth.exceptions.InvalidPasswordException;
+import com.git619.auth.exceptions.PasswordConfirmationMismatchException;
+import com.git619.auth.exceptions.PasswordUsedBeforeException;
 import com.git619.auth.services.SessionService;
 import com.git619.auth.utils.Role;
 import com.git619.auth.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +22,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +36,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api")
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     UserService userService;
     @Autowired
@@ -105,6 +118,51 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(userService.getLoginAttempts(user, pageable), HttpStatus.OK);
+    }
+
+    @PutMapping("/user/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+        try {
+            if (updatePasswordDTO != null) {
+                logger.info("Update password DTO=" + updatePasswordDTO);
+            } else {
+                logger.info("Update password DTO is null");
+                return new ResponseEntity<>("Update password DTO is null", HttpStatus.BAD_REQUEST);
+            }
+            String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userService.findByUsername(username);
+
+            userService.updatePassword(user, updatePasswordDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CurrentPasswordMismatchException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (PasswordConfirmationMismatchException | InvalidPasswordException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (PasswordUsedBeforeException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
+
+    @GetMapping("/user/old-passwords")
+    public ResponseEntity<?> getOldPasswords() {
+        try {
+            // Get the username of the currently authenticated user
+            String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            // Find the User object associated with the authenticated user
+            User user = userService.findByUsername(username);
+
+            if (user == null) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+
+            // Return the old passwords
+            return new ResponseEntity<>(user.getOldPasswords(), HttpStatus.OK);
+        } catch (Exception ex) {
+            logger.error("Error getting old passwords", ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

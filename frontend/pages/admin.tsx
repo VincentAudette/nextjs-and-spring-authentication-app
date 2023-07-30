@@ -1,23 +1,24 @@
 
 import ParametresDeSecurite from '@components/parametres-de-securite';
 import AdminView from '@components/admin-view'
-import GestionDeMotDePasseView from '@components/gestion-de-mdp-view';
+import ListeUtilisateurs from '@components/liste-utilisateurs';
 import Layout from '@components/layout'
 import PreposeAuxClientsAffaireView from '@components/prepose-aux-clients-affaire-view';
 import PreposeAuxClientsResidentielsView from '@components/prepose-aux-clients-residentiels-view';
 import { useEffect, useState } from 'react';
-import { AcademicCapIcon, GlobeAmericasIcon, IdentificationIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { AcademicCapIcon, GlobeAmericasIcon, IdentificationIcon, KeyIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 import NotificationAvecAction from '@components/notification-avec-action';
 import { useAuth } from 'context/auth-context';
 import { useRouter } from 'next/router';
 import RoleBasedRedirection from '@components/role-based-redirection';
+import GestionDeCompte from '@components/gestion-de-compte';
 
 const DASHBOARD_STR = "dashboard";
 const CLIENTS_RESIDENTIELS = "clients-residentiels";
 const CLIENTS_AFFAIRE = "clients-affaire";
 const GESTION_DE_MDP = "mot-de-passe";
 const PARAMETRES_DE_SECURITE = "paramètres de sécurité";
-
+const GESTION_DE_COMPTE = "gestion-de-compte";
 
 
 export default function AdminPage() {
@@ -36,6 +37,7 @@ export default function AdminPage() {
       { name: 'Clients d’affaire', view:CLIENTS_AFFAIRE, current: CLIENTS_AFFAIRE === activePage, icon: GlobeAmericasIcon },
       { name: 'Liste d\'utilisateurs', view:GESTION_DE_MDP, current: GESTION_DE_MDP === activePage, icon: IdentificationIcon },
       { name: 'Paramètres de sécurité', view:PARAMETRES_DE_SECURITE, current: PARAMETRES_DE_SECURITE === activePage, icon: ShieldCheckIcon },
+      { name: 'Gestion de compte', view:GESTION_DE_COMPTE, current: GESTION_DE_COMPTE === activePage, icon: KeyIcon}
     ];
 
 
@@ -53,8 +55,9 @@ export default function AdminPage() {
      {navigation[0].current && <AdminView navigation={navigation} activePage={activePage} setActivePage={setActivePage} />}
      {navigation[1].current && <PreposeAuxClientsResidentielsView />}
      {navigation[2].current && <PreposeAuxClientsAffaireView />}
-      {navigation[3].current && <GestionDeMotDePasseView />}
+      {navigation[3].current && <ListeUtilisateurs />}
       {navigation[4].current && <ParametresDeSecurite />}
+      {navigation[5].current && <GestionDeCompte />}
     </div>
    </Layout>
    </RoleBasedRedirection>

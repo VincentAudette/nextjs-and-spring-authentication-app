@@ -83,6 +83,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority(role)));
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            Authentication authTemp = SecurityContextHolder.getContext().getAuthentication();
+            LOGGER.info("AUTHENTICATION "+authTemp);
+
 
             // Update the session's last access time
             session.setLastAccessed(new Timestamp(System.currentTimeMillis()));

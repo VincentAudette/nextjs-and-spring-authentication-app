@@ -72,6 +72,18 @@ export default function UserSecurityInfo({user}){
         </div>
     </button>
     <div className="flex flex-col divide-y">
+    {expanded && <section className=" ">
+    <div className="bg-neutral-300 h-1 rounded-full mt-3 mb-5" />
+        <p className="font-bold pl-4 pr-8 sm:pl-6 lg:pl-8 mb-3">Panneau d&apos;actions utilisateur</p> 
+        <div className="flex gap-4">
+            <button className="focus-light w-full bg-white shadow-sm hover:shadow-none  hover:bg-neutral-100 text-neutral-700 text-center rounded-md ">
+                <p className="px-4 py-2">Revoquer le mot de passe </p>
+                </button>
+                <button className="focus-light w-full bg-red-600 shadow-sm hover:shadow-none  hover:bg-red-700 text-red-50 text-center rounded-md ">
+                <p className="px-4 py-2">Supprimer utilisateur</p>
+                </button>
+        </div>
+        </section>}
     {expanded && sessions && (
         isLoading ? <LoadingQuery /> : isError ? <ErrorQuery error={error as Error} /> : (
             
@@ -123,7 +135,7 @@ export default function UserSecurityInfo({user}){
 
             {expanded && loginAttempts && (
             isLoadingLoginAttempts ? <LoadingQuery /> : isLoginAttemptsError ? <ErrorQuery error={errorLoginAttempts as Error} /> : (
-            <section className="py-2">
+                loginAttempts.totalElements >= 1 && <section className="py-2">
                 <div className="bg-neutral-300 h-1 rounded-full mt-3" />
                 <div className="flex  text-base py-5 items-center w-full">
                     <p className="font-bold pl-4 pr-8 sm:pl-6 lg:pl-8 ">Tentatives de connexions</p> 
@@ -164,9 +176,7 @@ export default function UserSecurityInfo({user}){
             </section>
             ))}
         </div>
-        {expanded && <button className="focus-light w-full bg-white shadow-sm hover:shadow-none  hover:bg-neutral-100 text-neutral-700 text-center rounded-md mt-5">
-            <p className="px-4 py-2">Revoquer le mot de passe </p>
-            </button>}
+        
 
     
     

@@ -7,16 +7,9 @@ import LoadingQuery from "./loading-query";
 import ErrorQuery, { Error } from "./error-query";
 import { useAuth } from "context/auth-context";
 
-export default function ParametresDeSecurite() {
-  const [configurations, setConfigurations] = useState({});
-
-  console.log("CONFIG", configurations);
-  
-
-  const { profile } = useAuth();
-
-  const getConfigurations = async () => {
-    const res = await fetch(`/api/getPasswordConfig?token=${profile.token}`);
+export const getConfigurations = async (token) => {
+    
+    const res = await fetch(`/api/getPasswordConfig?token=${token}`);
     if (!res.ok) {
       const errorObj = await res.json();
       errorObj.status = res.status;
@@ -25,7 +18,15 @@ export default function ParametresDeSecurite() {
     return await res.json();
   }
 
-  const { data: passwordConfig, isLoading, isError, error } = useQuery('passwordConfig', getConfigurations);
+export default function ParametresDeSecurite() {
+  const [configurations, setConfigurations] = useState({});
+
+
+  const { profile } = useAuth();
+
+  
+
+  const { data: passwordConfig, isLoading, isError, error } = useQuery(['passwordConfig',profile.token], ({queryKey})=>getConfigurations(queryKey[1]), {enabled: !!profile.token});
 
   useEffect(() => {
     if (passwordConfig) {
@@ -38,7 +39,6 @@ export default function ParametresDeSecurite() {
   if (isLoading) return <LoadingQuery />
   if (isError) return <ErrorQuery error={error as Error} />
 
-  console.log("PWD CONFIG", passwordConfig);
 
   return (
     <>

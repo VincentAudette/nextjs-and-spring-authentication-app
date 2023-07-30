@@ -55,7 +55,7 @@ export default function PreposeAuxClientsAffaireView(){
                 <ul className="w-full flex flex-col gap-2 ">
                     {clientsAffaire.content.length >=1 &&
                         clientsAffaire.content.map(({name})=>(
-                            <li className="w-full font-semibold px-12 py-6 rounded-xl bg-neutral-200 text-black" key={name}>
+                            <li className="w-full font-semibold px-4 sm:px-6 lg:px-8 py-6 rounded-xl bg-neutral-200 text-black" key={name}>
                                 {name}
                                 </li>
                         ))

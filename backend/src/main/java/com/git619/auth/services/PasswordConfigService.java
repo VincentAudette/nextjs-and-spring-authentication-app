@@ -27,13 +27,21 @@ public class PasswordConfigService {
         return repository.save(passwordConfig);
     }
 
-    public boolean validatePassword(String password) {
+    public String validatePassword(String password) {
         PasswordConfig passwordConfig = getPasswordConfig();
-        return validatePasswordLength(password, passwordConfig)
-                && validateNeedsNumber(password, passwordConfig)
-                && validateNeedsSpecialCharacter(password, passwordConfig)
-                && validateNeedsUppercase(password, passwordConfig);
+        if (!validatePasswordLength(password, passwordConfig)) {
+            return "Le mot de passe n'est pas assez long.";
+        } else if (!validateNeedsNumber(password, passwordConfig)) {
+            return "Le mot de passe doit contenir un chiffre.";
+        } else if (!validateNeedsSpecialCharacter(password, passwordConfig)) {
+            return "Le mot de passe doit contenir un caractère spécial.";
+        } else if (!validateNeedsUppercase(password, passwordConfig)) {
+            return "Le mot de passe doit contenir une lettre majuscule.";
+        }
+        return "OK";
     }
+
+
 
     private boolean validatePasswordLength(String password, PasswordConfig passwordConfig) {
         return password.length() >= passwordConfig.getPasswordLength();

@@ -1,93 +1,13 @@
-import FRONTEND_URL from "../utils/FE/urls";
-import { AUTH_ENDPOINT } from "../utils/FULL/endpoints";
-import { useRouter } from "next/router";
-import { useAuth } from "../context/auth-context";
 import Notification from "./notification";
 import { useState } from "react";
 import Image from "next/image";
 import ETSLogo from "./SVG/ETSLogo";
-import Link from "next/link";
+import FormulaireLogin from "./formulaire-login";
+import { useNotifications } from "context/notification-context";
 
 export default function LoginView(){
 
-    const router = useRouter();
-    const {setProfile, setShowNotification, showNotification} = useAuth()
-    const [notifications, setNotifications] = useState([]);
-
-
-    const [notifcationContent, setNotificationContent] = useState({heading:"", description:""})
-
-
-    const loginUserHandler = async event => {
-        event.preventDefault()
-
-        const res = await fetch(
-          "/api/login",
-          {
-            body: JSON.stringify({
-              username: event.target.username.value,
-              password: event.target.password.value
-            }),
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            method: 'POST'
-          }
-        );
-    
-        const result = await res.json()
-        console.log("RESULT=====",result);
-        
-
-        if( result.hasOwnProperty("data")){
-            //load items in context
-            setProfile({
-                token: result.data.token,
-                username: result.decoded.sub,
-                role: result.decoded.role
-            });
-
-            //Check the role to redirect to the right page
-            if(result.decoded.role === "ROLE_ADMINISTRATEUR"){
-                router.push('/admin');
-            }else if(result.decoded.role === "ROLE_PREPOSE_AUX_CLIENTS_RESIDENTIELS"){
-                router.push('/dashboard');
-            }else if(result.decoded.role === "ROLE_PREPOSE_AUX_CLIENTS_DAFFAIRE"){
-                router.push('/dashboard');
-            }
-
-        }else{
-            console.log("ERROR=====",result.err);
-            
-            if(result.err.status === 429){
-                setNotifications(notifications => [
-                    ...notifications,
-                    {
-                        heading:"Trop de tentatives",
-                        description:"Vous avez trop tenté de vous connecter. Veuillez réessayer plus tard.",
-                    }
-                ]);
-                setTimeout(() => setNotifications(notifications => notifications.slice(1)), 3000); 
-            }
-            if(result.err.status === 401){
-                setNotifications(notifications => [
-                    ...notifications,
-                {
-                    heading:"Erreur d'authentification",
-                    description:"Nom d'utilisateur ou mot de passe invalide.",
-                }]);
-                setTimeout(() => setNotifications(notifications => notifications.slice(1)), 3000); 
-                return;
-            }
-
-        }
-        
-      }
-
-      console.log("NOTIFICATIONS=====",notifications);
-      
-
-
+    const { notifications} = useNotifications();
 
 
 
@@ -95,81 +15,23 @@ export default function LoginView(){
         <>
         <title>Authentification ÉTS | GTI619</title>
         <div className="flex flex-col-reverse fixed bottom-0 md:top-0 md:bottom-auto md:right-0 sm:inset-x-auto inset-x-0 z-10 p-5 max-h-screen overflow-scroll gap-3">
-  {notifications.length >= 1 && notifications.map((notification, index) => (
-    <Notification key={index} {...notification} />
-  ))}
-</div>
+        {notifications.length >= 1 && notifications.map((notification, index) => (
+            <Notification key={index} {...notification} />
+        ))}
+        </div>
 
         <div className="h-full bg-neutral-700 text-white">
                 <div className="h-full">
-                
                     <div className="min-h-screen flex">
                         <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
                             <div className="mx-auto w-full max-w-sm lg:w-96">
                             <div>
                            <ETSLogo />
                             <h2 className="mt-6 text-xl font-extrabold">Authentification par Équipe F - GTI619</h2>
-                            
                             </div>  
-
                             <div className="mt-8">
-                            
-
                             <div className="mt-6">
-                            <form onSubmit={loginUserHandler} className="space-y-6">
-                                <div>
-                                    <label htmlFor="username" className="block text-sm font-medium text-neutral-50">
-                                    Nom d&apos;utilisateur
-                                    </label>
-                                    <div className="mt-1">
-                                    <input
-                                        id="username"
-                                        name="username"
-                                        type="string"
-                                        autoComplete="username"
-                                        required
-                                        className="input"
-                                    />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-1"> 
-                                    <label htmlFor="password" className="block text-sm font-medium text-neutral-50">
-                                    Mot de passe
-                                    </label>
-                                    <div className="mt-1">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        autoComplete="current-password"
-                                        required
-                                        className="input"
-                                    />
-                                    </div>
-                                </div>
-
-                               
-
-                                <div>
-                                    <button
-                                    type="submit"
-                                    className="btn-primary"
-                                    >
-                                    Se connecter &rarr;
-                                    </button>
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                    
-
-                                    <div className="text-sm">
-                                    <Link href="reset-pwd" className="font-medium text-neutral-300 hover:text-white">
-                                        Demande de réinitialisation du mot de passe.
-                                    </Link>
-                                    </div>
-                                </div>
-                            </form>
+                            <FormulaireLogin />
                             </div>
                             </div>
                         </div>

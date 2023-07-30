@@ -49,7 +49,7 @@ const { data: clientResidentiels, isLoading, isError, error } = useQuery(['clien
                 <ul className="w-full flex flex-col gap-2">
                     {clientResidentiels.content.length >=1 &&
                         clientResidentiels.content.map(({name},i)=>(
-                            <li key={name+i} className="w-full font-semibold rounded-xl bg-neutral-200 text-black p-4" >
+                            <li key={name+i} className="w-full font-semibold rounded-xl bg-neutral-200 text-black px-4 sm:px-6 lg:px-8 py-4" >
                                 {name}
                                 </li>
                         ))

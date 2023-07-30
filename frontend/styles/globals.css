@@ -7,10 +7,10 @@ body{
 }
 
 .input{
-    @apply appearance-none block w-full px-3 bg-neutral-800 focus:bg-neutral-700 py-2 border border-neutral-700 rounded-md shadow-sm placeholder-neutral-400 focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm
+    @apply appearance-none block w-full px-3 bg-neutral-800 focus:bg-neutral-700 py-2  rounded-md shadow-sm placeholder-neutral-400 sm:text-sm 
 } 
 .titre-section{
-    @apply text-xl font-semibold;
+    @apply text-xl font-semibold px-4 sm:px-6 lg:px-8 mt-1;
 }
 
 .input-container{
@@ -26,9 +26,9 @@ body{
 }
 
 .focus-light{
-    @apply focus:ring-2 focus:ring-red-300 focus:border-red-400 border;
+    @apply focus:ring-2 focus:ring-red-300 focus:border-red-400 focus:ring-inset ring-neutral-300 ring-inset border-0 ring-1 outline-none;
 }
 
 .focus-dark{
-    @apply focus:ring-2 focus:ring-red-500 focus:border-red-800 border border-neutral-800;
+    @apply focus:ring-2 focus:ring-red-500 focus:border-red-800 focus:ring-inset ring-inset border-0 ring-neutral-700 ring-1 outline-none;
 }
