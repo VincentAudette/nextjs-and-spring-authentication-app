@@ -96,7 +96,7 @@ export default function LoginView(){
         <title>Authentification ÉTS | GTI619</title>
         <div className="flex flex-col-reverse fixed bottom-0 md:top-0 md:bottom-auto md:right-0 sm:inset-x-auto inset-x-0 z-10 p-5 max-h-screen overflow-scroll gap-3">
   {notifications.length >= 1 && notifications.map((notification, index) => (
-    <Notification key={index} {...notification} setShowNotification={setShowNotification} showNotification={showNotification} />
+    <Notification key={index} {...notification} />
   ))}
 </div>
 
@@ -165,7 +165,7 @@ export default function LoginView(){
 
                                     <div className="text-sm">
                                     <Link href="reset-pwd" className="font-medium text-neutral-300 hover:text-white">
-                                        Oublier votre mot de passe?
+                                        Demande de réinitialisation du mot de passe.
                                     </Link>
                                     </div>
                                 </div>

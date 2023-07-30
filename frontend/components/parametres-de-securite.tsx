@@ -1,21 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Settings2 } from "lucide-react";
 import ModalGeneric from "./modal-generic";
 import FormulaireConfigurationsMdp from "./formulaire-configurations-mdp";
+import { useQuery } from "react-query";
+import LoadingQuery from "./loading-query";
+import ErrorQuery, { Error } from "./error-query";
+import { useAuth } from "context/auth-context";
 
-export default function ParametresDeSecurite(){
-    const [configurations, setConfigurations] = useState({
-        specialCaracter: false,
-        uppercase: true,
-        numeros: true,
-        nombreCaracteres: [10]
-    });
-    const [open, setOpen] = useState(false);
-    return( 
-        <>
-        <ModalGeneric {...{open, setOpen, titre:"Modification des paramètres de sécurité"}}>
-            <FormulaireConfigurationsMdp {...{configurations, setConfigurations, setOpen}}/>
-        </ModalGeneric>
+export default function ParametresDeSecurite() {
+  const [configurations, setConfigurations] = useState({});
+
+  console.log("CONFIG", configurations);
+  
+
+  const { profile } = useAuth();
+
+  const getConfigurations = async () => {
+    const res = await fetch(`/api/getPasswordConfig?token=${profile.token}`);
+    if (!res.ok) {
+      const errorObj = await res.json();
+      errorObj.status = res.status;
+      throw errorObj;
+    }
+    return await res.json();
+  }
+
+  const { data: passwordConfig, isLoading, isError, error } = useQuery('passwordConfig', getConfigurations);
+
+  useEffect(() => {
+    if (passwordConfig) {
+      setConfigurations(passwordConfig);
+    }
+  }, [passwordConfig]);
+
+  const [open, setOpen] = useState(false);
+
+  if (isLoading) return <LoadingQuery />
+  if (isError) return <ErrorQuery error={error as Error} />
+
+  console.log("PWD CONFIG", passwordConfig);
+
+  return (
+    <>
+      <ModalGeneric {...{ open, setOpen, titre: "Modification des paramètres de sécurité" }}>
+        <FormulaireConfigurationsMdp {...{ configurations, setConfigurations, setOpen }} />
+      </ModalGeneric>
         <div>
              <title>Paramètres de sécurité | GTI619 | Labo 5</title>
                 <div className="flex items-center justify-center mb-3">
@@ -31,10 +60,10 @@ export default function ParametresDeSecurite(){
                  <div className=" gap-2 flex-col w-full grid sm:grid-cols-2">
                     {
                         [
-                            {label: "Nombre de caractères requis", value: configurations.nombreCaracteres[0]},
-                            {label: "Caractères spéciaux", value: configurations.specialCaracter ? "Oui":"Non"},
-                            {label: "Caractères en majuscule", value: configurations.uppercase ? "Oui":"Non"},
-                            {label: "Numéros", value: configurations.numeros ? "Oui":"Non"},
+                            {label: "Nombre de caractères requis", value: passwordConfig.passwordLength},
+                            {label: "Caractères spéciaux", value: passwordConfig.needsSpecialCharacter ? "Oui":"Non"},
+                            {label: "Caractères en majuscule", value: passwordConfig.needsUppercase ? "Oui":"Non"},
+                            {label: "Numéros", value: passwordConfig.needsNumber ? "Oui":"Non"},
                             
                         ].map(({label, value})=>(
                             <div

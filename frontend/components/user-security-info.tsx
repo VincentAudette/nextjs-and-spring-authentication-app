@@ -71,12 +71,12 @@ export default function UserSecurityInfo({user}){
             </span>
         </div>
     </button>
-    <div className={`bg-neutral-300 h-1 rounded-full mt-3 ${!expanded && "hidden"}`} />
     <div className="flex flex-col divide-y">
     {expanded && sessions && (
-            isLoading ? <LoadingQuery /> : isError ? <ErrorQuery error={error as Error} /> : (
-
+        isLoading ? <LoadingQuery /> : isError ? <ErrorQuery error={error as Error} /> : (
+            
             <section className="py-2">
+                <div className="bg-neutral-300 h-1 rounded-full mt-3" />
                 <div className="flex  text-base py-5 items-center w-full">
                     <p className="font-bold pl-4 pr-8 sm:pl-6 lg:pl-8 ">Informations des sessions</p> 
                     <p className=" bg-neutral-300 px-2 py-1 text-sm rounded-sm">{sessions.totalElements}</p>
@@ -119,12 +119,12 @@ export default function UserSecurityInfo({user}){
             </section>
             ))}
 
-            <div className={`bg-neutral-300 h-1 rounded-full mt-3 ${!expanded && "hidden"}`} />
 
 
             {expanded && loginAttempts && (
             isLoadingLoginAttempts ? <LoadingQuery /> : isLoginAttemptsError ? <ErrorQuery error={errorLoginAttempts as Error} /> : (
             <section className="py-2">
+                <div className="bg-neutral-300 h-1 rounded-full mt-3" />
                 <div className="flex  text-base py-5 items-center w-full">
                     <p className="font-bold pl-4 pr-8 sm:pl-6 lg:pl-8 ">Tentatives de connexions</p> 
                     <p className=" bg-neutral-300 px-2 py-1 text-sm rounded-sm">{loginAttempts.totalElements}</p>

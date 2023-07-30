@@ -1,12 +1,51 @@
+import { useMutation, useQueryClient } from "react-query";
 import { Checkbox } from "./ui/checkbox";
 import { Slider } from './ui/slider';
+import { useAuth } from "context/auth-context";
 
 export default function FormulaireConfigurationsMdp({setOpen, configurations, setConfigurations}){
 
+    const queryClient = useQueryClient();
+    const {profile} = useAuth();
+
+
     const handleConfigurationChanges = async (e)=>{
         e.preventDefault();
+
+        try{
+            const res = await mutation.mutateAsync(configurations);
+            console.log(res);
+
+        }catch(e){
+            console.log(e);                             
+        }
+
         setOpen(false); 
+
       }
+
+
+const updateConfigurations = async (newConfig) => {
+    const res = await fetch(`/api/updatePasswordConfig?token=${profile.token}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newConfig)
+    });
+    if (!res.ok) {
+        const errorObj = await res.json();
+        errorObj.status = res.status;
+        throw errorObj;
+    }
+    return await res.json();
+}
+
+const mutation = useMutation(updateConfigurations, {
+    onSuccess: () => {
+        queryClient.invalidateQueries('passwordConfig');
+    },
+});
 
     return (
         <form
@@ -16,13 +55,13 @@ export default function FormulaireConfigurationsMdp({setOpen, configurations, se
                         <div>
                             <div className="flex justify-between mb-2">
                                 <label className="block mb-2" htmlFor="nombreCaracteres">Nombre de caractères requis</label>
-                                <p>{configurations.nombreCaracteres[0]}</p>
+                                <p>{configurations.passwordLength}</p>
                             </div>
                             <div>
-                                <Slider value={configurations.nombreCaracteres} onValueChange={value=>{
+                                <Slider value={[configurations.passwordLength]} onValueChange={value=>{
                                     setConfigurations({
                                         ...configurations,
-                                        nombreCaracteres: value
+                                        passwordLength: value[0]
                                     });
                                 }} min={5} max={20} step={1} />
                             </div>
@@ -38,9 +77,9 @@ export default function FormulaireConfigurationsMdp({setOpen, configurations, se
                             <div className="flex flex-col gap-2 text-base">
                                 <div className="flex items-center space-x-2">
                                 <Checkbox 
-                                checked={configurations.uppercase}
+                                checked={configurations.needsUppercase}
                                 onClick={()=>{setConfigurations(
-                                    {...configurations, uppercase:!configurations.uppercase}
+                                    {...configurations, needsUppercase:!configurations.needsUppercase}
                                 )}}
                                 id="uppercase" />
                                 <label
@@ -54,9 +93,9 @@ export default function FormulaireConfigurationsMdp({setOpen, configurations, se
                                 <Checkbox 
                                 onClick={()=>{setConfigurations({
                                     ...configurations,
-                                    numeros:!configurations.numeros
+                                    needsNumber:!configurations.needsNumber
                                 })}}
-                                checked={configurations.numeros}
+                                checked={configurations.needsNumber}
                                 id="numeros" />
                                 <label
                                         htmlFor="numeros"
@@ -70,10 +109,10 @@ export default function FormulaireConfigurationsMdp({setOpen, configurations, se
                                 onClick={()=>{
                                   setConfigurations({
                                     ...configurations,
-                                    specialCaracter:!configurations.specialCaracter
+                                    needsSpecialCharacter:!configurations.needsSpecialCharacter
                                 })
                                 }}
-                                checked={configurations.specialCaracter}
+                                checked={configurations.needsSpecialCharacter}
                                 id="specialCaracter" />
                                 <label
                                         htmlFor="specialCaracter"

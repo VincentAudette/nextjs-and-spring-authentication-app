@@ -5,7 +5,7 @@ import Notification from "@components/notification";
 export default function ModalGeneric({ children, titre, open, setOpen}){
   
 
-      const [errorModal, setErrorModal] = useState(true)
+      const [errorModal, setErrorModal] = useState(false)
       const [errorMessage, setErrorMessage] = useState('')
 
      
