@@ -18,13 +18,34 @@ export const getConfigurations = async (token) => {
     return await res.json();
   }
 
-export default function ParametresDeSecurite() {
+
+
+
+export default function ParametresDeSecurite({displaySize}:{displaySize:string}) {
   const [configurations, setConfigurations] = useState({});
+
+  const displays = {
+    sm: {
+      padding: "py-4 px-3",
+      text:"text-sm"
+    },
+    md: {
+      padding: "p-5",
+      text:"text-md"
+    },
+    lg:{
+      padding: "p-5",
+      text:"text-lg"
+    },
+    xl:{
+      padding: "p-5",
+      text:"text-2xl"
+    },
+  }
+
 
 
   const { profile } = useAuth();
-
-  
 
   const { data: passwordConfig, isLoading, isError, error } = useQuery(['passwordConfig',profile.token], ({queryKey})=>getConfigurations(queryKey[1]), {enabled: !!profile.token});
 
@@ -39,38 +60,56 @@ export default function ParametresDeSecurite() {
   if (isLoading) return <LoadingQuery />
   if (isError) return <ErrorQuery error={error as Error} />
 
+  if(displaySize === "sm"){
+    
+  }
+
+  const selectedDisplay = displays[displaySize];
+
+
 
   return (
     <>
-      <ModalGeneric {...{ open, setOpen, titre: "Modification des paramètres de sécurité" }}>
+      {displaySize !== "sm" && <ModalGeneric {...{ open, setOpen, titre: "Modification des paramètres de sécurité" }}>
         <FormulaireConfigurationsMdp {...{ configurations, setConfigurations, setOpen }} />
-      </ModalGeneric>
-        <div>
+      </ModalGeneric>}
+        <div className="flex flex-col">
              <title>Paramètres de sécurité | GTI619 | Labo 5</title>
-                <div className="flex items-center justify-center mb-3">
-                 <h1 className="titre-section">Paramètres de sécurité</h1>
-                 <div className="grow"/>
-                 <button 
-                 onClick={()=>{setOpen(true)}}
-                 className="rounded-full bg-neutral-600 text-white p-2 hover:bg-neutral-700 focus-dark">
-                    <Settings2 className="w-5 h-5"  />
-                 </button>
-                 </div>
-                 <hr className="my-5 border border-neutral-800" />
+
+                
+                {displaySize !== "sm" && <div className="w-full grow">
+                  <div className=" w-full  justify-between flex items-center mb-3">
+                    <h1 className="titre-section">Paramètres de sécurité</h1>
+                 
+                    <button 
+                    onClick={()=>{setOpen(true)}}
+                    className={`${selectedDisplay} rounded-lg bg-red-700 text-white  items-center flex justify-center p-3 hover:bg-opacity-70 transition-opacity duration-500 focus-dark `}>
+                        <label>Modifier les paramètres</label>
+                        <div className="ml-2 mr-4">
+                          <Settings2 className="w-5 h-5 text-white"  />
+                        </div>
+                    </button>
+                  </div>
+                  <hr className="my-5 border border-neutral-800" />
+                </div>}
+
+
+
                  <div className=" gap-2 flex-col w-full grid sm:grid-cols-2">
                     {
                         [
-                            {label: "Nombre de caractères requis", value: passwordConfig.passwordLength},
-                            {label: "Caractères spéciaux", value: passwordConfig.needsSpecialCharacter ? "Oui":"Non"},
-                            {label: "Caractères en majuscule", value: passwordConfig.needsUppercase ? "Oui":"Non"},
-                            {label: "Numéros", value: passwordConfig.needsNumber ? "Oui":"Non"},
+                            {label: "Nombre de caractères requis",isNeeded:true, value: passwordConfig.passwordLength, representation:"#Caractères"},
+                            {label: "Caractères spéciaux", isNeeded:passwordConfig.needsSpecialCharacter, value: passwordConfig.needsSpecialCharacter ? "Oui":"Non", representation:"!@#$%^&*"},
+                            {label: "Caractères en majuscule",isNeeded:passwordConfig.needsUppercase, value: passwordConfig.needsUppercase ? "Oui":"Non", representation:"Aa-Zz"},
+                            {label: "Numéros",isNeeded:passwordConfig.needsNumber, value: passwordConfig.needsNumber ? "Oui":"Non", representation:"0123456789"},
                             
-                        ].map(({label, value})=>(
+                        ].map(({label, value, representation, isNeeded})=>(
                             <div
                             key={label}
-                            className="flex justify-between items-center flex-col bg-neutral-200 text-neutral-800 px-2 py-9 rounded-lg">
-                                <label className="block text-neutral-700 " htmlFor="nombreCaracteres">{label}</label>
-                                <p className="text-3xl">{value}</p>
+                            className={`flex justify-between items-center ${isNeeded ?"bg-slate-300 text-neutral-800":"bg-neutral-400 text-neutral-200"} flex-col  px-2 ${selectedDisplay.padding} rounded-lg`}>
+                                <label className={`block  ${isNeeded ? " text-slate-900 font-bold":"text-neutral-700"} min-h-[4rem] ${selectedDisplay.text}}`} htmlFor={label}>{label}</label>
+                                <p className={selectedDisplay.text + " bg-black text-neutral-300 px-5 py-1 rounded-md my-2"}>{representation}</p>
+                                <p className={` ${isNeeded ?"text-slate-800":"text-neutral-700"} text-4xl`}>{value}</p>
                             </div>
                         ))
                     }

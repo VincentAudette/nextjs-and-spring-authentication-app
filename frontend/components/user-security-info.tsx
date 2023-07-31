@@ -7,8 +7,7 @@ import ErrorQuery, { Error } from "./error-query";
 import SessionTableRow from "./session-table-row";
 import Pagination from "./pagination";
 import LoginAttemptTableRow from "./login-attempt-table-row";
-import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
-import { CheckBadgeIcon, CheckCircleIcon, ClockIcon, ExclamationCircleIcon, NoSymbolIcon } from "@heroicons/react/20/solid";
+import { LockClosedIcon, LockOpenIcon, MinusCircleIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 
 export default function UserSecurityInfo({user}){
     const [expanded, setExpanded] = useState(false);
@@ -70,16 +69,21 @@ export default function UserSecurityInfo({user}){
             <p className=" font-bold text-lg" >{user.username}</p>
             <div  className="h-3" />
             <div className="text-sm flex gap-3">
-                {user.accountNonLocked ? <span className="inline-flex items-center rounded-md py-1">
-                <CheckCircleIcon className="h-4 w-4 text-red-500" />
+                {user.accountNonLocked && user.enabled && <span className="inline-flex items-center rounded-md py-1">
+                        <CheckCircleIcon className="h-5 w-5 text-emerald-500  rounded-full flex-none" />
                 <span className="font-semibold pl-2">Compte actif</span>
-                </span> : <span className="inline-flex items-center rounded-md py-1  font-medium">
-                <ClockIcon className="h-4 w-4 text-red-500" />
-                <span className="font-semibold pl-2">Compte bloqué temporairement</span>
                 </span>}
+                
+                {
+                    !user.accountNonLocked && <span className="inline-flex items-center rounded-md py-1  font-medium">
+                        <LockClosedIcon className="h-5 w-5 text-yellow-600" />
+                    <span className="font-semibold pl-2">Compte bloqué temporairement</span>
+                    </span>
+                }
+
                 {
                     !user.enabled && <span className="inline-flex items-center rounded-md py-1  font-medium">
-                    <ExclamationCircleIcon className="h-4 w-4 text-red-500" />
+                    <MinusCircleIcon className="h-5 w-5 text-red-500" />
                     <span className="font-semibold pl-2">Compte désactivé</span>
                     </span>
                 }

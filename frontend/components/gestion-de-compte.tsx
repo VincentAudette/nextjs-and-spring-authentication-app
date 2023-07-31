@@ -1,6 +1,6 @@
 import FormulaireModificationMdp from "./formulaire-modification-mdp";
 import { useQuery } from "react-query";
-import { getConfigurations } from "./parametres-de-securite";
+import ParametresDeSecurite, { getConfigurations } from "./parametres-de-securite";
 import { useAuth } from "context/auth-context";
 import LoadingQuery from "./loading-query";
 import ErrorQuery, { Error } from "./error-query";
@@ -16,16 +16,16 @@ if (isLoading) return <LoadingQuery />
       <div>
         <h1 className="titre-section">Gestion de compte</h1>
 
-        <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-10 sm:px-6 md:grid-cols-3 lg:px-8">
-                <div>
-                  <h2 className="text-base font-semibold leading-7 text-white">Changer votre mot de passe</h2>
+        <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-10 sm:px-6 md:grid-cols-6 lg:px-8 h-full">
+                <div className="col-span-2 flex flex-col h-full">
+                  <h2 className=" font-semibold leading-7 text-white text-2xl">Changer votre mot de passe</h2>
                   <div className="h-4" />
                   <div className=" text-sm text-neutral-300">
                     <p className="mt-1 leading-6">
                         Le mot de passe doit respecter les configurations de sécurité suivantes
                     </p>
-                    <div className="h-3" />
-                    <ul className="list-disc list-inside">
+                  
+                    <ul className="list-disc">
                     {
                             [
                                 {label: "Nombre de caractères requis", value: passwordConfig.passwordLength},
@@ -43,9 +43,17 @@ if (isLoading) return <LoadingQuery />
                         }
                         </ul>
                   </div>
+                  <div className="grow" />
+                  <div className="py-5" >
+                      <ParametresDeSecurite displaySize="sm"/>
+                    </div>
                 </div>
 
-                <FormulaireModificationMdp />
+
+              <div className="bg-neutral-200 md:col-span-4 px-6  flex items-center rounded-xl">
+                <FormulaireModificationMdp dark={true} />
+              </div>
+
               </div>
         
       </div>

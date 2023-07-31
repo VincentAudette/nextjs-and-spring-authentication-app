@@ -1,3 +1,4 @@
+import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/solid";
 import React from "react";
 
@@ -21,12 +22,12 @@ function LoginAttemptTableRow({ loginAttempt }:{loginAttempt: {id:string, succes
       <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-neutral-700 md:table-cell lg:pr-20">
         {loginAttempt.userLocked ? <div>
           <div className="flex items-center gap-x-2 sm:justify-start">
-            <LockClosedIcon className=" text-red-400 h-4 w-4" />
+            <XCircleIcon className=" text-red-400 h-5 w-5" />
             <div className="hidden sm:block">Oui</div>
           </div>
         </div> :<div>
           <div className="flex items-center gap-x-2 sm:justify-start">
-           <LockOpenIcon className="text-neutral-400 h-4 w-4" />
+           <CheckCircleIcon className="text-slate-400 h-5 w-5" />
             <div className="hidden sm:block">Non</div>
           </div>
         </div> }

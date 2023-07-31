@@ -52,7 +52,7 @@ public class LoginAttemptService {
                 logger.warn("User: {} has been locked due to exceeding max attempts. Total locks: {}",
                         user.getUsername(), user.getAccountLockCount());
 
-                if (user.getAccountLockCount() >= 2) {
+                if (user.getAccountLockCount() >= 3) {
                     user.setEnabled(false);
                     logger.warn("User: {} has been disabled due to exceeding lock count limit.", user.getUsername());
                 }

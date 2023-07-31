@@ -6,7 +6,6 @@ import ETSLogo from '@components/SVG/ETSLogo'
 import { useAuth } from 'context/auth-context'
 import { useRouter } from 'next/router'
 import useIsClient from 'utils/use-is-client'
-import { useNotifications } from 'context/notification-context'
 import NotificationContainer from './notification-container'
 
 
@@ -44,9 +43,6 @@ export default function Layout(
     const router = useRouter();
     const isClient = useIsClient();
     const {profile} = useAuth();
-    const { notifications } = useNotifications();
-
-    console.log('notifications', notifications);
     
 
  
@@ -68,7 +64,7 @@ export default function Layout(
     
 
     const userNavigation = [
-      { name: 'Modifier mot de passe', href:'#modifier-mot-de-passe', onClick: ()=>setActivePage('mot-de-passe') },
+      { name: 'Modifier mot de passe', onClick: ()=>setActivePage('gestion-de-compte') },
       { name: 'Déconnexion', href: '/', onClick: logout },
     ]
     

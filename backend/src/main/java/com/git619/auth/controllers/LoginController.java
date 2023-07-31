@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,33 +44,11 @@ public class LoginController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun compte n'existe avec cet identifiant.");
             }
 
+            userService.checkUserEligibility(existingUser);
 
-            if(!existingUser.isAccountNonLocked() && userService.hasExceededMaxAttempts(existingUser)) {
-
-                ZonedDateTime timeToRetry = userService.getTimeToRetry(existingUser);
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                String retryTimeFormatted = timeToRetry.format(formatter);
-
-                logger.info("Too many requests try @{}", retryTimeFormatted);
-
-                // Respond with TOO_MANY_REQUESTS status and a custom message
-                return new ResponseEntity<>(
-                        "Vous avez dépassé le nombre maximal de tentatives de connexion. Veuillez réessayer après "
-                                + retryTimeFormatted + ".", HttpStatus.TOO_MANY_REQUESTS);
-            }else if(!userService.hasExceededMaxAttempts(existingUser) && !existingUser.isAccountNonLocked()){
-                existingUser.setAccountNonLocked(true);
-            }
-
-
-            if (!existingUser.isEnabled()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("Vous devez contacter l'administrateur pour réinitialiser votre mot de passe");
-            }
 
             // On récupère le salt de l'utilisateur existant et on l'applique au mdp entré
             Boolean authenticated = passwordEncoder.matches(user.getPassword() + existingUser.getSalt(), existingUser.getPassword());
-
 
             logger.info("Authentication worked - {}", authenticated);
 
@@ -77,13 +56,9 @@ public class LoginController {
                 userService.loginFailed(existingUser);
                 logger.info("Exceeded max attempts {}", userService.hasExceededMaxAttempts(existingUser));
                 if(userService.hasExceededMaxAttempts(existingUser)){
-                    logger.info("User {} exceeded max attempts", existingUser.getUsername());
-                    ZonedDateTime timeToRetry = userService.getTimeToRetry(existingUser);
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    String retryTimeFormatted = timeToRetry.format(formatter);
                     return new ResponseEntity<>(
                             "Vous avez dépassé le nombre maximal de tentatives de connexion. Veuillez réessayer après "
-                                    + retryTimeFormatted + ".", HttpStatus.TOO_MANY_REQUESTS);
+                                    + getRetryTimeFormatted(existingUser) + ".", HttpStatus.TOO_MANY_REQUESTS);
                 } else {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Le mot de passe ne correspond pas.");
                 }
@@ -94,14 +69,16 @@ public class LoginController {
             // Si les identifiants sont valide, le jeton sera retourné.
             final String token = userService.createToken(existingUser);
             logger.info("Token created for user: {}", existingUser.getUsername());
-
             AuthToken authToken = new AuthToken(token);
             // On retourne le jeton
             return ResponseEntity.ok(authToken);
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (RuntimeException e) {
+        } catch (ResponseStatusException e) {
+            // This is where you handle the exceptions thrown from checkUserEligibility
+            return ResponseEntity.status(e.getStatus()).body(e.getReason());
+        }catch (RuntimeException e) {
             logger.error("Exception caught: {}", e.getMessage());
             // Vérification que max attempts est atteint userService.createToken()
             if ("Nombre d’essais autorisés dépassé.".equals(e.getMessage())) {
@@ -111,7 +88,17 @@ public class LoginController {
             // If it was a different RuntimeException, rethrow it
             throw e;
         }
+
+
     }
+
+    private String getRetryTimeFormatted(User existingUser){
+        ZonedDateTime timeToRetry = userService.getTimeToRetry(existingUser);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return timeToRetry.format(formatter);
+    }
+
+
 
 }
 

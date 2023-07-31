@@ -56,7 +56,7 @@ export default function AdminPage() {
      {navigation[1].current && <PreposeAuxClientsResidentielsView />}
      {navigation[2].current && <PreposeAuxClientsAffaireView />}
       {navigation[3].current && <ListeUtilisateurs />}
-      {navigation[4].current && <ParametresDeSecurite />}
+      {navigation[4].current && <ParametresDeSecurite displaySize="lg" />}
       {navigation[5].current && <GestionDeCompte />}
     </div>
    </Layout>

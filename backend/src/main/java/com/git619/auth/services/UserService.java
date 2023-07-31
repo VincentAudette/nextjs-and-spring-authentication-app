@@ -14,10 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -115,13 +118,53 @@ public class UserService {
 
         try {
             String token = authTokenService.createToken(user);
-            loginAttemptService.createLoginAttempt(user, true);
             return token;
         } catch (Exception ex) {
-            loginAttemptService.createLoginAttempt(user, false);
             throw ex;
         }
     }
+
+    public void checkUserEligibility(User user) {
+
+        if (user.getAccountLockCount() >= 3) {
+            if(user.isEnabled()) {
+                user.setEnabled(false);
+                user.setAccountNonLocked(true);
+                logger.warn("User: {} has been disabled due to exceeding lock count limit.", user.getUsername());
+                userRepository.save(user); // persist changes immediately
+            }
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Vous devez contacter l'administrateur pour réinitialiser votre mot de passe"
+            );
+        }
+
+        if (!user.isEnabled()) {
+            user.setEnabled(true);
+            userRepository.save(user);
+        }
+
+        ZonedDateTime timeToRetry = getTimeToRetry(user);
+        if (timeToRetry != null && ZonedDateTime.now().isBefore(timeToRetry)) {
+            if(user.isAccountNonLocked()) {
+                user.setAccountNonLocked(false);
+                userRepository.save(user);
+            }
+            throw new ResponseStatusException(
+                    HttpStatus.LOCKED,
+                    "Votre compte est temporairement suspendu, veuillez réessayer après "
+                            + timeToRetry.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "."
+            );
+        } else {
+            if (!user.isAccountNonLocked()) {
+                user.setAccountNonLocked(true);
+                userRepository.save(user);
+
+            }
+        }
+    }
+
+
 
     public ZonedDateTime getTimeToRetry(User user) {
         return loginAttemptService.getTimeToRetry(user);
