@@ -3,11 +3,9 @@ import { useState } from "react";
 import Image from "next/image";
 import ETSLogo from "./SVG/ETSLogo";
 import FormulaireLogin from "./formulaire-login";
-import { useNotifications } from "context/notification-context";
+import NotificationContainer from "./notification-container";
 
 export default function LoginView(){
-
-    const { notifications} = useNotifications();
 
 
 
@@ -15,9 +13,7 @@ export default function LoginView(){
         <>
         <title>Authentification ÉTS | GTI619</title>
         <div className="flex flex-col-reverse fixed bottom-0 md:top-0 md:bottom-auto md:right-0 sm:inset-x-auto inset-x-0 z-10 p-5 max-h-screen overflow-scroll gap-3">
-        {notifications.length >= 1 && notifications.map((notification, index) => (
-            <Notification key={index} {...notification} />
-        ))}
+       <NotificationContainer />
         </div>
 
         <div className="h-full bg-neutral-700 text-white">

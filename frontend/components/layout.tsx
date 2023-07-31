@@ -7,7 +7,7 @@ import { useAuth } from 'context/auth-context'
 import { useRouter } from 'next/router'
 import useIsClient from 'utils/use-is-client'
 import { useNotifications } from 'context/notification-context'
-import Notification from './notification'
+import NotificationContainer from './notification-container'
 
 
 
@@ -78,9 +78,7 @@ export default function Layout(
     return (
         <>
         <div className="flex flex-col-reverse fixed bottom-0 md:top-0 md:bottom-auto md:right-0 sm:inset-x-auto inset-x-0 z-[1000] p-5 max-h-screen overflow-scroll gap-3">
-                {notifications.length >= 1 && notifications.map((notification, index) => (
-                    <Notification key={index} {...notification} />
-                ))}
+                <NotificationContainer />
             </div>
         <div className="min-h-screen bg-neutral-700 pb-5">
         <Popover

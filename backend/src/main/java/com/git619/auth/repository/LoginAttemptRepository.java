@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.sql.Timestamp;
-
 public interface LoginAttemptRepository extends JpaRepository<LoginAttempt, Long> {
     Long countByUserAndSuccessAndAttemptTimeAfter(User user, Boolean success, Timestamp timestamp);
 
@@ -15,4 +14,6 @@ public interface LoginAttemptRepository extends JpaRepository<LoginAttempt, Long
 
     Page<LoginAttempt> findAllByUserOrderByAttemptTimeDesc(User user, Pageable pageable);
 
+    // This method will return the earliest failed login attempt for a user
+    LoginAttempt findTopByUserAndSuccessOrderByAttemptTimeAsc(User user, Boolean success);
 }

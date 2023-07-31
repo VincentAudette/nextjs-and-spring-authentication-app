@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 @RestController
 @RequestMapping(value = "/api")
 public class LoginController {
@@ -37,8 +40,31 @@ public class LoginController {
             logger.info("Existing using is: {}", existingUser);
 
             if (existingUser == null) {
-                // Si l'utilisateur n'existe pas, on retourne 401
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun compte n'existe avec cet identifiant.");
+            }
+
+
+            if(!existingUser.isAccountNonLocked() && userService.hasExceededMaxAttempts(existingUser)) {
+
+                ZonedDateTime timeToRetry = userService.getTimeToRetry(existingUser);
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String retryTimeFormatted = timeToRetry.format(formatter);
+
+                logger.info("Too many requests try @{}", retryTimeFormatted);
+
+                // Respond with TOO_MANY_REQUESTS status and a custom message
+                return new ResponseEntity<>(
+                        "Vous avez dépassé le nombre maximal de tentatives de connexion. Veuillez réessayer après "
+                                + retryTimeFormatted + ".", HttpStatus.TOO_MANY_REQUESTS);
+            }else if(!userService.hasExceededMaxAttempts(existingUser) && !existingUser.isAccountNonLocked()){
+                existingUser.setAccountNonLocked(true);
+            }
+
+
+            if (!existingUser.isEnabled()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Vous devez contacter l'administrateur pour réinitialiser votre mot de passe");
             }
 
             // On récupère le salt de l'utilisateur existant et on l'applique au mdp entré
@@ -52,10 +78,14 @@ public class LoginController {
                 logger.info("Exceeded max attempts {}", userService.hasExceededMaxAttempts(existingUser));
                 if(userService.hasExceededMaxAttempts(existingUser)){
                     logger.info("User {} exceeded max attempts", existingUser.getUsername());
-                    // Respond with TOO_MANY_REQUESTS status and a custom message
-                    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("You have exceeded the maximum number of login attempts. Please try again later.");
+                    ZonedDateTime timeToRetry = userService.getTimeToRetry(existingUser);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String retryTimeFormatted = timeToRetry.format(formatter);
+                    return new ResponseEntity<>(
+                            "Vous avez dépassé le nombre maximal de tentatives de connexion. Veuillez réessayer après "
+                                    + retryTimeFormatted + ".", HttpStatus.TOO_MANY_REQUESTS);
                 } else {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Le mot de passe ne correspond pas.");
                 }
             }
 

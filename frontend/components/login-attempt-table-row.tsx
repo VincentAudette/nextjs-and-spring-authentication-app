@@ -1,6 +1,7 @@
+import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/solid";
 import React from "react";
 
-function LoginAttemptTableRow({ loginAttempt }:{loginAttempt: {id:string, success:boolean, attemptTime:Date}}) {
+function LoginAttemptTableRow({ loginAttempt }:{loginAttempt: {id:string, success:boolean, attemptTime:Date, userLocked:boolean}}) {
 
   return (
     <tr key={loginAttempt.id}>
@@ -16,6 +17,19 @@ function LoginAttemptTableRow({ loginAttempt }:{loginAttempt: {id:string, succes
           </div>
           <div className="hidden sm:block">{loginAttempt.success ? 'Succès' : 'Échec'}</div>
         </div>
+      </td>
+      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-neutral-700 md:table-cell lg:pr-20">
+        {loginAttempt.userLocked ? <div>
+          <div className="flex items-center gap-x-2 sm:justify-start">
+            <LockClosedIcon className=" text-red-400 h-4 w-4" />
+            <div className="hidden sm:block">Oui</div>
+          </div>
+        </div> :<div>
+          <div className="flex items-center gap-x-2 sm:justify-start">
+           <LockOpenIcon className="text-neutral-400 h-4 w-4" />
+            <div className="hidden sm:block">Non</div>
+          </div>
+        </div> }
       </td>
       <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-neutral-700 md:table-cell lg:pr-20">
         {new Date(loginAttempt.attemptTime).toLocaleString()}

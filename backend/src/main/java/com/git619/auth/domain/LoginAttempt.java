@@ -26,6 +26,9 @@ public class LoginAttempt {
     @Column(name = "SUCCESS", columnDefinition = "NUMBER(1,0)")
     private Boolean success;
 
+    @Column(name = "USER_LOCKED", columnDefinition = "NUMBER(1,0)")
+    private Boolean userLocked;
+
     public Long getId() {
         return id;
     }
@@ -42,8 +45,17 @@ public class LoginAttempt {
         return attemptTime;
     }
 
+
     public void setAttemptTime(Timestamp attemptTime) {
         this.attemptTime = attemptTime;
+    }
+
+    public Boolean getUserLocked() {
+        return userLocked;
+    }
+
+    public void setUserLocked(Boolean userLocked) {
+        this.userLocked = userLocked;
     }
 
     public Boolean getSuccess() {

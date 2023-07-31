@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default async function handler(req, res) {
     try {
-        const axiosRes = await axios.get(`http://localhost:8080/api/users/${req.query.userId}/login-attempts?page=${req.query.page}&size=${req.query.size}`, {
+        const axiosRes = await axios.get(`http://localhost:8080/api/users/${req.query.username}/login-attempts?page=${req.query.page}&size=${req.query.size}`, {
             headers: {
                 Authorization: `Bearer ${req.query.token}}`,
             },

@@ -59,10 +59,10 @@ export default function DemandeAcces(){
                                         type="string"
                                         autoComplete="username"
                                         required
-                                        className="input"
+                                        className="input focus-dark"
                                     />
                                     </div>
-                                </div>
+                            </div>
 
 
                                 <div>

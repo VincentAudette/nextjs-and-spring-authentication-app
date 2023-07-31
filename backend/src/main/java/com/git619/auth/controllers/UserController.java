@@ -9,6 +9,7 @@ import com.git619.auth.exceptions.CurrentPasswordMismatchException;
 import com.git619.auth.exceptions.InvalidPasswordException;
 import com.git619.auth.exceptions.PasswordConfirmationMismatchException;
 import com.git619.auth.exceptions.PasswordUsedBeforeException;
+import com.git619.auth.services.LoginAttemptService;
 import com.git619.auth.services.SessionService;
 import com.git619.auth.utils.Role;
 import com.git619.auth.services.UserService;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -47,11 +49,14 @@ public class UserController {
     @Autowired
     SessionService sessionService;
 
-    @GetMapping("/user/{userId}/sessions")
-    public ResponseEntity<?> getUserSessions(@PathVariable Long userId,
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+
+    @GetMapping("/user/{username}/sessions")
+    public ResponseEntity<?> getUserSessions(@PathVariable String username,
                                              @RequestParam(defaultValue = "0") int page,
                                              @RequestParam(defaultValue = "10") int size) {
-        User user = userService.getUserById(userId);
+        User user = userService.findByUsername(username);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Session> sessions = sessionService.getAllSessionsByUser(user, pageable);
 
@@ -78,7 +83,7 @@ public class UserController {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setSalt(encodedSalt);
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword() + encodedSalt));
+//        user.setPassword(passwordEncoder.encode(userDTO.getPassword() + encodedSalt));
         user.setRole(role);
 
         User createdUser = userService.createUser(user);
@@ -92,17 +97,24 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR')")
     @GetMapping("/users")
-    public ResponseEntity<?> getAllUsers() {
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR')")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userService.getAll();
 
         if (users == null || users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserDTO> userDtos = users.stream()
+                .map(user -> new UserDTO(user.getUsername(), user.getRole().name(),
+                        !loginAttemptService.hasExceededMaxAttempts(user), user.isEnabled()))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
+
+
 
     @DeleteMapping("/users")
     public ResponseEntity<?> deleteAllUsers() {
@@ -111,9 +123,9 @@ public class UserController {
     }
 
 
-    @GetMapping("/users/{userId}/login-attempts")
-    public ResponseEntity<Page<LoginAttempt>> getLoginAttempts(@PathVariable Long userId, Pageable pageable) {
-        User user = userService.getUserById(userId);
+    @GetMapping("/users/{username}/login-attempts")
+    public ResponseEntity<Page<LoginAttempt>> getLoginAttempts(@PathVariable String username, Pageable pageable) {
+        User user = userService.findByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -163,6 +175,13 @@ public class UserController {
             logger.error("Error getting old passwords", ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/users/{username}/isLocked")
+    public ResponseEntity<Boolean> isUserLocked(@PathVariable String username) {
+        User user = userService.findByUsername(username);
+        boolean isLocked = loginAttemptService.hasExceededMaxAttempts(user);
+        return ResponseEntity.ok(isLocked);
     }
 
 

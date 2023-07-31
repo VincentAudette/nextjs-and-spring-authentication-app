@@ -26,9 +26,57 @@ const { notify } = useNotifications();
           }
         );
     
-        const result = await res.json()
-        
+        if (!res.ok) {
+            const data = await res.json();
+            console.log(data);
 
+            if(data.err.status === 429){
+                notify({
+                    heading: "Trop de tentatives",
+                    description: data.message
+                });
+            return;
+            }else if(data.err.status === 401){
+                notify({
+                    heading: "Erreur d'authentification",
+                    description: data.message
+                });
+            return;
+            }else if(data.err.status === 500){
+                notify({
+                    heading: "Erreur interne",
+                    description: data.message
+                });
+            return;
+            }else if(data.err.status === 403){
+                notify({
+                    heading: "Non autorisé",
+                    description: data.message
+                });
+                return;
+            }
+            else if(data.err.status === 404){
+                notify({
+                    heading: "Utilisateur introuvable",
+                    description: data.message
+                });
+            return;
+            }else if(data.err.status === 400){
+                notify({
+                    heading: "Erreur interne",
+                    description: data.message
+                });
+            return;
+            }else{
+                notify({
+                    heading: "Erreur durant la connexion.",
+                    description: data.message
+                });
+            return;
+            }
+        }
+        
+        const result = await res.json();
         if( result.hasOwnProperty("data")){
             //load items in context
             setProfile({
@@ -48,20 +96,21 @@ const { notify } = useNotifications();
 
         }else{
             
-            if(result.err.status === 429){
-                notify({
-                    heading:"Trop de tentatives",
-                    description:"Vous avez trop tenté de vous connecter. Veuillez réessayer plus tard.",
-                });
-                return;
-            }
-            if(result.err.status === 401){
-                notify({
-                    heading:"Erreur d'authentification",
-                    description:"Nom d'utilisateur ou mot de passe invalide.",
-                });
-                return;
-            }
+            
+            // if(result.err.status === 429){
+            //     notify({
+            //         heading:"Trop de tentatives",
+            //         description:"Vous avez trop tenté de vous connecter. Veuillez réessayer plus tard.",
+            //     });
+            //     return;
+            // }
+            // if(result.err.status === 401){
+            //     notify({
+            //         heading:"Erreur d'authentification",
+            //         description:"Nom d'utilisateur ou mot de passe invalide.",
+            //     });
+            //     return;
+            // }
 
         }
         
@@ -80,7 +129,7 @@ const { notify } = useNotifications();
                                         name="username"
                                         type="string"
                                         required
-                                        className="input   focus-dark"
+                                        className="input focus-dark"
                                     />
                                     </div>
                                 </div>
@@ -114,7 +163,7 @@ const { notify } = useNotifications();
                                     
 
                                     <div className="text-sm">
-                                    <Link href="reset-pwd" className="font-medium text-neutral-300 hover:text-white">
+                                    <Link href="demande-acces" className="font-medium text-neutral-300 hover:text-white">
                                         Demande de réinitialisation du mot de passe.
                                     </Link>
                                     </div>

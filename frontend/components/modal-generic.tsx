@@ -2,6 +2,7 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
 import Notification from "@components/notification";
+import NotificationContainer from './notification-container';
 export default function ModalGeneric({ children, titre, open, setOpen}){
   
 
@@ -14,6 +15,7 @@ export default function ModalGeneric({ children, titre, open, setOpen}){
       const cancelButtonRef = useRef(null)
     
       return (<>
+      <NotificationContainer />
             <Transition.Root show={open} as={Fragment}>
           <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" initialFocus={cancelButtonRef} onClose={setOpen}>
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -28,11 +30,7 @@ export default function ModalGeneric({ children, titre, open, setOpen}){
               >
                 <Dialog.Overlay className="fixed inset-0 bg-neutral-950/75 transition-opacity" />
               </Transition.Child>
-              {
-                errorModal && <div className='z-50 flex flex-col-reverse fixed bottom-0 md:top-0 md:bottom-auto md:right-0 sm:inset-x-auto inset-x-0 p-5 max-h-screen overflow-scroll gap-3'>
-                <Notification description={errorMessage} heading={'ERROR'}/>
-              </div>
-              }
+              
              
     
               {/* This element is to trick the browser into centering the modal contents. */}

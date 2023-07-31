@@ -7,6 +7,8 @@ import ErrorQuery, { Error } from "./error-query";
 import SessionTableRow from "./session-table-row";
 import Pagination from "./pagination";
 import LoginAttemptTableRow from "./login-attempt-table-row";
+import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
+import { CheckBadgeIcon, CheckCircleIcon, ClockIcon, ExclamationCircleIcon, NoSymbolIcon } from "@heroicons/react/20/solid";
 
 export default function UserSecurityInfo({user}){
     const [expanded, setExpanded] = useState(false);
@@ -18,8 +20,8 @@ export default function UserSecurityInfo({user}){
 
 
     const fetchUserSessions = async ({queryKey}) => {
-        const [_key, userId, page] = queryKey;
-        const res = await fetch(`/api/getUserSessions?token=${profile.token}&userId=${userId}&page=${page}&size=${pageSize}`);
+        const [_key, username, page] = queryKey;
+        const res = await fetch(`/api/getUserSessions?token=${profile.token}&username=${username}&page=${page}&size=${pageSize}`);
         if (!res.ok) {
             const errorObj = await res.json();
             errorObj.status = res.status;
@@ -30,8 +32,8 @@ export default function UserSecurityInfo({user}){
     };
 
     const fetchUserLoginAttempts = async ({queryKey}) => {
-        const [_key, userId, loginAttemptPage] = queryKey;
-        const res = await fetch(`/api/getUserLoginAttempts?token=${profile.token}&userId=${userId}&page=${loginAttemptPage}&size=${pageSize}`);
+        const [_key, username, loginAttemptPage] = queryKey;
+        const res = await fetch(`/api/getUserLoginAttempts?token=${profile.token}&username=${username}&page=${loginAttemptPage}&size=${pageSize}`);
         if (!res.ok) {
             const errorObj = await res.json();
             errorObj.status = res.status;
@@ -45,41 +47,66 @@ export default function UserSecurityInfo({user}){
     const queryClient = useQueryClient();
     const onPageChange = (newPage) => {
         setPage(newPage);
-        queryClient.invalidateQueries(['userSessions', user.id, page]);
+        queryClient.invalidateQueries(['userSessions', user.username, page]);
       };
 
       const onPageChangeLoginAttempts = (newPage) => {
         setLoginAttemptPage(newPage);
-        queryClient.invalidateQueries(['loginAttempts', user.id, loginAttemptPage]);
+        queryClient.invalidateQueries(['loginAttempts', user.username, loginAttemptPage]);
       };
       
 
-    const { data: sessions, isLoading, isError, error } = useQuery(['userSessions', user.id, page],fetchUserSessions, { enabled: expanded });
-    const { data: loginAttempts, isLoading:isLoadingLoginAttempts, isError:isLoginAttemptsError, error: errorLoginAttempts } = useQuery(['loginAttempts', user.id, loginAttemptPage], fetchUserLoginAttempts, { enabled: expanded });
+    const { data: sessions, isLoading, isError, error } = useQuery(['userSessions', user.username, page],fetchUserSessions, { enabled: expanded });
+    const { data: loginAttempts, isLoading:isLoadingLoginAttempts, isError:isLoginAttemptsError, error: errorLoginAttempts } = useQuery(['loginAttempts', user.username, loginAttemptPage], fetchUserLoginAttempts, { enabled: expanded });
 
+    console.log("USER", user);
     
 
-    return (<div key={user.id} className="py-5 px-6 rounded-xl bg-neutral-200 text-neutral-950 ">
+    return (<div key={user.username} className="py-5 px-6 rounded-xl bg-neutral-200 text-neutral-950 ">
     <button 
     onClick={()=>setExpanded(!expanded)}
-    className="flex justify-between w-full p-5 rounded-2xl hover:bg-neutral-300">
-        <p className=" font-bold" > Nom d&apos;utilisateur : {user.username}</p>
+    className="flex justify-between items-center w-full p-5 rounded-2xl hover:bg-neutral-300">
+        <div className="flex flex-col items-start">
+            <p className=" font-bold text-lg" >{user.username}</p>
+            <div  className="h-3" />
+            <div className="text-sm flex gap-3">
+                {user.accountNonLocked ? <span className="inline-flex items-center rounded-md py-1">
+                <CheckCircleIcon className="h-4 w-4 text-red-500" />
+                <span className="font-semibold pl-2">Compte actif</span>
+                </span> : <span className="inline-flex items-center rounded-md py-1  font-medium">
+                <ClockIcon className="h-4 w-4 text-red-500" />
+                <span className="font-semibold pl-2">Compte bloqué temporairement</span>
+                </span>}
+                {
+                    !user.enabled && <span className="inline-flex items-center rounded-md py-1  font-medium">
+                    <ExclamationCircleIcon className="h-4 w-4 text-red-500" />
+                    <span className="font-semibold pl-2">Compte désactivé</span>
+                    </span>
+                }
+            </div>
+        </div>
         <div className="flex gap-2 text-xs items-center">
-            <span className="inline-flex items-center rounded-md bg-red-200 px-2 py-1  font-medium text-red-800">
-            <span className=" border-r pr-2 border-red-800">Role</span>
-            <span className="font-semibold pl-2">{getDisplayNameRole(user.role)}</span>
-            </span>
+            <div className="flex gap-2 text-xs items-center">
+                <span className="inline-flex items-center rounded-md bg-red-200 px-2 py-1  font-medium text-red-800">
+                <span className=" border-r pr-2 border-red-800">Role</span>
+                <span className="font-semibold pl-2">{getDisplayNameRole(user.role)}</span>
+                </span>
+            </div>
         </div>
     </button>
     <div className="flex flex-col divide-y">
     {expanded && <section className=" ">
     <div className="bg-neutral-300 h-1 rounded-full mt-3 mb-5" />
         <p className="font-bold pl-4 pr-8 sm:pl-6 lg:pl-8 mb-3">Panneau d&apos;actions utilisateur</p> 
-        <div className="flex gap-4">
-            <button className="focus-light w-full bg-white shadow-sm hover:shadow-none  hover:bg-neutral-100 text-neutral-700 text-center rounded-md ">
-                <p className="px-4 py-2">Revoquer le mot de passe </p>
+        <div className="flex gap-2 text-sm pl-4 pr-8 sm:pl-6 lg:pl-8">
+                <button className="focus-light max-w-[15rem] w-full text-neutral-200 bg-neutral-600 shadow-sm hover:shadow-none  hover:bg-neutral-700 text-center rounded-md ">
+                <p className="px-4 py-2">Réinitialiser le mot de passe</p>
                 </button>
-                <button className="focus-light w-full bg-red-600 shadow-sm hover:shadow-none  hover:bg-red-700 text-red-50 text-center rounded-md ">
+                {!user.accountNonLocked && (<button className=" focus-light max-w-[15rem] w-full text-neutral-200 bg-neutral-600 shadow-sm hover:shadow-none  hover:bg-neutral-700 text-center rounded-md ">
+                <span className="flex items-center mx-auto max-w-max px-4 gap-2"><LockOpenIcon className="h-4 w-4" />
+                <p className=" py-2">Débloquer le compte</p></span>
+                </button>)}
+                <button className="focus-light w-full max-w-[15rem] bg-red-600 shadow-sm hover:shadow-none  hover:bg-red-700 text-red-50 text-center rounded-md ">
                 <p className="px-4 py-2">Supprimer utilisateur</p>
                 </button>
         </div>
@@ -158,7 +185,10 @@ export default function UserSecurityInfo({user}){
                     ID Tentative
                     </th>
                     <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold sm:table-cell">
-                    État
+                    État de la tentative
+                    </th>
+                    <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">
+                    Accès bloqué
                     </th>
                     <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">
                     Date de tentative

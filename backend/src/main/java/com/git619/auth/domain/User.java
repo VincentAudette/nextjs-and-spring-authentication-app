@@ -41,12 +41,17 @@ public class User implements UserDetails{
     @Enumerated(EnumType.STRING)
     private Role role;
 
+
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<LoginAttempt> loginAttempts;
 
     @ElementCollection
     private List<String> oldPasswords;
+
+    @Column(name = "ACCOUNT_LOCK_COUNT", columnDefinition = "NUMBER(38,0) DEFAULT 0")
+    private int accountLockCount = 0;
 
 
 
@@ -77,6 +82,10 @@ public class User implements UserDetails{
         return password;
     }
 
+    public List<LoginAttempt> getLoginAttempts() {
+        return loginAttempts;
+    }
+
     public void setPassword(@NonNull String password) {
         this.password = password;
     }
@@ -103,6 +112,14 @@ public class User implements UserDetails{
 
     public void setOldPasswords(List<String> oldPasswords) {
         this.oldPasswords = oldPasswords;
+    }
+
+    public int getAccountLockCount() {
+        return accountLockCount;
+    }
+
+    public void setAccountLockCount(int accountLockCount) {
+        this.accountLockCount = accountLockCount;
     }
 
     @Override
@@ -153,5 +170,13 @@ public class User implements UserDetails{
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 }

@@ -36,13 +36,13 @@ export default function Notification({ heading, description, color="red" }) {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className={`max-w-full sm:max-w-sm min-w-max  backdrop-blur-md shadow-lg  rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden ${bgColor} ${shadowColor}`}>
+        <div className={`max-w-sm min-w-[20rem]  backdrop-blur-md shadow-lg  rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 ${bgColor} ${shadowColor}`}>
           <div className="p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0">
                 <ShieldExclamationIcon className={`h-6 w-6 ${iconColor}`} aria-hidden="true" />
               </div>
-              <div className={`ml-3 w-0 flex-1 pt-0.5 ${textColor} min-w-max`}>
+              <div className={`ml-3 w-0 flex-1 pt-0.5 ${textColor}`}>
                 <p className="text-sm font-medium ">{heading}</p>
                 <p className="mt-1 text-sm ">{description}</p>
               </div>

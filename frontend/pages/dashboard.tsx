@@ -8,6 +8,7 @@ import RoleBasedRedirection from '@components/role-based-redirection'
 import { AcademicCapIcon, GlobeAmericasIcon, KeyIcon } from '@heroicons/react/24/outline'
 import NotificationAvecAction from '@components/notification-avec-action'
 import { useRouter } from 'next/router'
+import GestionDeCompte from '@components/gestion-de-compte'
 
 const DASHBOARD_STR = "dashboard";
 const CLIENTS_RESIDENTIELS = "clients-residentiels";
@@ -63,6 +64,9 @@ export default function Dashboard() {
               }
               {
                 CLIENTS_AFFAIRE === activePage && <PreposeAuxClientsAffaireView />
+              }
+              {
+                GESTION_DE_COMPTE === activePage && <GestionDeCompte />
               }
               
               </div>

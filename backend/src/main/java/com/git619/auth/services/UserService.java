@@ -16,6 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -27,8 +30,7 @@ public class UserService {
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final AuthTokenService authTokenService;
-    @Autowired
-    private LoginAttemptService loginAttemptService;
+    private final LoginAttemptService loginAttemptService;
 
     @Autowired
     private LoginAttemptRepository loginAttemptRepository;
@@ -42,10 +44,11 @@ public class UserService {
 
     @Autowired
     public UserService(UserRepository userRepository, AuthTokenService authTokenService,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder, LoginAttemptService loginAttemptService) {
         this.userRepository = userRepository;
         this.authTokenService = authTokenService;
         this.passwordEncoder= passwordEncoder;
+        this.loginAttemptService = loginAttemptService;
     }
 
     public User createUser(User user) {
@@ -120,6 +123,10 @@ public class UserService {
         }
     }
 
+    public ZonedDateTime getTimeToRetry(User user) {
+        return loginAttemptService.getTimeToRetry(user);
+    }
+
 
 
     public boolean updatePassword(User user, UpdatePasswordDTO updatePasswordDTO) {
@@ -158,14 +165,6 @@ public class UserService {
 
         return true;
     }
-
-
-
-
-
-
-
-
 
 
 

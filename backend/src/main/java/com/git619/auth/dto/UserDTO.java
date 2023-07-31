@@ -5,17 +5,18 @@ import com.git619.auth.utils.Role;
 public class UserDTO {
 
     private String username;
-    private String password;
-    private String salt;
     private String role;
+    private boolean accountNonLocked;
+
+    private boolean enabled;
 
     public UserDTO() {}
 
-    public UserDTO(String username, String password, String salt, String role) {
+    public UserDTO(String username, String role, boolean accountNonLocked, boolean enabled) {
         this.username = username;
-        this.password = password;
-        this.salt = salt;
         this.role = role;
+        this.accountNonLocked = accountNonLocked;
+        this.enabled =enabled;
     }
 
     public String getUsername() {
@@ -26,22 +27,6 @@ public class UserDTO {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
     public String getRole() {
         return role;
     }
@@ -50,14 +35,28 @@ public class UserDTO {
         this.role = role;
     }
 
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
                 ", role=" + role +
+                ", accountNonLocked=" + accountNonLocked +
                 '}';
     }
 }
-
