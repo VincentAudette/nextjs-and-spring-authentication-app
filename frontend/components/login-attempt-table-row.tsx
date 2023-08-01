@@ -1,8 +1,35 @@
-import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon, MinusCircleIcon, XCircleIcon , LockClosedIcon} from "@heroicons/react/24/outline";
 import React from "react";
 
-function LoginAttemptTableRow({ loginAttempt }:{loginAttempt: {id:string, success:boolean, attemptTime:Date, userLocked:boolean}}) {
+const statesList = [
+  { 
+      state: 'DISABLED', 
+      icon: <MinusCircleIcon className="text-red-400 h-5 w-5" />, 
+      color: 'text-green-400', 
+      stateDisplayName: 'Désactivé' 
+  },
+  { 
+      state: 'LOCKED', 
+      icon: <LockClosedIcon className="text-yellow-500 h-5 w-5" />, 
+      color: 'text-red-400', 
+      stateDisplayName: 'Bloqué' 
+  },
+  { 
+      state: 'ACTIVE', 
+      icon: <CheckCircleIcon className="text-emerald-500 h-5 w-5" />, 
+      color: 'text-blue-400', 
+      stateDisplayName: 'Actif' 
+  }
+];
+
+
+
+
+function LoginAttemptTableRow({ loginAttempt }:{loginAttempt: {id:string, success:boolean, attemptTime:Date, userLocked:boolean, state:string}}) {
+
+  const loginAttemptState = statesList.find(s => {
+    if(!loginAttempt?.state) return false;
+    return s.state === loginAttempt?.state.toUpperCase()});
 
   return (
     <tr key={loginAttempt.id}>
@@ -27,11 +54,22 @@ function LoginAttemptTableRow({ loginAttempt }:{loginAttempt: {id:string, succes
           </div>
         </div> :<div>
           <div className="flex items-center gap-x-2 sm:justify-start">
-           <CheckCircleIcon className="text-slate-400 h-5 w-5" />
+           <CheckCircleIcon className="text-emerald-500 h-5 w-5" />
             <div className="hidden sm:block">Non</div>
           </div>
         </div> }
       </td>
+
+      <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-neutral-700 md:table-cell lg:pr-20">
+        <div>
+            {loginAttemptState?.state && <div className="flex items-center gap-x-2 sm:justify-start">
+              {loginAttemptState?.icon}
+              <div className="hidden sm:block">{loginAttemptState?.stateDisplayName}</div>
+              </div>
+              }
+        </div>
+      </td>
+
       <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-neutral-700 md:table-cell lg:pr-20">
         {new Date(loginAttempt.attemptTime).toLocaleString()}
       </td>

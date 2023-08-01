@@ -41,6 +41,10 @@ public class User implements UserDetails{
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "needs_to_reset_password", nullable = false, columnDefinition = "boolean default false")
+    private Boolean needsToResetPassword = false;
+
+
 
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -108,6 +112,14 @@ public class User implements UserDetails{
 
     public List<String> getOldPasswords() {
         return oldPasswords;
+    }
+
+    public boolean isNeedsToResetPassword() {
+        return needsToResetPassword;
+    }
+
+    public void setNeedsToResetPassword(boolean needsToResetPassword) {
+        this.needsToResetPassword = needsToResetPassword;
     }
 
     public void setOldPasswords(List<String> oldPasswords) {

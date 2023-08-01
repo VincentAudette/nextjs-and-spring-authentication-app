@@ -2,6 +2,7 @@ package com.git619.auth.controllers;
 
 import com.git619.auth.domain.User;
 import com.git619.auth.security.AuthToken;
+import com.git619.auth.services.LoginAttemptService;
 import com.git619.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,22 +31,23 @@ public class LoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         logger.info("Received login request for user: {}", user.getUsername());
+        User existingUser =null;
         try {
 
             // Requête de l'objet complet du User de la base de données
-            User existingUser = userService.findByUsername(user.getUsername());
+            existingUser = userService.findByUsername(user.getUsername());
             logger.info("Existing using is: {}", existingUser);
 
             if (existingUser == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun compte n'existe avec cet identifiant.");
             }
-
-            userService.checkUserEligibility(existingUser);
-
 
             // On récupère le salt de l'utilisateur existant et on l'applique au mdp entré
             Boolean authenticated = passwordEncoder.matches(user.getPassword() + existingUser.getSalt(), existingUser.getPassword());
@@ -64,6 +66,7 @@ public class LoginController {
                 }
             }
 
+            userService.checkUserEligibility(existingUser);
             userService.loginSuccessful(existingUser);
 
             // Si les identifiants sont valide, le jeton sera retourné.
@@ -74,29 +77,48 @@ public class LoginController {
             return ResponseEntity.ok(authToken);
 
         } catch (AuthenticationException e) {
+            userService.loginFailed(existingUser);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (ResponseStatusException e) {
-            // This is where you handle the exceptions thrown from checkUserEligibility
+            userService.loginFailed(existingUser);
             return ResponseEntity.status(e.getStatus()).body(e.getReason());
         }catch (RuntimeException e) {
             logger.error("Exception caught: {}", e.getMessage());
             // Vérification que max attempts est atteint userService.createToken()
             if ("Nombre d’essais autorisés dépassé.".equals(e.getMessage())) {
                 // Réponse avec 429 (Trop de requêtes)
-                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+                return new ResponseEntity<>(
+                            "Vous avez dépassé le nombre maximal de tentatives de connexion. Veuillez réessayer après "
+                                    + getRetryTimeFormatted(existingUser) + ".", HttpStatus.TOO_MANY_REQUESTS);
             }
-            // If it was a different RuntimeException, rethrow it
+            userService.loginFailed(existingUser);
+        } catch (Exception e) {
+            logger.error("General exception caught: {}", e.getMessage());
+            userService.loginFailed(existingUser);  // Calling loginFailed for all other exceptions
             throw e;
         }
-
-
+        return null;
     }
+
+
 
     private String getRetryTimeFormatted(User existingUser){
         ZonedDateTime timeToRetry = userService.getTimeToRetry(existingUser);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return timeToRetry.format(formatter);
     }
+
+    @DeleteMapping("/login/attempts/{username}")
+    public ResponseEntity<?> removeAllLoginAttempts(@PathVariable String username) {
+        User user = userService.findByUsername(username);
+        if(user != null){
+            loginAttemptService.removeAllLoginAttempts(user);
+            return ResponseEntity.ok().body("All login attempts for user " + username + " have been removed.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user found with username: " + username);
+        }
+    }
+
 
 
 

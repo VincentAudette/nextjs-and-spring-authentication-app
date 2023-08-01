@@ -12,6 +12,7 @@ public interface LoginAttemptRepository extends JpaRepository<LoginAttempt, Long
 
     Page<LoginAttempt> findByUser(User user, Pageable pageable);
 
+
     Page<LoginAttempt> findAllByUserOrderByAttemptTimeDesc(User user, Pageable pageable);
 
     // This method will return the earliest failed login attempt for a user

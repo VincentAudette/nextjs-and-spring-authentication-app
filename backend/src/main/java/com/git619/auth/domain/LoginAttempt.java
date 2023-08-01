@@ -1,6 +1,7 @@
 package com.git619.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.git619.auth.utils.LoginAttemptState;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -28,6 +29,19 @@ public class LoginAttempt {
 
     @Column(name = "USER_LOCKED", columnDefinition = "NUMBER(1,0)")
     private Boolean userLocked;
+
+    @Column(name = "STATE")
+    @Enumerated(EnumType.STRING)
+    private LoginAttemptState state;
+
+
+    public LoginAttemptState getState() {
+        return state;
+    }
+
+    public void setState(LoginAttemptState state) {
+        this.state = state;
+    }
 
     public Long getId() {
         return id;

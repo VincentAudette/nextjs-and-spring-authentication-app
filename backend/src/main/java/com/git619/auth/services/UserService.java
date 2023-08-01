@@ -43,6 +43,9 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private PasswordService passwordService;
+
 
 
     @Autowired
@@ -133,6 +136,7 @@ public class UserService {
                 logger.warn("User: {} has been disabled due to exceeding lock count limit.", user.getUsername());
                 userRepository.save(user); // persist changes immediately
             }
+
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "Vous devez contacter l'administrateur pour réinitialiser votre mot de passe"
@@ -150,6 +154,7 @@ public class UserService {
                 user.setAccountNonLocked(false);
                 userRepository.save(user);
             }
+
             throw new ResponseStatusException(
                     HttpStatus.LOCKED,
                     "Votre compte est temporairement suspendu, veuillez réessayer après "
@@ -159,10 +164,10 @@ public class UserService {
             if (!user.isAccountNonLocked()) {
                 user.setAccountNonLocked(true);
                 userRepository.save(user);
-
             }
         }
     }
+
 
 
 
@@ -208,6 +213,24 @@ public class UserService {
 
         return true;
     }
+
+    public String resetPassword(User user) {
+        String tempPassword = passwordService.generateTemporaryPassword();
+        // Check if the generated password meets your rules.
+        String validationMessage = passwordConfigService.validatePassword(tempPassword);
+        if (!validationMessage.equals("OK")) {
+            // Handle password validation failure
+            throw new InvalidPasswordException(validationMessage);
+        }
+
+        // If the password is valid
+        user.setNeedsToResetPassword(true);
+        user.setPassword(passwordService.encodePassword(tempPassword, user.getSalt()));
+        userRepository.save(user);
+
+        return tempPassword;
+    }
+
 
 
 

@@ -10,6 +10,7 @@ import com.git619.auth.exceptions.InvalidPasswordException;
 import com.git619.auth.exceptions.PasswordConfirmationMismatchException;
 import com.git619.auth.exceptions.PasswordUsedBeforeException;
 import com.git619.auth.services.LoginAttemptService;
+import com.git619.auth.services.PasswordService;
 import com.git619.auth.services.SessionService;
 import com.git619.auth.utils.Role;
 import com.git619.auth.services.UserService;
@@ -23,9 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +50,9 @@ public class UserController {
 
     @Autowired
     private LoginAttemptService loginAttemptService;
+
+    @Autowired
+    private PasswordService passwordService;
 
     @GetMapping("/user/{username}/sessions")
     public ResponseEntity<?> getUserSessions(@PathVariable String username,
@@ -145,6 +147,7 @@ public class UserController {
             User user = userService.findByUsername(username);
 
             userService.updatePassword(user, updatePasswordDTO);
+            passwordService.recordUserModifiedPassword(user);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CurrentPasswordMismatchException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -183,6 +186,25 @@ public class UserController {
         boolean isLocked = loginAttemptService.hasExceededMaxAttempts(user);
         return ResponseEntity.ok(isLocked);
     }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String username) {
+        User user = userService.findByUsername(username);
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Il n'y a pas de compte existant pour l'utilisateur "+username+".");
+        }
+
+        try {
+            String tempPassword = userService.resetPassword(user);
+            passwordService.recordAdminResetPassword(user);
+            return ResponseEntity.ok("Le mot de passe est réinitialisé correctement. " + tempPassword);
+        } catch (InvalidPasswordException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
 
 
 

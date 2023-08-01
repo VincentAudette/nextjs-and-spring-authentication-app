@@ -58,7 +58,7 @@ export default function UserSecurityInfo({user}){
     const { data: sessions, isLoading, isError, error } = useQuery(['userSessions', user.username, page],fetchUserSessions, { enabled: expanded });
     const { data: loginAttempts, isLoading:isLoadingLoginAttempts, isError:isLoginAttemptsError, error: errorLoginAttempts } = useQuery(['loginAttempts', user.username, loginAttemptPage], fetchUserLoginAttempts, { enabled: expanded });
 
-    console.log("USER", user);
+    console.log("loginAttempts", loginAttempts);
     
 
     return (<div key={user.username} className="py-5 px-6 rounded-xl bg-neutral-200 text-neutral-950 ">
@@ -192,7 +192,10 @@ export default function UserSecurityInfo({user}){
                     État de la tentative
                     </th>
                     <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">
-                    Accès bloqué
+                    Bloqué
+                    </th>
+                    <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">
+                    Statut du compte
                     </th>
                     <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">
                     Date de tentative

@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 import LoadingQuery from "./loading-query";
 import ErrorQuery, { Error } from "./error-query";
 import { useAuth } from "context/auth-context";
+import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 
 export const getConfigurations = async (token) => {
     
@@ -27,18 +28,22 @@ export default function ParametresDeSecurite({displaySize}:{displaySize:string})
   const displays = {
     sm: {
       padding: "py-4 px-3",
+      label:"text-base",
       text:"text-sm"
     },
     md: {
       padding: "p-5",
+      label:"text-lg",
       text:"text-md"
     },
     lg:{
-      padding: "p-5",
+      padding: "py-12",
+      label:"text-xl",
       text:"text-lg"
     },
     xl:{
       padding: "p-5",
+      label:"text-4xl",
       text:"text-2xl"
     },
   }
@@ -83,11 +88,9 @@ export default function ParametresDeSecurite({displaySize}:{displaySize:string})
                  
                     <button 
                     onClick={()=>{setOpen(true)}}
-                    className={`${selectedDisplay} rounded-lg bg-red-700 text-white  items-center flex justify-center p-3 hover:bg-opacity-70 transition-opacity duration-500 focus-dark `}>
-                        <label>Modifier les paramètres</label>
-                        <div className="ml-2 mr-4">
-                          <Settings2 className="w-5 h-5 text-white"  />
-                        </div>
+                    className={`${selectedDisplay} rounded-xl hover:cursor-pointer text-base bg-neutral-500 text-white  items-center flex justify-center py-2 px-3 hover:bg-opacity-70 transition-opacity duration-500 focus-dark `}>
+                        <p>Modifier les paramètres</p>
+                       <AdjustmentsHorizontalIcon className="h-5 w-5 ml-2" />
                     </button>
                   </div>
                   <hr className="my-5 border border-neutral-800" />
@@ -95,7 +98,7 @@ export default function ParametresDeSecurite({displaySize}:{displaySize:string})
 
 
 
-                 <div className=" gap-2 flex-col w-full grid sm:grid-cols-2">
+                 <div className=" gap-4 flex-col w-full grid sm:grid-cols-2 ">
                     {
                         [
                             {label: "Nombre de caractères requis",isNeeded:true, value: passwordConfig.passwordLength, representation:"#Caractères"},
@@ -106,10 +109,10 @@ export default function ParametresDeSecurite({displaySize}:{displaySize:string})
                         ].map(({label, value, representation, isNeeded})=>(
                             <div
                             key={label}
-                            className={`flex justify-between items-center ${isNeeded ?"bg-slate-300 text-neutral-800":"bg-neutral-400 text-neutral-200"} flex-col  px-2 ${selectedDisplay.padding} rounded-lg`}>
-                                <label className={`block  ${isNeeded ? " text-slate-900 font-bold":"text-neutral-700"} min-h-[4rem] ${selectedDisplay.text}}`} htmlFor={label}>{label}</label>
-                                <p className={selectedDisplay.text + " bg-black text-neutral-300 px-5 py-1 rounded-md my-2"}>{representation}</p>
-                                <p className={` ${isNeeded ?"text-slate-800":"text-neutral-700"} text-4xl`}>{value}</p>
+                            className={`flex justify-between items-center ${isNeeded ?"bg-neutral-200 text-neutral-800":"bg-neutral-400 text-neutral-200"} flex-col  px-2 ${selectedDisplay.padding} rounded-md`}>
+                                <label className={`block  ${isNeeded ? " text-neutral-900":"text-neutral-50"} font-bold min-h-[4.2rem] ${selectedDisplay.label}`} htmlFor={label}>{label}</label>
+                                <p className={`${isNeeded ? "bg-neutral-800 text-slate-50 shadow-xl":"bg-neutral-500"} ${selectedDisplay.text} text-neutral-300 px-5 py-1 rounded-full my-2`}>{representation}</p>
+                                <p className={` ${isNeeded ?"text-neutral-800":"text-neutral-50"} text-4xl mt-3`}>{value}</p>
                             </div>
                         ))
                     }

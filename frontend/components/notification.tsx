@@ -36,7 +36,7 @@ export default function Notification({ heading, description, color="red" }) {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div className={`max-w-sm min-w-[20rem]  backdrop-blur-md shadow-lg  rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 ${bgColor} ${shadowColor}`}>
+        <div className={`max-w-md min-w-[23rem]  backdrop-blur-md shadow-lg  rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 ${bgColor} ${shadowColor}`}>
           <div className="p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0">
