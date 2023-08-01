@@ -18,7 +18,7 @@ function SessionTableRow({ session }) {
           <div className={statuses[session.active] + ' flex-none rounded-full p-1'}>
             <div className="h-1.5 w-1.5 rounded-full bg-current" />
           </div>
-          <div className="hidden sm:block">{session.active ? 'Active' : 'Inactive'}</div>
+          <div className="hidden sm:block">{session.active ? 'Actif' : 'Inactif'}</div>
         </div>
       </td>
       <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-neutral-700 md:table-cell lg:pr-20">

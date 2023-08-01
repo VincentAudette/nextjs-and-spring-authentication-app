@@ -9,6 +9,17 @@ import Pagination from "./pagination";
 import LoginAttemptTableRow from "./login-attempt-table-row";
 import { LockClosedIcon, LockOpenIcon, MinusCircleIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 
+
+const handleReinitPassword = async (username) => {
+    const res = await fetch(`/api/resetPassword?username=${username}`);
+    if (!res.ok) {
+        const errorObj = await res.json();
+        errorObj.status = res.status;
+        throw errorObj;
+    }
+    return await res.json();
+}
+
 export default function UserSecurityInfo({user}){
     const [expanded, setExpanded] = useState(false);
     const {profile} = useAuth();
@@ -58,8 +69,6 @@ export default function UserSecurityInfo({user}){
     const { data: sessions, isLoading, isError, error } = useQuery(['userSessions', user.username, page],fetchUserSessions, { enabled: expanded });
     const { data: loginAttempts, isLoading:isLoadingLoginAttempts, isError:isLoginAttemptsError, error: errorLoginAttempts } = useQuery(['loginAttempts', user.username, loginAttemptPage], fetchUserLoginAttempts, { enabled: expanded });
 
-    console.log("loginAttempts", loginAttempts);
-    
 
     return (<div key={user.username} className="py-5 px-6 rounded-xl bg-neutral-200 text-neutral-950 ">
     <button 
@@ -103,7 +112,9 @@ export default function UserSecurityInfo({user}){
     <div className="bg-neutral-300 h-1 rounded-full mt-3 mb-5" />
         <p className="font-bold pl-4 pr-8 sm:pl-6 lg:pl-8 mb-3">Panneau d&apos;actions utilisateur</p> 
         <div className="flex gap-2 text-sm pl-4 pr-8 sm:pl-6 lg:pl-8">
-                <button className="focus-light max-w-[15rem] w-full text-neutral-200 bg-neutral-600 shadow-sm hover:shadow-none  hover:bg-neutral-700 text-center rounded-md ">
+                <button 
+                onClick={() => handleReinitPassword(user.username)}
+                className="focus-light max-w-[15rem] w-full text-neutral-800 bg-neutral-300 shadow-sm hover:shadow-none  hover:bg-neutral-400/40 text-center rounded-md ">
                 <p className="px-4 py-2">Réinitialiser le mot de passe</p>
                 </button>
                 {!user.accountNonLocked && (<button className=" focus-light max-w-[15rem] w-full text-neutral-200 bg-neutral-600 shadow-sm hover:shadow-none  hover:bg-neutral-700 text-center rounded-md ">

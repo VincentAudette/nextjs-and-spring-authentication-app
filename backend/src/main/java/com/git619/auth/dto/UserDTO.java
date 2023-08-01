@@ -10,6 +10,8 @@ public class UserDTO {
 
     private boolean enabled;
 
+    private boolean needsToResetPassword;
+
     public UserDTO() {}
 
     public UserDTO(String username, String role, boolean accountNonLocked, boolean enabled) {
@@ -51,12 +53,22 @@ public class UserDTO {
         this.enabled = enabled;
     }
 
+    public boolean isNeedsToResetPassword() {
+        return needsToResetPassword;
+    }
+
+    public void setNeedsToResetPassword(boolean needsToResetPassword) {
+        this.needsToResetPassword = needsToResetPassword;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
                 "username='" + username + '\'' +
-                ", role=" + role +
+                ", role='" + role + '\'' +
                 ", accountNonLocked=" + accountNonLocked +
+                ", enabled=" + enabled +
+                ", needsToResetPassword=" + needsToResetPassword +
                 '}';
     }
 }

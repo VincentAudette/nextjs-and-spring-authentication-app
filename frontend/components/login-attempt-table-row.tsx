@@ -52,7 +52,10 @@ function LoginAttemptTableRow({ loginAttempt }:{loginAttempt: {id:string, succes
             <XCircleIcon className=" text-red-400 h-5 w-5" />
             <div className="hidden sm:block">Oui</div>
           </div>
-        </div> :<div>
+        </div> : loginAttempt.state == "DISABLED" ?<div className="flex items-center gap-x-2 sm:justify-start">
+            <MinusCircleIcon className="text-red-400 h-5 w-5" />
+            <div className="hidden sm:block">Désactivé</div>
+        </div>:<div>
           <div className="flex items-center gap-x-2 sm:justify-start">
            <CheckCircleIcon className="text-emerald-500 h-5 w-5" />
             <div className="hidden sm:block">Non</div>

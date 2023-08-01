@@ -66,22 +66,7 @@ export default function FormulaireCreationUtilisateur({setOpen}){
           />
         </div>
       </div>
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-          Mot de passe
-        </label>
-        <div className="mt-2">
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            value={user?.password}
-            onChange={(e) => setUser({...user, password: e.target.value})}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm focus-light  sm:text-sm sm:leading-6"
-          />
-        </div>
-      </div>
+      
       <div>
         <label className="tblock text-sm font-medium leading-6 text-gray-900">Role</label>
         <fieldset className="mt-2">
