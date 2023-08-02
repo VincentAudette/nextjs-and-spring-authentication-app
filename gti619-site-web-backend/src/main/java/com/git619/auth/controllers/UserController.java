@@ -25,9 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -85,19 +83,30 @@ public class UserController {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setSalt(encodedSalt);
-//        user.setPassword(passwordEncoder.encode(userDTO.getPassword() + encodedSalt));
         user.setRole(role);
 
         User createdUser = userService.createUser(user);
 
-        // Si l'utilisateur n'est pas créer avec succès, on retourne Statut HTTP 500
+        // If user creation was not successful, return HTTP Status 500
         if (createdUser == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        // L'utilisateur est bien créer, on retourne Statut HTTP 201
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        // Reset the password of the newly created user
+        String tempPassword = userService.resetPassword(createdUser);
+
+        // Record the password reset action
+        passwordService.recordAdminResetPassword(createdUser);
+
+        // Prepare the response object
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", createdUser);
+        response.put("tempPassword", tempPassword);
+
+        // User created successfully, return HTTP Status 201 along with the user and temporary password
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR')")
@@ -115,6 +124,37 @@ public class UserController {
 
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
+
+    @DeleteMapping("/users/delete/{username}")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR')")
+    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Utilisateur avec nom: " + username + " non trouvé.");
+        }
+
+        try {
+            userService.delete(user.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception ex) {
+            logger.error("Erreur durant la suppression d'utilisateur", ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/users/delete-by-id/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR')")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+
+        try {
+            userService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception ex) {
+            logger.error("Erreur durant la suppression d'utilisateur", ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 

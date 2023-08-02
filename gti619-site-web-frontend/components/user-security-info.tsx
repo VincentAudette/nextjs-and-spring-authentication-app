@@ -113,6 +113,38 @@ export default function UserSecurityInfo({user}){
         queryClient.invalidateQueries('users');
         return data;
     }
+
+    const deleteUser = async () => {
+        try {
+            const response = await fetch(`/api/deleteUser?username=${user.username}&token=${profile.token}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            notify({
+                heading: "Utilisateur supprimé",
+                description: `L'utilisateur ${user.username} a été supprimé avec succès.`,
+                color: "green"
+            });
+            
+            // Invalidate 'users' queries so that react-query refetches the updated data
+            queryClient.invalidateQueries('users');
+
+        } catch (error) {
+            notify({
+                heading: "Erreur lors de la suppression de l'utilisateur",
+                description: error.message,
+                color: "red"
+            });
+        }
+    }
+    
     
 
     const queryClient = useQueryClient();
@@ -212,7 +244,9 @@ export default function UserSecurityInfo({user}){
                     <LockOpenIcon className="h-4 w-4" />
                 <p className=" py-2">Débloquer le compte</p></span>
                 </button>)}
-                <button className="focus-light w-full max-w-[15rem] bg-red-600 shadow-sm hover:shadow-none  hover:bg-red-700 text-red-50 text-center rounded-md ">
+                <button
+                onClick={deleteUser}
+                className="focus-light w-full max-w-[15rem] bg-red-600 shadow-sm hover:shadow-none  hover:bg-red-700 text-red-50 text-center rounded-md ">
                 <p className="px-4 py-2">Supprimer utilisateur</p>
                 </button>
         </div>

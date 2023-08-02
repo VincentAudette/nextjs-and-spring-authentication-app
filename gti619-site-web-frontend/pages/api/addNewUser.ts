@@ -13,12 +13,14 @@ export default async function handler(req, res) {
             });
             res.status(200).json(axiosRes.data);
         } catch (error) {
-            if (error.response && error.response.data === "SESSION_EXPIRED") {
+            if (error.response && error.response.data.message === "SESSION_EXPIRED") {
                 return res.status(401).json({
                     message: "Votre session a expiré.",
                 });
             }
-            res.status(error.response?.status || 500).json({ message: error.message });
+            res.status(error.response?.status || 500).json({ 
+                message: error.response ? error.message : "An error occurred while processing your request." 
+            });
         }
     } else {
         res.setHeader('Allow', ['POST']);

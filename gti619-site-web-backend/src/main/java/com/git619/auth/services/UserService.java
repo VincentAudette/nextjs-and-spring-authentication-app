@@ -114,6 +114,16 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public void deleteByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            userRepository.delete(user);
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User with username " + username + " not found"
+            );
+        }
+    }
     public void deleteAll() {
         userRepository.deleteAll();
     }

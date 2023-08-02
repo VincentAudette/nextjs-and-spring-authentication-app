@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useAuth } from 'context/auth-context';
+import { useNotifications } from 'context/notification-context';
+import { ClipboardIcon } from '@heroicons/react/24/outline';
 
 const roles = [
   { id: 'ROLE_ADMINISTRATEUR', title: 'Administrateur' },
@@ -12,22 +14,40 @@ export default function FormulaireCreationUtilisateur({setOpen}){
   const { profile } = useAuth();
   const queryClient = useQueryClient();
   const [user, setUser] = useState<{username:string,password:string,role:string}|null>(null);
+  const { notify } = useNotifications();
+  const [tempPassword, setTempPassword] = useState<string | null>(null);
 
   const addUser = async (user) => {
-    const res = await fetch(`/api/addNewUser?token=${profile.token}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(user)
-    });
-    if (!res.ok) {
-      const errorObj = await res.json();
-      errorObj.status = res.status;
-      throw errorObj;
-    }
-    return await res.json();
-  }
+      try {
+          const res = await fetch(`/api/addNewUser?token=${profile.token}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(user)
+          });
+          if (!res.ok) {
+              const errorObj = await res.json();
+              errorObj.status = res.status;
+              throw errorObj;
+          }
+          const result = await res.json();
+          notify({
+              color: "green",
+              heading: "Utilisateur ajouté avec succès",
+              description: `User was added successfully. ${result.tempPassword}`
+          });
+          setTempPassword(result.tempPassword);
+          return result;
+      } catch (error) {
+          notify({
+              heading: "Erreur durant la création de l'utilisateur.",
+              description: error.message || "Une erreur est survenue durant la création de l'utilisateur."
+          });
+          throw error;
+      }
+  };
+  
 
   const mutation = useMutation(addUser, {
     onSuccess: () => {
@@ -41,11 +61,39 @@ export default function FormulaireCreationUtilisateur({setOpen}){
       const res = await mutation.mutateAsync(user);
       console.log(res);
       if(res.id){
-        setOpen(false);
+        // setOpen(false);
       }
     } catch(e) {
       console.log(e);
     }
+  }
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(tempPassword || '');
+      notify({
+        color: "green",
+        heading: "Copied to clipboard",
+        description: `The temporary password has been copied to the clipboard.`
+      });
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  }
+  
+  if(tempPassword){
+    return (
+      <div className="flex flex-col gap-2 text-neutral-900">
+        <p className="text-lg font-semibold">Mot de passe temporaire</p>
+        <div className="flex items-center">
+          <p className="text-sm">Le mot de passe temporaire est: <span className="font-bold">{tempPassword}</span></p>
+          <button onClick={copyToClipboard} className="ml-2 focus-light rounded-md p-2">
+            <ClipboardIcon className="h-5 w-5 text-gray-500" />
+          </button>
+        </div>
+        <p className="text-sm">Veuillez le donner à l&apos;utilisateur.</p>
+      </div>
+    )
   }
 
   return (
