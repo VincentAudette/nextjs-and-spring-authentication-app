@@ -1,7 +1,5 @@
 package com.git619.auth.dto;
 
-import com.git619.auth.utils.Role;
-
 public class UserDTO {
 
     private String username;
