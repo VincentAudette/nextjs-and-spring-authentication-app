@@ -1,6 +1,6 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
-import { Bars3Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, BellIcon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import ETSLogo from '@components/SVG/ETSLogo'
 import { useAuth } from 'context/auth-context'
@@ -8,6 +8,8 @@ import { useRouter } from 'next/router'
 import useIsClient from 'utils/use-is-client'
 import NotificationContainer from './notification-container'
 import { useNotifications } from 'context/notification-context'
+import { useQuery, useQueryClient } from 'react-query'
+import { Bell, CheckCircle } from 'lucide-react'
 
 
 
@@ -47,13 +49,13 @@ import { useNotifications } from 'context/notification-context'
     }
   }
 
+
+
 export default function Layout(
-    {children, navigation, setActivePage, setFocusedElement, focusedElement=null}:{
+    {children, navigation, setActivePage}:{
         children: React.ReactNode,
         navigation: {name:string, view:string, current:boolean}[],
         setActivePage: (view:string)=>void,
-        setFocusedElement?: (element:React.ReactNode)=>void,
-        focusedElement?: React.ReactNode | null
     }
     ){
 
@@ -61,9 +63,11 @@ export default function Layout(
     const isClient = useIsClient();
     const {profile} = useAuth();
     const {notify} = useNotifications();
+    const queryClient = useQueryClient(); 
 
  
-    
+    const [focusedElement, setFocusedElement] = useState(null)
+    const [notifications, setNotifications] = useState([])
     
 
     const userNavigation = [
@@ -82,6 +86,26 @@ export default function Layout(
         }
       } },
     ]
+
+    const fetchNotifications = async ({queryKey}) => {
+      const [_key, role, token] = queryKey;
+        if(role === 'ROLE_ADMINISTRATEUR'){
+            const res = await fetch(`/api/getPasswordResetNotifications?token=${token}`)
+    
+            if(res.ok){
+                const data = await res.json()
+                setNotifications(data)
+                return data;
+            }
+        }
+    }
+
+
+  const { data: passwordNotifications,isLoading:loadingPwdNotif, isError, error } = useQuery(['passwordResetNotifications', profile?.role, profile?.token], fetchNotifications, {
+    enabled: profile?.role === 'ROLE_ADMINISTRATEUR',
+  });
+
+
     
 
 
@@ -228,9 +252,64 @@ export default function Layout(
                   <p className='text-lg font-bold'>{profile.username}</p>
                   <p className='text-base font-bold'>Role: {getDisplayNameRole(profile?.role)}</p>
                 </div>}
+                
+                
                 {
-                  focusedElement !== null &&  <div className='bg-neutral-900 p-5 rounded-md'>{focusedElement}</div>
+                  
+                 passwordNotifications?.length >= 1 && !loadingPwdNotif && !error && ( <div className='bg-neutral-900 p-5 rounded-md'>
+                    <div className='flex gap-2'>
+                    <BellIcon className='h-6 w-6 text-red-500 animate-pulse' aria-hidden='true' />
+                    <h2 className='font-bold text-lg mb-4'>Notifications</h2>
+                    </div>
+                    <ul className='flex flex-col gap-3'>
+                        {notifications.map(notification => (
+                            <li className='bg-neutral-400 flex flex-col gap-3 text-neutral-800 rounded-md p-4' key={notification.id}>
+                                <div className='flex flex-col gap-1'>
+                                  <p className='font-uppercase text-sm'>Utilisateur</p>
+                                  <p className='text-lg font-semibold'>{JSON.parse(notification.username).username}</p>
+                                  <p>Date d&apos;envoi: {new Date(notification.timestamp).toLocaleString()}</p>
+                                  <p>État de la commande: {notification.isTreated ? 'Traité' : <span className='bg-neutral-500/50 text-neutral-950 border border-neutral-600/20 px-2  rounded-sm'>Non traité</span>}</p>
+                                  <p>Demande de réinitialisation de mot de passe</p>
+                                </div>
+                                <button className="focus-light py-1 focus:ring-green-300 group max-w-[15rem] w-full text-neutral-800 bg-neutral-100 hover:border-green-600 border shadow-sm hover:shadow-none  hover:bg-green-100 text-center rounded-md "
+                                 onClick={async () => {
+                                    const res = await fetch(`/api/treatNotification?token=${profile?.token}&id=${notification.id}`,
+                                   { method: 'PUT'} )
+                                    if(!res.ok){
+                                        const data = await res.json()
+                                        notify(
+                                            {
+                                                heading: 'Erreur durant le traitement de la demande',
+                                                description: data.message,
+                                            }
+                                        );
+                                        return;
+                                    }
+                                    if(res.ok){
+                                        queryClient.invalidateQueries('passwordResetNotifications');
+                                        notify(
+                                          {
+                                              heading: 'Succès',
+                                              description: "La demande a été traité avec succès",
+                                              color: 'green'
+                                          }
+                                      );
+                                    }
+                                }}>
+                                    <div className="flex items-center mx-auto max-w-min gap-2">
+                                      <div className="group-hover:bg-green-300 rounded-md p-1">
+                                      <CheckCircle className="h-4 w-4 group-hover:text-green-800" />
+                                      </div>
+                                      <p className=" min-w-max group-hover:text-green-900">Demande complété</p>
+                                  </div>
+                                  
+                                  </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>)
                 }
+
               </div>}
             </aside>
           </div>

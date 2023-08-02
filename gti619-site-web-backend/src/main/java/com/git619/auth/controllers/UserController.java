@@ -1,9 +1,6 @@
 package com.git619.auth.controllers;
 
-import com.git619.auth.domain.LoginAttempt;
-import com.git619.auth.domain.PasswordChangeRecord;
-import com.git619.auth.domain.Session;
-import com.git619.auth.domain.User;
+import com.git619.auth.domain.*;
 import com.git619.auth.dto.PasswordChangeRecordDTO;
 import com.git619.auth.dto.UpdatePasswordDTO;
 import com.git619.auth.dto.UserDTO;
@@ -11,11 +8,8 @@ import com.git619.auth.exceptions.CurrentPasswordMismatchException;
 import com.git619.auth.exceptions.InvalidPasswordException;
 import com.git619.auth.exceptions.PasswordConfirmationMismatchException;
 import com.git619.auth.exceptions.PasswordUsedBeforeException;
-import com.git619.auth.services.LoginAttemptService;
-import com.git619.auth.services.PasswordService;
-import com.git619.auth.services.SessionService;
+import com.git619.auth.services.*;
 import com.git619.auth.utils.Role;
-import com.git619.auth.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +50,9 @@ public class UserController {
 
     @Autowired
     private PasswordService passwordService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("/user/{username}/sessions")
     public ResponseEntity<?> getUserSessions(@PathVariable String username,
@@ -245,4 +243,52 @@ public class UserController {
         Page<PasswordChangeRecordDTO> passwordChangeRecords = userService.getPasswordChangeHistory(user, pageable);
         return ResponseEntity.ok(passwordChangeRecords);
     }
+
+    @PostMapping("/password-reset-notify")
+    public ResponseEntity<?> passwordResetNotify(@RequestBody String username) {
+        Notification notification = new Notification();
+        notification.setUsername(username);
+        notification.setTimestamp(new Date());
+        notification.setIsTreated(false);
+
+        Notification createdNotification = notificationService.saveNotification(notification);
+        if (createdNotification == null) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(createdNotification, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/password-reset-notifications")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR')")
+    public ResponseEntity<List<Notification>> getPasswordResetNotifications() {
+        List<Notification> notifications = notificationService.getUntreatedNotifications();
+
+        if (notifications.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
+    }
+
+    @PutMapping("/notifications/{id}/treat")
+    @PreAuthorize("hasAuthority('ROLE_ADMINISTRATEUR')")
+    public ResponseEntity<?> treatNotification(@PathVariable Long id) {
+        try {
+            Notification notification = notificationService.getNotificationById(id);
+
+            if (notification == null) {
+                return new ResponseEntity<>("Notification not found", HttpStatus.NOT_FOUND);
+            }
+
+            notification.setIsTreated(true);
+            notificationService.updateNotification(notification);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception ex) {
+            logger.error("Error updating notification", ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.git619.auth.services;
 
 import com.git619.auth.domain.LoginAttempt;
+import com.git619.auth.domain.Notification;
 import com.git619.auth.domain.PasswordChangeRecord;
 import com.git619.auth.domain.User;
 import com.git619.auth.dto.PasswordChangeRecordDTO;
@@ -10,6 +11,7 @@ import com.git619.auth.exceptions.InvalidPasswordException;
 import com.git619.auth.exceptions.PasswordConfirmationMismatchException;
 import com.git619.auth.exceptions.PasswordUsedBeforeException;
 import com.git619.auth.repository.LoginAttemptRepository;
+import com.git619.auth.repository.NotificationRepository;
 import com.git619.auth.repository.PasswordChangeRecordRepository;
 import com.git619.auth.repository.UserRepository;
 import org.slf4j.Logger;
@@ -53,9 +55,6 @@ public class UserService {
     private PasswordService passwordService;
 
 
-
-
-
     @Autowired
     public UserService(UserRepository userRepository, AuthTokenService authTokenService,
                        PasswordEncoder passwordEncoder, LoginAttemptService loginAttemptService) {
@@ -73,6 +72,7 @@ public class UserService {
                 user.getRole()
         ));
     }
+
 
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {

@@ -1,24 +1,54 @@
-import { useRouter } from "next/router";
-import { useAuth } from "../context/auth-context";
-import Notification from "./notification";
-import { useState } from "react";
 import Image from "next/image";
 import ETSLogo from "./SVG/ETSLogo";
 import Link from "next/link";
+import NotificationContainer from "./notification-container";
+import { useNotifications } from "context/notification-context";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function DemandeAcces(){
 
+    const {notify} = useNotifications();
+
+    const [username, setUsername] = useState('');
     const router = useRouter();
-    const [notifications, setNotifications] = useState([]);
 
-    const [notifcationContent, setNotificationContent] = useState({heading:"", description:""})
+    const demandeAccessHandler = async event => {
+        event.preventDefault();
 
+        try {
+            const res = await fetch('/api/postPasswordResetNotify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username })
+            });
 
-    
+            if (res.ok) {
+                notify({
+                    heading: 'Success',
+                    description: 'Password reset was successful.',
+                    color: 'green'
+                });
+                router.push('/');
+            } else {
+                throw new Error(await res.text());
+            }
 
-    const resetPwd = async event => {
-        event.preventDefault()
+        } catch (error) {
+            notify({
+                heading: 'Error',
+                description: error.message,
+                color: 'red'
+            });
+        }
     };
+
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
+    }
+
 
 
 
@@ -26,11 +56,9 @@ export default function DemandeAcces(){
         <>
         <title>Authentification ÉTS | GTI619</title>
         <div className="flex flex-col-reverse fixed bottom-0 md:top-0 md:bottom-auto md:right-0 sm:inset-x-auto inset-x-0 z-10 p-5 max-h-screen overflow-scroll gap-3">
-  {notifications.length >= 1 && notifications.map((notification, index) => (
-    <Notification key={index} {...notification}  />
-  ))}
-</div>
-    <div className="h-full bg-neutral-700 text-white">
+       <NotificationContainer />
+        </div>
+        <div className="h-full bg-neutral-700 text-white">
                 <div className="h-full">
                   
                 
@@ -47,20 +75,23 @@ export default function DemandeAcces(){
                             
 
                             <div className="mt-6">
-                            <form onSubmit={resetPwd} className="space-y-6">
+                            <form onSubmit={demandeAccessHandler} className="space-y-6">
                                 <div>
                                     <label htmlFor="username" className="block text-sm font-medium text-neutral-50">
                                     Nom d&apos;utilisateur
                                     </label>
                                     <div className="mt-1">
                                     <input
-                                        id="username"
-                                        name="username"
-                                        type="string"
-                                        autoComplete="username"
-                                        required
-                                        className="input focus-dark"
-                                    />
+                                            id="username"
+                                            name="username"
+                                            type="string"
+                                            autoComplete="username"
+                                            required
+                                            className="input focus-dark"
+                                            value={username}
+                                            onChange={handleUsernameChange}
+                                        />
+
                                     </div>
                             </div>
 
