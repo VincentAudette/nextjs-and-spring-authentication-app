@@ -32,3 +32,27 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## TLS/SSL
+
+[Medium Source](https://medium.com/@greg.farrow1/nextjs-https-for-a-local-dev-server-98bb441eabd7)
+
+```
+openssl req -x509 -out localhost.crt -keyout localhost.key \
+  -days 365 \
+  -newkey rsa:2048 -nodes -sha256 \
+  -subj '/CN=localhost' -extensions EXT -config <( \
+   printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+```
+
+Add both the files: ``localhost.crt`` and ``localhost.key`` in the root of the client repository.
+
+(MacOs)
+
+Double click the localhost.crt to add it into the keychain.
+
+Then open the certificate and setup trust level
+
+The ``server.js`` refers to the keys within the root of the repository
+
+Run ``npm run dev-secure``
