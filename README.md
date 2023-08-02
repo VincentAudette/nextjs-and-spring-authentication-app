@@ -27,4 +27,5 @@ Ce projet est une site web qui implémente certaines fonctionnalités de sécuri
 2. `npm install` dans le dossier `/frontend`
 3. Lancer avec la commande `npm run dev`
 4. Le frontend ouvre sur [http://localhost:3000](http://localhost:3000)
+5. Créé un fichier `.env` dans le frontend et mettre ceci : `SECRETE_AUTH_KEY="Q823Le0Ig+boU6tqItopkNxSIznjp858kC/fLH/28fY="`
 

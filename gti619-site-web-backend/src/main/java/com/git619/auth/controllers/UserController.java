@@ -236,7 +236,6 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/users/{username}/password-change-history")
     public ResponseEntity<Page<PasswordChangeRecordDTO>> getPasswordChangeHistory(@PathVariable String username, Pageable pageable) {
         User user = userService.findByUsername(username);
@@ -246,11 +245,4 @@ public class UserController {
         Page<PasswordChangeRecordDTO> passwordChangeRecords = userService.getPasswordChangeHistory(user, pageable);
         return ResponseEntity.ok(passwordChangeRecords);
     }
-
-
-
-
-
-
-
 }
