@@ -50,8 +50,6 @@ export default function Dashboard() {
     <Layout
       navigation={navigation}
       setActivePage={setActivePage}
-      setFocusedElement={setFocusedElement}
-      focusedElement={focusedElement}
       
     >
 
