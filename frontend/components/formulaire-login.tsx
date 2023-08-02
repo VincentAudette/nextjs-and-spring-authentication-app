@@ -85,6 +85,12 @@ const { notify } = useNotifications();
                 role: result.decoded.role
             });
 
+            if(result.decoded.needsToResetPassword){
+                router.push('/reinitialiser-mot-de-passe');
+                return;
+            }
+            
+
             //Check the role to redirect to the right page
             if(result.decoded.role === "ROLE_ADMINISTRATEUR"){
                 router.push('/admin');

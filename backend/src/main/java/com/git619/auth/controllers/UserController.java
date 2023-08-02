@@ -1,8 +1,10 @@
 package com.git619.auth.controllers;
 
 import com.git619.auth.domain.LoginAttempt;
+import com.git619.auth.domain.PasswordChangeRecord;
 import com.git619.auth.domain.Session;
 import com.git619.auth.domain.User;
+import com.git619.auth.dto.PasswordChangeRecordDTO;
 import com.git619.auth.dto.UpdatePasswordDTO;
 import com.git619.auth.dto.UserDTO;
 import com.git619.auth.exceptions.CurrentPasswordMismatchException;
@@ -110,7 +112,7 @@ public class UserController {
 
         List<UserDTO> userDtos = users.stream()
                 .map(user -> new UserDTO(user.getUsername(), user.getRole().name(),
-                        !loginAttemptService.hasExceededMaxAttempts(user), user.isEnabled()))
+                        !loginAttemptService.hasExceededMaxAttempts(user), user.isEnabled(), user.isNeedsToResetPassword()))
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(userDtos, HttpStatus.OK);
@@ -134,29 +136,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getLoginAttempts(user, pageable), HttpStatus.OK);
     }
 
-    @PutMapping("/user/update-password")
-    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
-        try {
-            if (updatePasswordDTO != null) {
-                logger.info("Update password DTO=" + updatePasswordDTO);
-            } else {
-                logger.info("Update password DTO is null");
-                return new ResponseEntity<>("Update password DTO is null", HttpStatus.BAD_REQUEST);
-            }
-            String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user = userService.findByUsername(username);
 
-            userService.updatePassword(user, updatePasswordDTO);
-            passwordService.recordUserModifiedPassword(user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (CurrentPasswordMismatchException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (PasswordConfirmationMismatchException | InvalidPasswordException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (PasswordUsedBeforeException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
-        }
-    }
 
 
     @GetMapping("/user/old-passwords")
@@ -187,7 +167,7 @@ public class UserController {
         return ResponseEntity.ok(isLocked);
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping("/users/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String username) {
         User user = userService.findByUsername(username);
         if(user == null) {
@@ -203,6 +183,70 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+
+    @PostMapping("/users/update-account-to-enabled")
+    public ResponseEntity<String> updateAccountToEnabled(@RequestParam String username) {
+        User user = userService.findByUsername(username);
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Il n'y a pas de compte existant pour l'utilisateur "+username+".");
+        }
+
+        try {
+            // Reset the account lock count to 0
+            user.setAccountLockCount(0);
+            // Set the account as enabled
+            user.setEnabled(true);
+            // Set the account as not locked
+            user.setAccountNonLocked(true);
+
+
+            // save the changes to the user
+            userService.editUser(user);
+
+            return ResponseEntity.ok("Le compte est maintenant débloqué pour " +username +"." );
+        } catch (InvalidPasswordException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+    @PutMapping("/user/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+        try {
+            if (updatePasswordDTO != null) {
+                logger.info("Update password DTO=" + updatePasswordDTO);
+            } else {
+                logger.info("Update password DTO is null");
+                return new ResponseEntity<>("Update password DTO is null", HttpStatus.BAD_REQUEST);
+            }
+            String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userService.findByUsername(username);
+
+            userService.updatePassword(user, updatePasswordDTO);
+            passwordService.recordUserModifiedPassword(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CurrentPasswordMismatchException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (PasswordConfirmationMismatchException | InvalidPasswordException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (PasswordUsedBeforeException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
+
+    @GetMapping("/users/{username}/password-change-history")
+    public ResponseEntity<Page<PasswordChangeRecordDTO>> getPasswordChangeHistory(@PathVariable String username, Pageable pageable) {
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Page<PasswordChangeRecordDTO> passwordChangeRecords = userService.getPasswordChangeHistory(user, pageable);
+        return ResponseEntity.ok(passwordChangeRecords);
+    }
+
 
 
 

@@ -8,9 +8,9 @@ import ErrorQuery, { Error } from "./error-query";
 import { useAuth } from "context/auth-context";
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 
-export const getConfigurations = async (token) => {
+export const getConfigurations = async () => {
     
-    const res = await fetch(`/api/getPasswordConfig?token=${token}`);
+    const res = await fetch(`/api/getPasswordConfig`);
     if (!res.ok) {
       const errorObj = await res.json();
       errorObj.status = res.status;
@@ -52,7 +52,7 @@ export default function ParametresDeSecurite({displaySize}:{displaySize:string})
 
   const { profile } = useAuth();
 
-  const { data: passwordConfig, isLoading, isError, error } = useQuery(['passwordConfig',profile.token], ({queryKey})=>getConfigurations(queryKey[1]), {enabled: !!profile.token});
+  const { data: passwordConfig, isLoading, isError, error } = useQuery('passwordConfig', getConfigurations);
 
   useEffect(() => {
     if (passwordConfig) {

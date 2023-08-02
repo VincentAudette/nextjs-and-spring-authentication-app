@@ -42,6 +42,7 @@ public class AuthTokenService {
                 .setSubject(user.getUsername())
                 .claim("role", roleName)
                 .claim("sessionId", session.getId())
+                .claim("needsToResetPassword", user.isNeedsToResetPassword())
                 .signWith(key)
                 .compact();
 

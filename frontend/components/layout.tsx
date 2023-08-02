@@ -7,6 +7,7 @@ import { useAuth } from 'context/auth-context'
 import { useRouter } from 'next/router'
 import useIsClient from 'utils/use-is-client'
 import NotificationContainer from './notification-container'
+import { useNotifications } from 'context/notification-context'
 
 
 
@@ -30,6 +31,22 @@ import NotificationContainer from './notification-container'
 
   }
 
+ export const logout = async (token:string) => {
+    const res = await fetch(`/api/logout?token=${token}`);
+    if (!res.ok) {
+      const errorObj = await res.json();
+      errorObj.status = res.status;
+      throw errorObj;
+    } else {
+      // Clear the client-side storage
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("profile");
+      }
+  
+      
+    }
+  }
+
 export default function Layout(
     {children, navigation, setActivePage, setFocusedElement, focusedElement=null}:{
         children: React.ReactNode,
@@ -43,29 +60,27 @@ export default function Layout(
     const router = useRouter();
     const isClient = useIsClient();
     const {profile} = useAuth();
-    
+    const {notify} = useNotifications();
 
  
-    const logout = async () => {
-      const res = await fetch(`/api/logout?token=${profile.token}`);
-      if (!res.ok) {
-        const errorObj = await res.json();
-        errorObj.status = res.status;
-        throw errorObj;
-      } else {
-        // Clear the client-side storage
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("profile");
-        }
     
-        router.push('/');
-      }
-    }
     
 
     const userNavigation = [
       { name: 'Modifier mot de passe', onClick: ()=>setActivePage('gestion-de-compte') },
-      { name: 'Déconnexion', href: '/', onClick: logout },
+      { name: 'Déconnexion', href: '/', onClick: ()=>{
+        try{
+          logout(profile.token)
+          router.push('/');
+        }catch (err){
+          notify(
+            {
+              heading: 'Erreur durant la déconnexion',
+              description: err.message,
+            }
+          )
+        }
+      } },
     ]
     
 

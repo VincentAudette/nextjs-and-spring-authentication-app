@@ -1,16 +1,22 @@
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "context/auth-context";
 import { useNotifications } from "context/notification-context";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { logout } from "./layout";
 
 
-export default function FormulaireModificationMdp({dark:boolean}){
+export default function FormulaireModificationMdp({dark=false, needsPasswordResetView=false}:{dark?:boolean,needsPasswordResetView?:boolean}){
 
     const { notify } = useNotifications();
     const {profile} = useAuth();
 
+    const router = useRouter();
+
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    
 
     const handlePasswordModifcation = async (event) => {
         event.preventDefault();
@@ -45,6 +51,23 @@ export default function FormulaireModificationMdp({dark:boolean}){
             });
             // Formulaire vide une fois complété
             event.target.reset();
+            // Redirection vers la page d'accueil
+            if(needsPasswordResetView){
+              router.push("/");
+              return;
+            }else{
+              try{
+                logout(profile.token)
+                router.push('/');
+              }catch (err){
+                notify(
+                  {
+                    heading: 'Erreur durant la déconnexion',
+                    description: err.message,
+                  }
+                )
+              }
+            }
         } catch (error) {
             notify({
                 heading: "Erreur",
@@ -56,10 +79,10 @@ export default function FormulaireModificationMdp({dark:boolean}){
     };
     
    return (
-    <form onSubmit={handlePasswordModifcation} className=" w-full my-auto">
+    <form onSubmit={handlePasswordModifcation} className={` w-full my-auto ${dark ? "text-white":"text-neutral-800"}`}>
                   <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6 ">
                     <div className="col-span-full">
-                      <label htmlFor="current-password" className="block text-sm font-medium leading-6 text-neutral-800">
+                      <label htmlFor="current-password" className="block text-sm font-medium leading-6 ">
                         Mot de passe actuel
                       </label>
                       <div className="mt-2">
@@ -68,13 +91,13 @@ export default function FormulaireModificationMdp({dark:boolean}){
                           name="current_password"
                           type="password"
                           autoComplete="current-password"
-                          className="block w-full rounded-md border-0 bg-white py-1.5 text-neutral-800 shadow-sm focus-light  sm:text-sm sm:leading-6"
+                          className={`block w-full rounded-md border-0  py-1.5 ${dark ?"focus-dark bg-neutral-800 focus:bg-neutral-700":"focus-light bg-white"}  shadow-sm   sm:text-sm sm:leading-6`}
                         />
                       </div>
                     </div>
 
                     <div className="col-span-full">
-                      <label htmlFor="new-password" className="block text-sm font-medium leading-6 text-neutral-800">
+                      <label htmlFor="new-password" className="block text-sm font-medium leading-6 ">
                         Nouveau mot de passe
                       </label>
                       <div className="mt-2">
@@ -83,13 +106,13 @@ export default function FormulaireModificationMdp({dark:boolean}){
                           name="new_password"
                           type="password"
                           autoComplete="new-password"
-                          className="block w-full rounded-md border-0 bg-white py-1.5 text-neutral-800 shadow-sm focus-light  sm:text-sm sm:leading-6"
+                          className={`block w-full rounded-md border-0  py-1.5  shadow-sm  ${dark ?"focus-dark bg-neutral-800 focus:bg-neutral-700":"focus-light bg-white"}   sm:text-sm sm:leading-6`}
                         />
                       </div>
                     </div>
 
                     <div className="col-span-full">
-                      <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-neutral-800">
+                      <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 ">
                         Confirmer le nouveau mot de passe
                       </label>
                       <div className="mt-2">
@@ -98,7 +121,7 @@ export default function FormulaireModificationMdp({dark:boolean}){
                           name="confirm_password"
                           type="password"
                           autoComplete="new-password"
-                          className="block w-full rounded-md bg-white py-1.5 text-neutral-800 shadow-sm focus-light sm:text-sm sm:leading-6"
+                          className={`block w-full rounded-md  py-1.5  shadow-sm ${dark ?"focus-dark bg-neutral-800 focus:bg-neutral-700":"focus-light bg-white"} sm:text-sm sm:leading-6`}
                         />
                       </div>
                     </div>
@@ -111,7 +134,7 @@ export default function FormulaireModificationMdp({dark:boolean}){
                         disabled={isSubmitting}
                     >
                       {
-                        isSubmitting ?<div className="flex items-center gap-2"><ArrowPathIcon className="animate-spin ml-2 h-4 w-4 text-neutral-800" /> <p>Chargement</p></div>  : "Sauvegarder"
+                        isSubmitting ?<div className="flex items-center gap-2"><ArrowPathIcon className="animate-spin ml-2 h-4 w-4 " /> <p>Chargement</p></div>  : "Sauvegarder"
                       }
                     </button>
                   </div>

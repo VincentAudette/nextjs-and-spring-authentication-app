@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         //Ignore for /api/login
         LOGGER.info("Request URI: "+request.getRequestURI());
-        if(request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/logout") || request.getRequestURI().contains("/h2-console")) {
+        if(request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/password-config") || request.getRequestURI().equals("/api/logout") || request.getRequestURI().contains("/h2-console")) {
             LOGGER.info("Continue the filter chain...");
             filterChain.doFilter(request, response);
             return;

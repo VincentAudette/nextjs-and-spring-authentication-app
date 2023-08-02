@@ -1,13 +1,16 @@
 package com.git619.auth.services;
 
 import com.git619.auth.domain.LoginAttempt;
+import com.git619.auth.domain.PasswordChangeRecord;
 import com.git619.auth.domain.User;
+import com.git619.auth.dto.PasswordChangeRecordDTO;
 import com.git619.auth.dto.UpdatePasswordDTO;
 import com.git619.auth.exceptions.CurrentPasswordMismatchException;
 import com.git619.auth.exceptions.InvalidPasswordException;
 import com.git619.auth.exceptions.PasswordConfirmationMismatchException;
 import com.git619.auth.exceptions.PasswordUsedBeforeException;
 import com.git619.auth.repository.LoginAttemptRepository;
+import com.git619.auth.repository.PasswordChangeRecordRepository;
 import com.git619.auth.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +42,17 @@ public class UserService {
     private LoginAttemptRepository loginAttemptRepository;
 
     @Autowired
+    private PasswordChangeRecordRepository passwordChangeRecordRepository;
+
+    @Autowired
     private PasswordConfigService passwordConfigService;
 
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private PasswordService passwordService;
+
+
 
 
 
@@ -74,6 +82,16 @@ public class UserService {
     public Page<LoginAttempt> getLoginAttempts(User user, Pageable pageable) {
         return loginAttemptRepository.findAllByUserOrderByAttemptTimeDesc(user, pageable);
     }
+
+    public Page<PasswordChangeRecordDTO> getPasswordChangeHistory(User user, Pageable pageable) {
+        Page<PasswordChangeRecord> passwordChangeRecords = passwordChangeRecordRepository.findByUserOrderByChangeTimestampDesc(user, pageable);
+        return passwordChangeRecords.map(record -> new PasswordChangeRecordDTO(
+                record.getId(),
+                record.getChangeType(),
+                record.getChangeTimestamp()
+        ));
+    }
+
 
 
     public void loginSuccessful(User user) {
@@ -209,6 +227,9 @@ public class UserService {
         // Tous les conditions sont valide
         user.getOldPasswords().add(user.getPassword());
         user.setPassword(passwordEncoder.encode(updatePasswordDTO.getNewPassword() + user.getSalt()));
+
+        // set needs password reset to false
+        user.setNeedsToResetPassword(false);
         userRepository.save(user);
 
         return true;

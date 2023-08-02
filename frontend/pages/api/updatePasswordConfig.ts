@@ -13,7 +13,7 @@ export default async function handler(req, res) {
             });
             res.status(200).json(axiosRes.data);
         } catch (error) {
-            if (error.response && error.response.data === "SESSION_EXPIRED") {
+            if (error.response && error.response.data === "SESSION_EXPIRED_OR_INACTIVE") {
                 return res.status(401).json({
                     message: "Votre session a expiré.",
                 });

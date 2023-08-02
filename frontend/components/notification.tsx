@@ -10,13 +10,13 @@ export default function Notification({ heading, description, color="red" }) {
 
   switch (color) {
     case "red":
-      bgColor = "bg-red-300/80"
+      bgColor = "bg-red-200/80"
       textColor = "text-red-950"
       iconColor = "text-red-800"
       shadowColor = "shadow-red-950/20"
       break;
     case "green":
-      bgColor = "bg-green-300/80"
+      bgColor = "bg-green-200/80"
       textColor = "text-green-950"
       iconColor = "text-green-800"
       shadowColor = "shadow-green-950/20"

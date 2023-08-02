@@ -6,13 +6,12 @@ import LoadingQuery from "./loading-query";
 import ErrorQuery, { Error } from "./error-query";
 import ModalGeneric from "./modal-generic";
 import { useState } from "react";
-import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid";
 import { MagnifyingGlassPlusIcon } from "@heroicons/react/20/solid";
 
 export default function GestionDeCompte(){
     const { profile } = useAuth();
     const [open, setOpen] = useState(false);
-    const { data: passwordConfig, isLoading, isError, error } = useQuery(['passwordConfig',profile.token], ({queryKey})=>getConfigurations(queryKey[1]), {enabled: !!profile.token});
+    const { data: passwordConfig, isLoading, isError, error } = useQuery('passwordConfig', getConfigurations);
 if (isLoading) return <LoadingQuery />
   if (isError) return <ErrorQuery error={error as Error} />
     return (
@@ -65,7 +64,7 @@ if (isLoading) return <LoadingQuery />
               <div className=" md:col-span-8 xl:px-20 py-20  flex flex-col items-center rounded-xl">
                 <h3 className="text-neutral-800  text-xl mb-10 font-bold">Entrez votre nouveau mot de passe</h3>
                 
-                <FormulaireModificationMdp dark={true} />
+                <FormulaireModificationMdp dark={false} />
               </div>
 
               </div>

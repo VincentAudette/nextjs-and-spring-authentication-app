@@ -14,11 +14,12 @@ public class UserDTO {
 
     public UserDTO() {}
 
-    public UserDTO(String username, String role, boolean accountNonLocked, boolean enabled) {
+    public UserDTO(String username, String role, boolean accountNonLocked, boolean enabled, boolean needsToResetPassword) {
         this.username = username;
         this.role = role;
         this.accountNonLocked = accountNonLocked;
         this.enabled =enabled;
+        this.needsToResetPassword = needsToResetPassword;
     }
 
     public String getUsername() {
