@@ -34,3 +34,7 @@ build/
 # misc
 .DS_Store
 *.pem
+
+frontend/node_modules/
+frontend/.next/
+frontend/.env
