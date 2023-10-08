@@ -1,12 +1,5 @@
-# GTI619 - Laboratoire 4 <br>
-#### GTI619-01 Sécurité des systèmes (É2023)
-**Remis à**: Antoine Tönz et Mathias St-Jean<br>
-**Équipe**: F <br><br>
-Vincent Audette - AUDV03119608<br>
-Philippe Beaufort - BEAP18129801<br>
-Nicolas Fournier - FOUN11059705<br>
-Lucas Rousselange - ROUL72260001<br><br>
-Remise : 9 août 2023
+# Système d'authentification pour un cours de sécurité <br>
+Technologies Next.js (TS) - Spring (Java)
 
 ## Introduction
 
